@@ -1,4 +1,6 @@
 using Blanketomat.DataAccess.Context;
+using Blanketomat.DataAccess.Implementation;
+using Blanketomat.Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<BlanketomatContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BlanketomatConnection")));
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
