@@ -1,4 +1,5 @@
-﻿using Blanketomat.Domain.Repository;
+﻿using Blanketomat.Domain.Models;
+using Blanketomat.Domain.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +17,50 @@ public class StudentController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult GetAll()
+    public ActionResult VratiSveStudente()
     {
         var studenti = _unitOfWork.StudentRepository.GetAll();
         return Ok(studenti);
+    }
+
+    [HttpGet("{id}")]
+    public ActionResult VratiStudenta(int id)
+    {
+        return Ok(_unitOfWork.StudentRepository.Get(id));
+    }
+
+    [HttpPost]
+    public ActionResult KreirajStudenta([FromBody]Student student)
+    {
+        _unitOfWork.StudentRepository.Add(student);
+        _unitOfWork.Save();
+
+        return CreatedAtAction(nameof(VratiStudenta), new { id = student.Id }, student);
+    }
+
+    [HttpPut("{id}")]
+    public ActionResult AzurirajStudenta(int id, [FromBody]Student student)
+    {
+        var studentZaUpdate = _unitOfWork.StudentRepository.Get(id);
+        studentZaUpdate.Ime = student.Ime;
+        studentZaUpdate.Prezime = student.Prezime;
+        studentZaUpdate.Email = student.Email;
+        studentZaUpdate.Password = student.Password;
+        studentZaUpdate.Akreditacija = student.Akreditacija;
+        studentZaUpdate.Smer = student.Smer;
+        studentZaUpdate.Predmeti = student.Predmeti;
+
+        _unitOfWork.Save();
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public ActionResult ObrisiStudenta(int id)
+    {
+        var studenZaBrisanje = _unitOfWork.StudentRepository.Get(id);
+        _unitOfWork.StudentRepository.Remove(studenZaBrisanje);
+        _unitOfWork.Save();
+
+        return Ok(studenZaBrisanje);
     }
 }
