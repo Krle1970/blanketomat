@@ -46,7 +46,7 @@ namespace Blanketomat.DataAccess.Migrations
                     Prezime = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    SmerId = table.Column<int>(type: "int", nullable: false)
+                    SmerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,8 +55,7 @@ namespace Blanketomat.DataAccess.Migrations
                         name: "FK_Asistenti_Smerovi_SmerId",
                         column: x => x.SmerId,
                         principalTable: "Smerovi",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -67,8 +66,8 @@ namespace Blanketomat.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Naziv = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Godina = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false),
-                    AkreditacijaId = table.Column<int>(type: "int", nullable: false),
-                    SmerId = table.Column<int>(type: "int", nullable: false)
+                    AkreditacijaId = table.Column<int>(type: "int", nullable: true),
+                    SmerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -77,14 +76,12 @@ namespace Blanketomat.DataAccess.Migrations
                         name: "FK_Predmeti_Akreditacije_AkreditacijaId",
                         column: x => x.AkreditacijaId,
                         principalTable: "Akreditacije",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Predmeti_Smerovi_SmerId",
                         column: x => x.SmerId,
                         principalTable: "Smerovi",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -97,7 +94,7 @@ namespace Blanketomat.DataAccess.Migrations
                     Prezime = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    SmerId = table.Column<int>(type: "int", nullable: false)
+                    SmerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -106,8 +103,7 @@ namespace Blanketomat.DataAccess.Migrations
                         name: "FK_Profesori_Smerovi_SmerId",
                         column: x => x.SmerId,
                         principalTable: "Smerovi",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -120,8 +116,8 @@ namespace Blanketomat.DataAccess.Migrations
                     Prezime = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    AkreditacijaId = table.Column<int>(type: "int", nullable: false),
-                    SmerId = table.Column<int>(type: "int", nullable: false)
+                    AkreditacijaId = table.Column<int>(type: "int", nullable: true),
+                    SmerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -130,14 +126,12 @@ namespace Blanketomat.DataAccess.Migrations
                         name: "FK_Studenti_Akreditacije_AkreditacijaId",
                         column: x => x.AkreditacijaId,
                         principalTable: "Akreditacije",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Studenti_Smerovi_SmerId",
                         column: x => x.SmerId,
                         principalTable: "Smerovi",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -161,7 +155,7 @@ namespace Blanketomat.DataAccess.Migrations
                         column: x => x.PredmetiId,
                         principalTable: "Predmeti",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -185,7 +179,7 @@ namespace Blanketomat.DataAccess.Migrations
                         column: x => x.ProfesoriId,
                         principalTable: "Profesori",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -209,7 +203,7 @@ namespace Blanketomat.DataAccess.Migrations
                         column: x => x.StudentiId,
                         principalTable: "Studenti",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

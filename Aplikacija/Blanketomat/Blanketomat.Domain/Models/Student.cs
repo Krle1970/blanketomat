@@ -16,7 +16,7 @@ public class Student
     [EmailAddress]
     public required string Email { get; set; }
     public required byte[] Password { get; set; }
-    public required Akreditacija Akreditacija { get; set; }
-    public required Smer Smer { get; set; }
+    public Akreditacija? Akreditacija { get; set; }
+    public Smer? Smer { get; set; }
     public List<Predmet>? Predmeti { get; set; }
 }

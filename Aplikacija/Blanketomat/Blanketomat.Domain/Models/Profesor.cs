@@ -16,6 +16,6 @@ public class Profesor
     [EmailAddress]
     public required string Email { get; set; }
     public required byte[] Password { get; set; }
-    public required Smer Smer { get; set; }
+    public Smer? Smer { get; set; }
     public List<Predmet>? Predmeti { get; set; }
 }

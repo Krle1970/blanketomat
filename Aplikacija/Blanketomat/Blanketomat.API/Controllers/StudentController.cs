@@ -1,6 +1,5 @@
 ﻿using Blanketomat.Domain.Models;
 using Blanketomat.Domain.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blanketomat.API.Controllers;
@@ -19,8 +18,7 @@ public class StudentController : ControllerBase
     [HttpGet]
     public ActionResult VratiSveStudente()
     {
-        var studenti = _unitOfWork.StudentRepository.GetAll();
-        return Ok(studenti);
+        return Ok(_unitOfWork.StudentRepository.GetAll());
     }
 
     [HttpGet("{id}")]
@@ -30,7 +28,7 @@ public class StudentController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult KreirajStudenta([FromBody]Student student)
+    public ActionResult DodajStudenta([FromBody]Student student)
     {
         _unitOfWork.StudentRepository.Add(student);
         _unitOfWork.Save();
