@@ -1,4 +1,5 @@
 ﻿using Blanketomat.API.Context;
+using Blanketomat.API.Filters;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,7 @@ namespace Blanketomat.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [TypeFilter(typeof(Student_ValidateStudentIdFilter<Student>))]
         public async Task<ActionResult> VratiStudenta(int id)
         {
             return Ok(await _context.Studenti.FindAsync(id));

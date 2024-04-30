@@ -21,7 +21,7 @@ public class Student_ValidateStudentIdFilter<T> : ActionFilterAttribute where T 
         {
             if (Id.Value <= 0)
             {
-                context.ModelState.AddModelError($"{nameof(T)}" + "Id", $"{nameof(T)}" + "Id" + " je nevalidan.");
+                context.ModelState.AddModelError($"{typeof(T).Name}" + "Id", $"{typeof(T).Name}" + "Id" + " je nevalidan.");
                 var problemDetails = new ValidationProblemDetails(context.ModelState)
                 {
                     Status = StatusCodes.Status400BadRequest
@@ -34,16 +34,12 @@ public class Student_ValidateStudentIdFilter<T> : ActionFilterAttribute where T 
 
                 if (osoba == null)
                 {
-                    context.ModelState.AddModelError($"{nameof(T)}" + "Id", $"{nameof(T)}" + "Id" + " ne postoji u bazi podataka.");
+                    context.ModelState.AddModelError($"{typeof(T).Name}" + "Id", $"{typeof(T).Name}" + "Id" + " ne postoji u bazi podataka.");
                     var problemDetails = new ValidationProblemDetails(context.ModelState)
                     {
                         Status = StatusCodes.Status404NotFound
                     };
                     context.Result = new NotFoundObjectResult(problemDetails);
-                }
-                else
-                {
-                    context.HttpContext.Items[$"{nameof(T).ToLower()}"] = osoba;
                 }
             }
         }
