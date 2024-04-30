@@ -1,6 +1,4 @@
 using Blanketomat.DataAccess.Context;
-using Blanketomat.DataAccess.Implementation;
-using Blanketomat.Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -14,7 +12,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<BlanketomatContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BlanketomatConnection")));
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddMvc()
     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
