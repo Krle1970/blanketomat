@@ -1,4 +1,5 @@
-﻿using Blanketomat.Domain.Models;
+﻿using Blanketomat.API.Filters;
+using Blanketomat.Domain.Models;
 using Blanketomat.Domain.Repository;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,7 @@ public class StudentController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [TypeFilter(typeof(Student_ValidateStudentIdFilter<Student>))]
     public ActionResult VratiStudenta(int id)
     {
         return Ok(_unitOfWork.StudentRepository.Get(id));
