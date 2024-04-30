@@ -13,9 +13,12 @@ public class Profesor
     [MaxLength(20)]
     public required string Prezime { get; set; }
 
+    [MaxLength(50)]
     [EmailAddress]
     public required string Email { get; set; }
-    public required byte[] Password { get; set; }
+
+    [MaxLength(30)]
+    public required string Password { get; set; }
     public Smer? Smer { get; set; }
     public List<Predmet>? Predmeti { get; set; }
 }
