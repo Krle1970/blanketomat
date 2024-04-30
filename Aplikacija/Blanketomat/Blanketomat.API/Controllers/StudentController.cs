@@ -1,6 +1,5 @@
-﻿using Blanketomat.DataAccess.Context;
-using Blanketomat.Domain.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Blanketomat.API.Context;
+using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blanketomat.API.Controllers

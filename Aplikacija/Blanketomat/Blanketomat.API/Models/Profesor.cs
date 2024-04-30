@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Blanketomat.Domain.Models;
+namespace Blanketomat.API.Models;
 
-public class Student
+public class Profesor
 {
     [Key]
     public int Id { get; set; }
@@ -19,7 +19,6 @@ public class Student
 
     [MaxLength(30)]
     public required string Password { get; set; }
-    public Akreditacija? Akreditacija { get; set; }
     public Smer? Smer { get; set; }
     public List<Predmet>? Predmeti { get; set; }
 }

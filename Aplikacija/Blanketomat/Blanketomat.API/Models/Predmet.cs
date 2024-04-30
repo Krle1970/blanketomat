@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Blanketomat.Domain.Models;
+namespace Blanketomat.API.Models;
 
 public class Predmet
 {

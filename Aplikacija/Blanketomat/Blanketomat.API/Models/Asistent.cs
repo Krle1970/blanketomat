@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Blanketomat.Domain.Models;
+namespace Blanketomat.API.Models;
 
-public class Profesor
+public class Asistent
 {
     [Key]
     public int Id { get; set; }

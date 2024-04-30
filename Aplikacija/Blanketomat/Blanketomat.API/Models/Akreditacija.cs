@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Blanketomat.Domain.Models;
+namespace Blanketomat.API.Models;
 
-public class Smer
+public class Akreditacija
 {
     [Key]
     public int Id { get; set; }
@@ -10,7 +10,5 @@ public class Smer
     [MaxLength(40)]
     public required string Naziv { get; set; }
     public List<Predmet>? Predmeti { get; set; }
-    public List<Profesor>? Profesori { get; set; }
-    public List<Asistent>? Asistenti { get; set; }
     public List<Student>? Studenti { get; set; }
 }

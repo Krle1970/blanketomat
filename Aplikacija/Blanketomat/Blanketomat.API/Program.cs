@@ -1,4 +1,4 @@
-using Blanketomat.DataAccess.Context;
+using Blanketomat.API.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
