@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Blanketomat.API.Filters;
 
-public class Student_ValidateStudentIdFilter<T> : ActionFilterAttribute where T : class
+public class ValidateIdFilter<T> : ActionFilterAttribute where T : class
 {
     private readonly BlanketomatContext _context;
 
-    public Student_ValidateStudentIdFilter(BlanketomatContext context)
+    public ValidateIdFilter(BlanketomatContext context)
     {
         _context = context;
     }
@@ -21,7 +21,7 @@ public class Student_ValidateStudentIdFilter<T> : ActionFilterAttribute where T 
         {
             if (Id.Value <= 0)
             {
-                context.ModelState.AddModelError($"{typeof(T).Name}" + "Id", $"{typeof(T).Name}" + "Id" + " je nevalidan.");
+                context.ModelState.AddModelError($"{typeof(T).Name}", $"Id" + " je nevalidan.");
                 var problemDetails = new ValidationProblemDetails(context.ModelState)
                 {
                     Status = StatusCodes.Status400BadRequest
@@ -30,11 +30,11 @@ public class Student_ValidateStudentIdFilter<T> : ActionFilterAttribute where T 
             }
             else
             {
-                var osoba = _context.Set<T>().Find(Id.Value);
+                var entity = _context.Set<T>().Find(Id.Value);
 
-                if (osoba == null)
+                if (entity == null)
                 {
-                    context.ModelState.AddModelError($"{typeof(T).Name}" + "Id", $"{typeof(T).Name}" + "Id" + " ne postoji u bazi podataka.");
+                    context.ModelState.AddModelError($"{typeof(T).Name}", $"{typeof(T).Name}" + " ne postoji u bazi podataka.");
                     var problemDetails = new ValidationProblemDetails(context.ModelState)
                     {
                         Status = StatusCodes.Status404NotFound
