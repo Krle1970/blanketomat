@@ -2,6 +2,7 @@
 using Blanketomat.API.Filters;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blanketomat.API.Controllers;
 
@@ -16,10 +17,10 @@ public class StudentController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
-    public ActionResult VratiStudente()
+    [HttpGet("{start}/{limit}")]
+    public async Task<ActionResult> VratiStudente(int start, int limit)
     {
-        return Ok(_context.Studenti);
+        return Ok(await _context.Studenti.Skip(start).Take(limit).ToListAsync());
     }
 
     [HttpGet("{id}")]
@@ -29,7 +30,7 @@ public class StudentController : ControllerBase
         return Ok(await _context.Studenti.FindAsync(id));
     }
 
-    [HttpPost("Dodaj")]
+    [HttpPost]
     [TypeFilter(typeof(ValidateDodajStudentaFilter))]
     public async Task<ActionResult> DodajStudenta([FromBody]Student student)
     {
@@ -41,7 +42,7 @@ public class StudentController : ControllerBase
             student);
     }
 
-    [HttpPut("Azuriraj")]
+    [HttpPut]
     [TypeFilter(typeof(ValidateAzurirajStudentaFilter))]
     public async Task<ActionResult> AzurirajStudenta([FromBody]Student student)
     {
@@ -58,7 +59,7 @@ public class StudentController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("Obrisi/{id}")]
+    [HttpDelete("{id}")]
     [TypeFilter(typeof(ValidateIdFilter<Student>))]
     public async Task<ActionResult> ObrisiStudenta(int id)
     {

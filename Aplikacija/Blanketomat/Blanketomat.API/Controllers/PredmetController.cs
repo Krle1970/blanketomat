@@ -2,6 +2,7 @@
 using Blanketomat.API.Filters;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blanketomat.API.Controllers;
 
@@ -16,10 +17,10 @@ public class PredmetController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
-    public ActionResult VratiPredmete()
+    [HttpGet("{start}/{limit}")]
+    public async Task<ActionResult> VratiPredmete(int start, int limit)
     {
-        return Ok(_context.Predmeti);
+        return Ok(await _context.Predmeti.Skip(start).Take(limit).ToListAsync());
     }
 
     [HttpGet("{id}")]
@@ -29,7 +30,7 @@ public class PredmetController : ControllerBase
         return Ok(await _context.Predmeti.FindAsync(id));
     }
 
-    [HttpPost("Dodaj")]
+    [HttpPost]
     public async Task<ActionResult> DodajPredmet([FromBody]Predmet predmet)
     {
         await _context.Predmeti.AddAsync(predmet);
@@ -40,7 +41,7 @@ public class PredmetController : ControllerBase
             predmet);
     }
 
-    [HttpPost("Azuriraj")]
+    [HttpPut]
     public async Task<ActionResult> AzurirajPredmet([FromBody]Predmet predmet)
     {
         var predmetZaAzuriranje = await _context.Predmeti.FindAsync(predmet.Id);
@@ -56,7 +57,7 @@ public class PredmetController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("Obrisi/{id}")]
+    [HttpDelete("{id}")]
     public async Task<ActionResult> ObrisiPredmet(int id)
     {
         var predmetZaBrisanje = await _context.Predmeti.FindAsync(id);
