@@ -1,4 +1,5 @@
 ﻿using Blanketomat.API.Context;
+using Blanketomat.API.DTOs;
 using Blanketomat.API.Filters;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +18,25 @@ public class PredmetController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("{start}/{limit}")]
-    public async Task<ActionResult> VratiPredmete(int start, int limit)
+    [HttpGet("{page}/{count}")]
+    public async Task<ActionResult> VratiPredmete(int page, int count)
     {
-        return Ok(await _context.Predmeti.Skip(start).Take(limit).ToListAsync());
+        var brojRezultata = count;
+        var brojStranica = Math.Ceiling(_context.Predmeti.Count() / (float)brojRezultata);
+
+        var predmeti = await _context.Predmeti
+            .Skip((page - 1) * brojRezultata)
+            .Take(brojRezultata)
+            .ToListAsync();
+
+        var response = new PaginationResponseDTO<Predmet>
+        {
+            Response = predmeti,
+            BrojStranica = (int)brojStranica,
+            TrenutnaStranica = page
+        };
+
+        return Ok(response);
     }
 
     [HttpGet("{id}")]

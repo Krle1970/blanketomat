@@ -1,4 +1,5 @@
 ﻿using Blanketomat.API.Context;
+using Blanketomat.API.DTOs;
 using Blanketomat.API.Filters;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +18,25 @@ public class StudentController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("{start}/{limit}")]
-    public async Task<ActionResult> VratiStudente(int start, int limit)
+    [HttpGet("{page}/{count}")]
+    public async Task<ActionResult> VratiStudente(int page, int count)
     {
-        return Ok(await _context.Studenti.Skip(start).Take(limit).ToListAsync());
+        var brojRezultata = count;
+        var brojStranica = Math.Ceiling(_context.Studenti.Count() / (float)brojRezultata);
+
+        var studenti = await _context.Studenti
+            .Skip((page - 1) * brojRezultata)
+            .Take(brojRezultata)
+            .ToListAsync();
+
+        var response = new PaginationResponseDTO<Student>
+        {
+            Response = studenti,
+            BrojStranica = (int)brojStranica,
+            TrenutnaStranica = page
+        };
+
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
