@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Blanketomat.API.Filters;
 
-public class ValidateDodajStudentaFilter : ActionFilterAttribute
+public class ValidateDodajPredmetFilter : ActionFilterAttribute
 {
     private readonly BlanketomatContext _context;
 
-    public ValidateDodajStudentaFilter(BlanketomatContext context)
+    public ValidateDodajPredmetFilter(BlanketomatContext context)
     {
         _context = context;
     }
@@ -17,10 +17,10 @@ public class ValidateDodajStudentaFilter : ActionFilterAttribute
     public override void OnActionExecuting(ActionExecutingContext context)
     {
         //base.OnActionExecuting(context);
-        var student = context.ActionArguments["student"] as Student;
-        if (student == null)
+        var predmet = context.ActionArguments["predmet"] as Predmet;
+        if (predmet == null)
         {
-            context.ModelState.AddModelError("Student", "Student objekat je null.");
+            context.ModelState.AddModelError("Predmet", "Predmet objekat je null.");
             var problemDetails = new ValidationProblemDetails(context.ModelState)
             {
                 Status = StatusCodes.Status400BadRequest
@@ -29,9 +29,9 @@ public class ValidateDodajStudentaFilter : ActionFilterAttribute
         }
         else
         {
-            if (_context.Studenti == null)
+            if (_context.Predmeti == null)
             {
-                context.ModelState.AddModelError("Student", "Tabela Studenti ne postoji.");
+                context.ModelState.AddModelError("Predmet", "Tabela Predmet ne postoji.");
                 var problemDetails = new ValidationProblemDetails(context.ModelState)
                 {
                     Status = StatusCodes.Status404NotFound
@@ -40,15 +40,15 @@ public class ValidateDodajStudentaFilter : ActionFilterAttribute
             }
             else
             {
-                var postojeciStudent = _context.Studenti.FirstOrDefault(x =>
-                    !string.IsNullOrWhiteSpace(student.Email) &&
-                    !string.IsNullOrWhiteSpace(x.Email) &&
-                    student.Email.ToLower() == x.Email.ToLower()
+                var postojeciPredmet = _context.Predmeti.FirstOrDefault(x =>
+                    !string.IsNullOrWhiteSpace(predmet.Naziv) &&
+                    !string.IsNullOrWhiteSpace(x.Naziv) &&
+                    predmet.Naziv.ToLower() == x.Naziv.ToLower()
                     );
 
-                if (postojeciStudent != null)
+                if (postojeciPredmet != null)
                 {
-                    context.ModelState.AddModelError("Student", "Student vec postoji.");
+                    context.ModelState.AddModelError("Predmet", "Predmet vec postoji.");
                     var problemDetails = new ValidationProblemDetails(context.ModelState)
                     {
                         Status = StatusCodes.Status400BadRequest

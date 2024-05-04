@@ -34,7 +34,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("PredmetiId");
 
-                    b.ToTable("AsistentPredmet");
+                    b.ToTable("AsistentPredmet", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Akreditacija", b =>
@@ -52,7 +52,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Akreditacije");
+                    b.ToTable("Akreditacije", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Asistent", b =>
@@ -90,7 +90,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("SmerId");
 
-                    b.ToTable("Asistenti");
+                    b.ToTable("Asistenti", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Predmet", b =>
@@ -123,7 +123,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("SmerId");
 
-                    b.ToTable("Predmeti");
+                    b.ToTable("Predmeti", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Profesor", b =>
@@ -161,7 +161,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("SmerId");
 
-                    b.ToTable("Profesori");
+                    b.ToTable("Profesori", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Smer", b =>
@@ -179,7 +179,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Smerovi");
+                    b.ToTable("Smerovi", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Student", b =>
@@ -222,7 +222,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("SmerId");
 
-                    b.ToTable("Studenti");
+                    b.ToTable("Studenti", (string)null);
                 });
 
             modelBuilder.Entity("PredmetProfesor", b =>
@@ -237,7 +237,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("ProfesoriId");
 
-                    b.ToTable("PredmetProfesor");
+                    b.ToTable("PredmetProfesor", (string)null);
                 });
 
             modelBuilder.Entity("PredmetStudent", b =>
@@ -252,7 +252,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("StudentiId");
 
-                    b.ToTable("PredmetStudent");
+                    b.ToTable("PredmetStudent", (string)null);
                 });
 
             modelBuilder.Entity("AsistentPredmet", b =>

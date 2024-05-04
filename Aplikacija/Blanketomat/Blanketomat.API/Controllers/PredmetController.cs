@@ -47,6 +47,7 @@ public class PredmetController : ControllerBase
     }
 
     [HttpPost]
+    [TypeFilter(typeof(ValidateDodajPredmetFilter))]
     public async Task<ActionResult> DodajPredmet([FromBody]Predmet predmet)
     {
         await _context.Predmeti.AddAsync(predmet);
@@ -58,10 +59,11 @@ public class PredmetController : ControllerBase
     }
 
     [HttpPut]
+    [TypeFilter(typeof(ValidateAzurirajPredmetFilter))]
     public async Task<ActionResult> AzurirajPredmet([FromBody]Predmet predmet)
     {
-        var predmetZaAzuriranje = await _context.Predmeti.FindAsync(predmet.Id);
-        predmetZaAzuriranje.Naziv = predmet.Naziv;
+        var predmetZaAzuriranje = HttpContext.Items["predmet"] as Predmet;
+        predmetZaAzuriranje!.Naziv = predmet.Naziv;
         predmetZaAzuriranje.Godina = predmet.Godina;
         predmetZaAzuriranje.Akreditacija = predmet.Akreditacija;
         predmetZaAzuriranje.Smer = predmet.Smer;
@@ -74,10 +76,11 @@ public class PredmetController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [TypeFilter(typeof(ValidateIdFilter<Predmet>))]
     public async Task<ActionResult> ObrisiPredmet(int id)
     {
         var predmetZaBrisanje = await _context.Predmeti.FindAsync(id);
-        _context.Predmeti.Remove(predmetZaBrisanje);
+        _context.Predmeti.Remove(predmetZaBrisanje!);
         await _context.SaveChangesAsync();
 
         return Ok(predmetZaBrisanje);

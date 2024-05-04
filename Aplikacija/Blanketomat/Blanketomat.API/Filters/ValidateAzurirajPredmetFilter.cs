@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Blanketomat.API.Filters;
 
-public class ValidateAzurirajStudentaFilter : ActionFilterAttribute
+public class ValidateAzurirajPredmetFilter : ActionFilterAttribute
 {
     private readonly BlanketomatContext _context;
 
-    public ValidateAzurirajStudentaFilter(BlanketomatContext context)
+    public ValidateAzurirajPredmetFilter(BlanketomatContext context)
     {
         _context = context;
     }
@@ -17,10 +17,10 @@ public class ValidateAzurirajStudentaFilter : ActionFilterAttribute
     public override void OnActionExecuting(ActionExecutingContext context)
     {
         //base.OnActionExecuting(context);
-        var student = context.ActionArguments["student"] as Student;
-        if (student == null)
+        var predmet = context.ActionArguments["predmet"] as Predmet;
+        if (predmet == null)
         {
-            context.ModelState.AddModelError("Student", "Student objekat je null.");
+            context.ModelState.AddModelError("Predmet", "Predmet objekat je null.");
             var problemDetails = new ValidationProblemDetails(context.ModelState)
             {
                 Status = StatusCodes.Status400BadRequest
@@ -29,10 +29,10 @@ public class ValidateAzurirajStudentaFilter : ActionFilterAttribute
         }
         else
         {
-            var studentId = student.Id;
+            var studentId = predmet.Id;
             if (studentId <= 0)
             {
-                context.ModelState.AddModelError("Student", "Nevalidan Id.");
+                context.ModelState.AddModelError("Predmet", "Nevalidan Id.");
                 var problemDetails = new ValidationProblemDetails(context.ModelState)
                 {
                     Status = StatusCodes.Status400BadRequest
@@ -41,9 +41,9 @@ public class ValidateAzurirajStudentaFilter : ActionFilterAttribute
             }
             else
             {
-                if (_context.Studenti == null)
+                if (_context.Predmeti == null)
                 {
-                    context.ModelState.AddModelError("Student", "Tabela Studenti ne postoji.");
+                    context.ModelState.AddModelError("Predmet", "Tabela Predmeti ne postoji.");
                     var problemDetails = new ValidationProblemDetails(context.ModelState)
                     {
                         Status = StatusCodes.Status404NotFound
@@ -52,10 +52,10 @@ public class ValidateAzurirajStudentaFilter : ActionFilterAttribute
                 }
                 else
                 {
-                    var studentZaAzuriranje = _context.Studenti.Find(studentId);
-                    if (studentZaAzuriranje == null)
+                    var predmetZaAzuriranje = _context.Predmeti.Find(studentId);
+                    if (predmetZaAzuriranje == null)
                     {
-                        context.ModelState.AddModelError("Student", "Student ne postoji u bazi podataka.");
+                        context.ModelState.AddModelError("Predmet", "Predmet ne postoji u bazi podataka.");
                         var problemDetails = new ValidationProblemDetails(context.ModelState)
                         {
                             Status = StatusCodes.Status404NotFound
@@ -64,7 +64,7 @@ public class ValidateAzurirajStudentaFilter : ActionFilterAttribute
                     }
                     else
                     {
-                        context.HttpContext.Items["student"] = studentZaAzuriranje;
+                        context.HttpContext.Items["predmet"] = predmetZaAzuriranje;
                     }
                 }
             }
