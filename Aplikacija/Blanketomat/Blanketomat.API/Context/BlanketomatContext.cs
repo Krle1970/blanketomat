@@ -16,4 +16,13 @@ public class BlanketomatContext : DbContext
     public DbSet<Asistent> Asistenti { get; set; }
     public DbSet<Smer> Smerovi { get; set; }
     public DbSet<Akreditacija> Akreditacije { get; set; }
+    public DbSet<Administrator> Administratori { get; set; }
+    public DbSet<Blanket> Blanketi { get; set; }
+    public DbSet<IspitniRok> IspitniRokovi { get; set; }
+    public DbSet<Oblast> Oblasti { get; set; }
+    public DbSet<Pitanje> Pitanja { get; set; }
+    public DbSet<Podoblast> Podoblasti { get; set; }
+    public DbSet<PonavljanjeRoka> Ponavljanja { get; set; }
+    public DbSet<Slika> Slike { get; set; }
+    public DbSet<Zadatak> Zadaci { get; set; }
 }
