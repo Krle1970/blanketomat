@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blanketomat.API.Migrations
 {
     [DbContext(typeof(BlanketomatContext))]
-    [Migration("20240504125137_V1")]
+    [Migration("20240504125626_V1")]
     partial class V1
     {
         /// <inheritdoc />
