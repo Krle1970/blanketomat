@@ -20,7 +20,7 @@ namespace Blanketomat.API.Controllers;
     }
 
     [HttpGet("{page}/{count}")]
-    public async Task<ActionResult> VratiAkreditaciju(int page, int count)
+    public async Task<ActionResult> VratiAkreditacije(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Akreditacije.Count() / (float)brojRezultata);

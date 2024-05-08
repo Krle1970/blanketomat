@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
 using Blanketomat.API.Filters;
@@ -22,7 +19,7 @@ namespace Blanketomat.API.Controllers;
         _context = context;
     }
     [HttpGet("{page}/{count}")]
-    public async Task<ActionResult> VratiIspitniRok(int page, int count)
+    public async Task<ActionResult> VratiIspitneRokove(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.IspitniRokovi.Count() / (float)brojRezultata);

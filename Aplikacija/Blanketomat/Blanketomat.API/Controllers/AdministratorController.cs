@@ -1,5 +1,3 @@
-
-
 using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
 using Blanketomat.API.Filters;
@@ -21,7 +19,7 @@ namespace Blanketomat.API.Controllers;
     }
 
     [HttpGet("{page}/{count}")]
-    public async Task<ActionResult> VratiAdministratora(int page, int count)
+    public async Task<ActionResult> VratiAdministratore(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Administratori.Count() / (float)brojRezultata);
