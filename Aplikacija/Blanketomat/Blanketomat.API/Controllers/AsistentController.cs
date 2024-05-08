@@ -20,7 +20,7 @@ public class AsistentController : ControllerBase
 
    
     [HttpGet("{page}/{count}")]
-    public async Task<ActionResult> VratiAsistenta(int page, int count)
+    public async Task<ActionResult> VratiAsistente(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Asistenti.Count() / (float)brojRezultata);
@@ -48,27 +48,29 @@ public class AsistentController : ControllerBase
     }
 
     [HttpPost]
-    //filter
+    [TypeFilter(typeof(ValidateDodajAsistentaFilter))]
     public async Task<ActionResult> DodajAsistenta([FromBody]Asistent asistent)
     {
         await _context.Asistenti.AddAsync(asistent);
         await _context.SaveChangesAsync();
 
-       return Ok(new { message = "Asistent je uspešno dodat.", asistent });
+        return CreatedAtAction(nameof(VratiAsistenta),
+            new { id = asistent.Id },
+            asistent
+            );
     }
 
     [HttpPut]
-    //filter<---
+    [TypeFilter(typeof(ValidateAzurirajAsistentaFilter))]
     public async Task<ActionResult> AzurirajAsistenta([FromBody]Asistent asistent)
     {
-        var asistentZaPromenu= await _context.Asistenti.FindAsync(asistent.Id);
-        //var ProfesorZaAzuriranje = HttpContext.Items["profesor"] as Profesor;
-        asistentZaPromenu!.Ime=asistent.Ime;
-        asistentZaPromenu.Prezime=asistent.Prezime;
-        asistentZaPromenu.Email=asistent.Email;
-        asistentZaPromenu.Password=asistent.Password;
-        asistentZaPromenu.Smer=asistent.Smer;
-        asistentZaPromenu.Predmeti=asistent.Predmeti;
+        var asistentZaAzuriranje = HttpContext.Items["asistent"] as Asistent;
+        asistentZaAzuriranje!.Ime = asistent.Ime;
+        asistentZaAzuriranje.Prezime = asistent.Prezime;
+        asistentZaAzuriranje.Email = asistent.Email;
+        asistentZaAzuriranje.Password = asistent.Password;
+        asistentZaAzuriranje.Smer = asistent.Smer;
+        asistentZaAzuriranje.Predmeti = asistent.Predmeti;
 
         await _context.SaveChangesAsync();
     

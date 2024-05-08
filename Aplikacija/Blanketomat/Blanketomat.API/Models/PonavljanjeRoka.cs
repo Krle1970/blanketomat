@@ -8,4 +8,5 @@ public class PonavljanjeRoka
     public int Id { get; set; }
     public required string Datum { get; set; }
     public IspitniRok? IspitniRok { get; set; }
+    public List<Blanket>? Blanketi { get; set; }
 }

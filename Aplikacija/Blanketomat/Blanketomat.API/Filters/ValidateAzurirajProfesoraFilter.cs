@@ -5,21 +5,21 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Blanketomat.API.Filters;
 
-public class ValidateAzurirajPredmetFilter : ActionFilterAttribute
+public class ValidateAzurirajProfesoraFilter : ActionFilterAttribute
 {
     private readonly BlanketomatContext _context;
 
-    public ValidateAzurirajPredmetFilter(BlanketomatContext context)
+    public ValidateAzurirajProfesoraFilter(BlanketomatContext context)
     {
         _context = context;
     }
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        var predmet = context.ActionArguments["predmet"] as Predmet;
-        if (predmet == null)
+        var profesor = context.ActionArguments["profesor"] as Profesor;
+        if (profesor == null)
         {
-            context.ModelState.AddModelError("Predmet", "Predmet objekat je null.");
+            context.ModelState.AddModelError("Profesor", "Profesor objekat je null.");
             var problemDetails = new ValidationProblemDetails(context.ModelState)
             {
                 Status = StatusCodes.Status400BadRequest
@@ -28,10 +28,10 @@ public class ValidateAzurirajPredmetFilter : ActionFilterAttribute
         }
         else
         {
-            var studentId = predmet.Id;
-            if (studentId <= 0)
+            var profesorId = profesor.Id;
+            if (profesorId <= 0)
             {
-                context.ModelState.AddModelError("Predmet", "Nevalidan Id.");
+                context.ModelState.AddModelError("Profesor", "Nevalidan Id.");
                 var problemDetails = new ValidationProblemDetails(context.ModelState)
                 {
                     Status = StatusCodes.Status400BadRequest
@@ -40,9 +40,9 @@ public class ValidateAzurirajPredmetFilter : ActionFilterAttribute
             }
             else
             {
-                if (_context.Predmeti == null)
+                if (_context.Profesori == null)
                 {
-                    context.ModelState.AddModelError("Predmet", "Tabela Predmeti ne postoji.");
+                    context.ModelState.AddModelError("Profesor", "Tabela Profesori ne postoji.");
                     var problemDetails = new ValidationProblemDetails(context.ModelState)
                     {
                         Status = StatusCodes.Status404NotFound
@@ -51,10 +51,10 @@ public class ValidateAzurirajPredmetFilter : ActionFilterAttribute
                 }
                 else
                 {
-                    var predmetZaAzuriranje = _context.Predmeti.Find(studentId);
-                    if (predmetZaAzuriranje == null)
+                    var profesorZaAzuriranje = _context.Profesori.Find(profesorId);
+                    if (profesorZaAzuriranje == null)
                     {
-                        context.ModelState.AddModelError("Predmet", "Predmet ne postoji u bazi podataka.");
+                        context.ModelState.AddModelError("Profesor", "Profesor ne postoji u bazi podataka.");
                         var problemDetails = new ValidationProblemDetails(context.ModelState)
                         {
                             Status = StatusCodes.Status404NotFound
@@ -63,7 +63,7 @@ public class ValidateAzurirajPredmetFilter : ActionFilterAttribute
                     }
                     else
                     {
-                        context.HttpContext.Items["predmet"] = predmetZaAzuriranje;
+                        context.HttpContext.Items["profesor"] = profesorZaAzuriranje;
                     }
                 }
             }
