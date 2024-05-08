@@ -6,6 +6,6 @@ public class PonavljanjeRoka
 {
     [Key]
     public int Id { get; set; }
-    public required DateOnly Datum { get; set; }
+    public required string Datum { get; set; }
     public IspitniRok? IspitniRok { get; set; }
 }

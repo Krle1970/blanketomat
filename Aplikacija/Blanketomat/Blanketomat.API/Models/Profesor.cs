@@ -21,4 +21,5 @@ public class Profesor
     public required string Password { get; set; }
     public Smer? Smer { get; set; }
     public List<Predmet>? Predmeti { get; set; }
+    public List<Komentar>? LajkovaniKomentari { get; set; }
 }

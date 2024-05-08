@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
 using Blanketomat.API.Filters;
@@ -22,10 +18,7 @@ namespace Blanketomat.API.Controllers;
         _context = context;
       }
 
-
-#pragma warning disable ASP0023 // Route conflict detected between controller actions
     [HttpGet("{page}/{count}")]
-#pragma warning restore ASP0023 // Route conflict detected between controller actions
     public async Task<ActionResult> VratiBlanket(int page,int count)
       {
         
@@ -52,19 +45,6 @@ namespace Blanketomat.API.Controllers;
       public async Task<ActionResult> VratiBlanket(int id)
       {
         return Ok(await _context.Blanketi.FindAsync(id));
-      }
-
-#pragma warning disable ASP0023 
-    [HttpGet("{tip}/{kategorija}")]//mislio sam mozda da se doda neki tip godina u modelu da se mozda na taj nacin pretrazuju blanketi, ili cemo to preko PonavljanjeRoka
-#pragma warning restore ASP0023 // Route conflict detected between controller actions
-    public async Task<ActionResult> VratiBlanket(string tip, string kategorija)
-      {
-         var blanket=await _context.Blanketi.FirstOrDefaultAsync(x=> x.Tip==tip && x.Kategorija==kategorija);
-         if(blanket==null)
-         {
-           return NotFound();
-         }
-         return Ok(blanket);
       }
 
       [HttpDelete("{id}")]

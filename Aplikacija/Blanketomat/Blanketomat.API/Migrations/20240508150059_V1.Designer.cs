@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blanketomat.API.Migrations
 {
     [DbContext(typeof(BlanketomatContext))]
-    [Migration("20240504125626_V1")]
+    [Migration("20240508150059_V1")]
     partial class V1
     {
         /// <inheritdoc />
@@ -24,6 +24,21 @@ namespace Blanketomat.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("AsistentKomentar", b =>
+                {
+                    b.Property<int>("AsistentiLikedId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LajkovaniKomentariId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AsistentiLikedId", "LajkovaniKomentariId");
+
+                    b.HasIndex("LajkovaniKomentariId");
+
+                    b.ToTable("AsistentKomentar");
+                });
 
             modelBuilder.Entity("AsistentPredmet", b =>
                 {
@@ -210,6 +225,31 @@ namespace Blanketomat.API.Migrations
                     b.ToTable("IspitniRokovi");
                 });
 
+            modelBuilder.Entity("Blanketomat.API.Models.Komentar", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Lajkovi")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StudentPostavioId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tekst")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentPostavioId");
+
+                    b.ToTable("Komentari");
+                });
+
             modelBuilder.Entity("Blanketomat.API.Models.Oblast", b =>
                 {
                     b.Property<int>("Id")
@@ -281,8 +321,9 @@ namespace Blanketomat.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateOnly>("Datum")
-                        .HasColumnType("date");
+                    b.Property<string>("Datum")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("IspitniRokId")
                         .HasColumnType("int");
@@ -373,12 +414,17 @@ namespace Blanketomat.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("KomentarId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PutanjaDoSlike")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("KomentarId");
 
                     b.ToTable("Slike");
                 });
@@ -476,6 +522,21 @@ namespace Blanketomat.API.Migrations
                     b.ToTable("Zadaci");
                 });
 
+            modelBuilder.Entity("KomentarProfesor", b =>
+                {
+                    b.Property<int>("LajkovaniKomentariId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProfesoriLikedId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LajkovaniKomentariId", "ProfesoriLikedId");
+
+                    b.HasIndex("ProfesoriLikedId");
+
+                    b.ToTable("KomentarProfesor");
+                });
+
             modelBuilder.Entity("PredmetProfesor", b =>
                 {
                     b.Property<int>("PredmetiId")
@@ -504,6 +565,21 @@ namespace Blanketomat.API.Migrations
                     b.HasIndex("StudentiId");
 
                     b.ToTable("PredmetStudent");
+                });
+
+            modelBuilder.Entity("AsistentKomentar", b =>
+                {
+                    b.HasOne("Blanketomat.API.Models.Asistent", null)
+                        .WithMany()
+                        .HasForeignKey("AsistentiLikedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Blanketomat.API.Models.Komentar", null)
+                        .WithMany()
+                        .HasForeignKey("LajkovaniKomentariId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AsistentPredmet", b =>
@@ -577,6 +653,15 @@ namespace Blanketomat.API.Migrations
                     b.Navigation("IspitniRok");
                 });
 
+            modelBuilder.Entity("Blanketomat.API.Models.Komentar", b =>
+                {
+                    b.HasOne("Blanketomat.API.Models.Student", "StudentPostavio")
+                        .WithMany("PostavljeniKomentari")
+                        .HasForeignKey("StudentPostavioId");
+
+                    b.Navigation("StudentPostavio");
+                });
+
             modelBuilder.Entity("Blanketomat.API.Models.Pitanje", b =>
                 {
                     b.HasOne("Blanketomat.API.Models.Oblast", "Oblast")
@@ -625,6 +710,15 @@ namespace Blanketomat.API.Migrations
                     b.Navigation("Smer");
                 });
 
+            modelBuilder.Entity("Blanketomat.API.Models.Slika", b =>
+                {
+                    b.HasOne("Blanketomat.API.Models.Komentar", "Komentar")
+                        .WithMany("Slike")
+                        .HasForeignKey("KomentarId");
+
+                    b.Navigation("Komentar");
+                });
+
             modelBuilder.Entity("Blanketomat.API.Models.Student", b =>
                 {
                     b.HasOne("Blanketomat.API.Models.Akreditacija", "Akreditacija")
@@ -659,6 +753,21 @@ namespace Blanketomat.API.Migrations
                     b.Navigation("Podoblast");
 
                     b.Navigation("Slika");
+                });
+
+            modelBuilder.Entity("KomentarProfesor", b =>
+                {
+                    b.HasOne("Blanketomat.API.Models.Komentar", null)
+                        .WithMany()
+                        .HasForeignKey("LajkovaniKomentariId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Blanketomat.API.Models.Profesor", null)
+                        .WithMany()
+                        .HasForeignKey("ProfesoriLikedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PredmetProfesor", b =>
@@ -703,6 +812,11 @@ namespace Blanketomat.API.Migrations
                     b.Navigation("Ponavljanja");
                 });
 
+            modelBuilder.Entity("Blanketomat.API.Models.Komentar", b =>
+                {
+                    b.Navigation("Slike");
+                });
+
             modelBuilder.Entity("Blanketomat.API.Models.Oblast", b =>
                 {
                     b.Navigation("Blanketi");
@@ -735,6 +849,11 @@ namespace Blanketomat.API.Migrations
                     b.Navigation("Profesori");
 
                     b.Navigation("Studenti");
+                });
+
+            modelBuilder.Entity("Blanketomat.API.Models.Student", b =>
+                {
+                    b.Navigation("PostavljeniKomentari");
                 });
 #pragma warning restore 612, 618
         }

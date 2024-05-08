@@ -11,4 +11,5 @@ public class Slika
     public required string PutanjaDoSlike { get; set; }
     public List<Pitanje>? Pitanja { get; set; }
     public List<Zadatak>? Zadaci { get; set; }
+    public Komentar? Komentar { get; set; }
 }

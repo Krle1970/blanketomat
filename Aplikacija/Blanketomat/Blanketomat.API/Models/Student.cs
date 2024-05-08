@@ -22,4 +22,5 @@ public class Student
     public Akreditacija? Akreditacija { get; set; }
     public Smer? Smer { get; set; }
     public List<Predmet>? Predmeti { get; set; }
+    public List<Komentar>? PostavljeniKomentari { get; set; }
 }
