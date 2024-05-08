@@ -4,7 +4,6 @@ using Blanketomat.API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,11 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blanketomat.API.Migrations
 {
     [DbContext(typeof(BlanketomatContext))]
-    [Migration("20240508153929_V1")]
-    partial class V1
+    partial class BlanketomatContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -639,7 +636,7 @@ namespace Blanketomat.API.Migrations
             modelBuilder.Entity("Blanketomat.API.Models.Blanket", b =>
                 {
                     b.HasOne("Blanketomat.API.Models.PonavljanjeRoka", "IspitniRok")
-                        .WithMany()
+                        .WithMany("Blanketi")
                         .HasForeignKey("IspitniRokId");
 
                     b.HasOne("Blanketomat.API.Models.Oblast", null)
@@ -831,6 +828,11 @@ namespace Blanketomat.API.Migrations
                     b.Navigation("Blanketi");
 
                     b.Navigation("Zadaci");
+                });
+
+            modelBuilder.Entity("Blanketomat.API.Models.PonavljanjeRoka", b =>
+                {
+                    b.Navigation("Blanketi");
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Slika", b =>
