@@ -11,3 +11,4 @@ public class IspitniRok
     public required string Naziv { get; set; }
     public List<PonavljanjeRoka>? Ponavljanja { get; set; }
 }
+   
