@@ -41,7 +41,7 @@ public class PitanjeController : ControllerBase
 
     [HttpGet("{id}")]
     [TypeFilter(typeof(ValidateIdFilter<Pitanje>))]
-    public async Task<ActionResult> VratiPitanja(int id)
+    public async Task<ActionResult> VratiPitanje(int id)
     {
         return Ok(await _context.Oblasti.FindAsync(id));
     }

@@ -81,8 +81,8 @@ public class AsistentController : ControllerBase
     [TypeFilter(typeof(ValidateIdFilter<Asistent>))]
     public async Task<ActionResult> ObrisiAsistenta(int id)
     {
-        var AsistentZaBrisanje = await _context.Predmeti.FindAsync(id);
-        _context.Predmeti.Remove(AsistentZaBrisanje!);
+        var AsistentZaBrisanje = await _context.Asistenti.FindAsync(id);
+        _context.Asistenti.Remove(AsistentZaBrisanje!);
         await _context.SaveChangesAsync();
 
         return Ok(AsistentZaBrisanje);
