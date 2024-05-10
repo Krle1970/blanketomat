@@ -1,12 +1,13 @@
 using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
-using Blanketomat.API.Filters;
+using Blanketomat.API.Filters.GenericFilters;
+using Blanketomat.API.Filters.ProfesorFilters;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Blanketomat.API.Controllers;
-  
+
 [Route("api/[controller]")]
 [ApiController]
 public class ProfesorController : ControllerBase

@@ -1,6 +1,7 @@
 using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
-using Blanketomat.API.Filters;
+using Blanketomat.API.Filters.GenericFilters;
+using Blanketomat.API.Filters.IspitniRokFIlters;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

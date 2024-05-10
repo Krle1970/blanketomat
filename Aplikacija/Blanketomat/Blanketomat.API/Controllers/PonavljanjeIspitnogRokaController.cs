@@ -1,6 +1,7 @@
 ﻿using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
-using Blanketomat.API.Filters;
+using Blanketomat.API.Filters.GenericFilters;
+using Blanketomat.API.Filters.PonavljanjeIspitnogRokaFilters;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
