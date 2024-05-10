@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blanketomat.API.Migrations
 {
     [DbContext(typeof(BlanketomatContext))]
-    [Migration("20240510140149_V1")]
+    [Migration("20240510190358_V1")]
     partial class V1
     {
         /// <inheritdoc />
@@ -284,7 +284,6 @@ namespace Blanketomat.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Slika")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tekst")
@@ -486,7 +485,6 @@ namespace Blanketomat.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Slika")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tekst")

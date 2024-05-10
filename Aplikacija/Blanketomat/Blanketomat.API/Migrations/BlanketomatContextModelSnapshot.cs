@@ -281,7 +281,6 @@ namespace Blanketomat.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Slika")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tekst")
@@ -483,7 +482,6 @@ namespace Blanketomat.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Slika")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tekst")

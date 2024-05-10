@@ -116,7 +116,7 @@ namespace Blanketomat.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Tekst = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Slika = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Slika = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OblastId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -136,7 +136,7 @@ namespace Blanketomat.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Tekst = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Slika = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Slika = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OblastId = table.Column<int>(type: "int", nullable: true),
                     PodoblastId = table.Column<int>(type: "int", nullable: true)
                 },
