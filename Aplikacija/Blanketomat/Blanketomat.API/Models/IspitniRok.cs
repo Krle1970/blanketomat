@@ -9,6 +9,5 @@ public class IspitniRok
 
     [MaxLength(40)]
     public required string Naziv { get; set; }
-    public List<PonavljanjeRoka>? Ponavljanja { get; set; }
+    public List<PonavljanjeIspitnogRoka>? Ponavljanja { get; set; }
 }
-   

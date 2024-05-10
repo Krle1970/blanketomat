@@ -30,7 +30,7 @@ public class ValidateDodajAsistentaFilter : ActionFilterAttribute
         {
             if (_context.Asistenti == null)
             {
-                context.ModelState.AddModelError("Asistent", "Tabela Asistent ne postoji.");
+                context.ModelState.AddModelError("Asistent", "Tabela Asistenti ne postoji.");
                 var problemDetails = new ValidationProblemDetails(context.ModelState)
                 {
                     Status = StatusCodes.Status404NotFound

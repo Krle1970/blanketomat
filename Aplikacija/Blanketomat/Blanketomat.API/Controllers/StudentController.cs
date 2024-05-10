@@ -31,7 +31,7 @@ public class StudentController : ControllerBase
 
         var response = new PaginationResponseDTO<Student>
         {
-            Response = studenti,
+            Podaci = studenti,
             BrojStranica = (int)brojStranica,
             TrenutnaStranica = page
         };
@@ -50,12 +50,13 @@ public class StudentController : ControllerBase
     [TypeFilter(typeof(ValidateDodajStudentaFilter))]
     public async Task<ActionResult> DodajStudenta([FromBody]Student student)
     {
-        await _context.Studenti.AddAsync(student);
+        _context.Studenti.Add(student);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(VratiStudenta),
             new { id = student.Id },
-            student);
+            student
+            );
     }
 
     [HttpPut]
@@ -72,7 +73,7 @@ public class StudentController : ControllerBase
         studentZaAzuriranje.Predmeti = student.Predmeti;
 
         await _context.SaveChangesAsync();
-        return NoContent();
+        return Ok(studentZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
@@ -83,6 +84,6 @@ public class StudentController : ControllerBase
         _context.Studenti.Remove(studentZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok(studentZaBrisanje);
+        return NoContent();
     }
 }

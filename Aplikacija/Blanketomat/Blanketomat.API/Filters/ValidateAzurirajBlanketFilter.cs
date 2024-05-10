@@ -51,7 +51,7 @@ public class ValidateAzurirajBlanketFilter : ActionFilterAttribute
                 }
                 else
                 {
-                    var blanketZaAzuriranje = _context.Predmeti.Find(blanketId);
+                    var blanketZaAzuriranje = _context.Blanketi.Find(blanketId);
                     if (blanketZaAzuriranje == null)
                     {
                         context.ModelState.AddModelError("Blanket", "Blanket ne postoji u bazi podataka.");

@@ -31,7 +31,7 @@ public class PitanjeController : ControllerBase
 
         var response = new PaginationResponseDTO<Pitanje>
         {
-            Response = pitanja,
+            Podaci = pitanja,
             BrojStranica = (int)brojStranica,
             TrenutnaStranica = page
         };
@@ -47,28 +47,31 @@ public class PitanjeController : ControllerBase
     }
 
     [HttpPost]
+    [TypeFilter(typeof(ValidateDodajPitanjeFilter))]
     public async Task<ActionResult> DodajPitanje([FromBody]Pitanje pitanje)
     {
-        await _context.Pitanja.AddAsync(pitanje);
+        _context.Pitanja.Add(pitanje);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(VratiPitanja),
+        return CreatedAtAction(nameof(VratiPitanje),
             new { id = pitanje.Id },
-            pitanje);
+            pitanje
+            );
     }
 
     [HttpPut]
+    [TypeFilter(typeof(ValidateAzurirajPitanjeFilter))]
     public async Task<ActionResult> AzurirajPitanje([FromBody]Pitanje pitanje)
     {
         var pitanjeZaAzuriranje = HttpContext.Items["pitanje"] as Pitanje;
 
-        pitanjeZaAzuriranje!.Tekst=pitanje.Tekst;
-        pitanjeZaAzuriranje.Slika=pitanje.Slika;
-        pitanjeZaAzuriranje.Oblast=pitanje.Oblast;
-        pitanjeZaAzuriranje.Blanketi=pitanje.Blanketi;
+        pitanjeZaAzuriranje!.Tekst = pitanje.Tekst;
+        pitanjeZaAzuriranje.Slika = pitanje.Slika;
+        pitanjeZaAzuriranje.Oblast = pitanje.Oblast;
+        pitanjeZaAzuriranje.Blanketi = pitanje.Blanketi;
         
         await _context.SaveChangesAsync();
-        return NoContent();
+        return Ok(pitanjeZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
@@ -79,6 +82,6 @@ public class PitanjeController : ControllerBase
         _context.Pitanja.Remove(pitanjaZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok(pitanjaZaBrisanje);
+        return NoContent();
     }
 }

@@ -32,7 +32,7 @@ public class AsistentController : ControllerBase
 
         var response = new PaginationResponseDTO<Asistent>
         {
-            Response = asistenti,
+            Podaci = asistenti,
             BrojStranica = (int)brojStranica,
             TrenutnaStranica = page
         };
@@ -51,7 +51,7 @@ public class AsistentController : ControllerBase
     [TypeFilter(typeof(ValidateDodajAsistentaFilter))]
     public async Task<ActionResult> DodajAsistenta([FromBody]Asistent asistent)
     {
-        await _context.Asistenti.AddAsync(asistent);
+        _context.Asistenti.Add(asistent);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(VratiAsistenta),
@@ -74,18 +74,17 @@ public class AsistentController : ControllerBase
 
         await _context.SaveChangesAsync();
     
-        return NoContent();
+        return Ok(asistentZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
     [TypeFilter(typeof(ValidateIdFilter<Asistent>))]
     public async Task<ActionResult> ObrisiAsistenta(int id)
     {
-        var AsistentZaBrisanje = await _context.Asistenti.FindAsync(id);
-        _context.Asistenti.Remove(AsistentZaBrisanje!);
+        var asistentZaBrisanje = await _context.Asistenti.FindAsync(id);
+        _context.Asistenti.Remove(asistentZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok(AsistentZaBrisanje);
+        return NoContent();
     }
-
 }

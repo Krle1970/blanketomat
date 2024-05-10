@@ -31,7 +31,7 @@ public class PredmetController : ControllerBase
 
         var response = new PaginationResponseDTO<Predmet>
         {
-            Response = predmeti,
+            Podaci = predmeti,
             BrojStranica = (int)brojStranica,
             TrenutnaStranica = page
         };
@@ -50,12 +50,13 @@ public class PredmetController : ControllerBase
     [TypeFilter(typeof(ValidateDodajPredmetFilter))]
     public async Task<ActionResult> DodajPredmet([FromBody]Predmet predmet)
     {
-        await _context.Predmeti.AddAsync(predmet);
+        _context.Predmeti.Add(predmet);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(VratiPredmet), 
             new { id = predmet.Id }, 
-            predmet);
+            predmet
+            );
     }
 
     [HttpPut]
@@ -72,7 +73,7 @@ public class PredmetController : ControllerBase
         predmetZaAzuriranje.Studenti = predmet.Studenti;
 
         await _context.SaveChangesAsync();
-        return NoContent();
+        return Ok(predmetZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
@@ -83,6 +84,6 @@ public class PredmetController : ControllerBase
         _context.Predmeti.Remove(predmetZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok(predmetZaBrisanje);
+        return NoContent();
     }
 }

@@ -1,4 +1,3 @@
-
 using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
 using Blanketomat.API.Filters;
@@ -10,7 +9,7 @@ namespace Blanketomat.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
- public class IspitniRokController : ControllerBase
+public class IspitniRokController : ControllerBase
 {
     private readonly BlanketomatContext _context;
 
@@ -18,20 +17,27 @@ namespace Blanketomat.API.Controllers;
     {
         _context = context;
     }
+
+    [HttpGet]
+    public async Task<ActionResult> VratiSveIspitneRokove()
+    {
+        return Ok(await _context.IspitniRokovi.ToListAsync());
+    }
+
     [HttpGet("{page}/{count}")]
     public async Task<ActionResult> VratiIspitneRokove(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.IspitniRokovi.Count() / (float)brojRezultata);
 
-        var iRok = await _context.IspitniRokovi
+        var ispitniRok = await _context.IspitniRokovi
             .Skip((page - 1) * brojRezultata)
             .Take(brojRezultata)
             .ToListAsync();
 
         var response = new PaginationResponseDTO<IspitniRok>
         {
-            Response = iRok,
+            Podaci = ispitniRok,
             BrojStranica = (int)brojStranica,
             TrenutnaStranica = page
         };
@@ -47,26 +53,28 @@ namespace Blanketomat.API.Controllers;
     }
 
     [HttpPost]
-    public async Task<ActionResult> DodajIspitniRok([FromBody]IspitniRok irok)
+    [TypeFilter(typeof(ValidateDodajIspitniRokFilter))]
+    public async Task<ActionResult> DodajIspitniRok([FromBody]IspitniRok ispitniRok)
     {
-        await _context.IspitniRokovi.AddAsync(irok);
+        _context.IspitniRokovi.Add(ispitniRok);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(VratiIspitniRok), 
-            new { id = irok.Id }, 
-            irok);
+            new { id = ispitniRok.Id }, 
+            ispitniRok
+            );
     }
 
     [HttpPut]
-    
-    public async Task<ActionResult> AzurirajIspitniRok([FromBody]IspitniRok irok)
+    [TypeFilter(typeof(ValidateAzurirajIspitniRokFilter))]
+    public async Task<ActionResult> AzurirajIspitniRok([FromBody]IspitniRok ispitniRok)
     {
-        var rokZaAzuriranje = HttpContext.Items["irok"] as IspitniRok;
-        rokZaAzuriranje!.Naziv=irok.Naziv;
-        rokZaAzuriranje.Ponavljanja=irok.Ponavljanja;
+        var rokZaAzuriranje = HttpContext.Items["ispitniRok"] as IspitniRok;
+        rokZaAzuriranje!.Naziv = ispitniRok.Naziv;
+        rokZaAzuriranje.Ponavljanja = ispitniRok.Ponavljanja;
        
         await _context.SaveChangesAsync();
-        return NoContent();
+        return Ok(rokZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
@@ -77,8 +85,6 @@ namespace Blanketomat.API.Controllers;
         _context.IspitniRokovi.Remove(IspitniRokZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok(IspitniRokZaBrisanje);
+        return NoContent();
     }
-
-
 }

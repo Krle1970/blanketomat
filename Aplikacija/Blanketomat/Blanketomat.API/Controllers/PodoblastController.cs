@@ -31,7 +31,7 @@ public class PodoblastController : ControllerBase
 
         var response = new PaginationResponseDTO<Podoblast>
         {
-            Response = poblast,
+            Podaci = poblast,
             BrojStranica = (int)brojStranica,
             TrenutnaStranica = page
         };
@@ -47,27 +47,30 @@ public class PodoblastController : ControllerBase
     }
 
     [HttpPost]
+    [TypeFilter(typeof(ValidateDodajPodoblastFilter))]
     public async Task<ActionResult> DodajPodoblast([FromBody]Podoblast podoblast)
     {
-        await _context.Podoblasti.AddAsync(podoblast);
+        _context.Podoblasti.Add(podoblast);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(Podoblast),
             new { id = podoblast.Id },
-            podoblast);
+            podoblast
+            );
     }
 
     [HttpPut]
+    [TypeFilter(typeof(ValidateAzurirajPodoblastFilter))]
     public async Task<ActionResult> AzurirajPodoblast([FromBody]Podoblast podoblast)
     {
         var podoblastZaAzuriranje = HttpContext.Items["podoblast"] as Podoblast;
 
-        podoblastZaAzuriranje!.Naziv=podoblast.Naziv;
-        podoblastZaAzuriranje.Zadaci=podoblast.Zadaci;
-        podoblastZaAzuriranje.Blanketi=podoblast.Blanketi;
+        podoblastZaAzuriranje!.Naziv = podoblast.Naziv;
+        podoblastZaAzuriranje.Zadaci = podoblast.Zadaci;
+        podoblastZaAzuriranje.Blanketi = podoblast.Blanketi;
         
         await _context.SaveChangesAsync();
-        return NoContent();
+        return Ok(podoblastZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
@@ -78,6 +81,6 @@ public class PodoblastController : ControllerBase
         _context.Podoblasti.Remove(podoblastZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok(podoblastZaBrisanje);
+        return NoContent();
     }
 }

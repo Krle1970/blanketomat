@@ -31,7 +31,7 @@ public class ProfesorController : ControllerBase
 
         var response = new PaginationResponseDTO<Profesor>
         {
-            Response = profesori,
+            Podaci = profesori,
             BrojStranica = (int)brojStranica,
             TrenutnaStranica = page
         };
@@ -50,7 +50,7 @@ public class ProfesorController : ControllerBase
     [TypeFilter(typeof(ValidateDodajProfesoraFilter))]
     public async Task<ActionResult> DodajProfesora([FromBody] Profesor profesor)
     {
-        await _context.Profesori.AddAsync(profesor);
+        _context.Profesori.Add(profesor);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(VratiProfesora),
@@ -73,7 +73,7 @@ public class ProfesorController : ControllerBase
 
         await _context.SaveChangesAsync();
     
-        return NoContent();
+        return Ok(profesorZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
@@ -84,6 +84,6 @@ public class ProfesorController : ControllerBase
         _context.Studenti.Remove(profesorZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok(profesorZaBrisanje);
+        return NoContent();
     }
 }

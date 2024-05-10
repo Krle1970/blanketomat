@@ -5,21 +5,21 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Blanketomat.API.Filters;
 
-public class ValidateDodajPredmetFilter : ActionFilterAttribute
+public class ValidateDodajPonavljanjeIspitnogRokaFilter : ActionFilterAttribute
 {
     private readonly BlanketomatContext _context;
 
-    public ValidateDodajPredmetFilter(BlanketomatContext context)
+    public ValidateDodajPonavljanjeIspitnogRokaFilter(BlanketomatContext context)
     {
         _context = context;
     }
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        var predmet = context.ActionArguments["predmet"] as Predmet;
-        if (predmet == null)
+        var ponavljanjeIspitnogRoka = context.ActionArguments["ponavljanjeIspitnogRoka"] as PonavljanjeIspitnogRoka;
+        if (ponavljanjeIspitnogRoka == null)
         {
-            context.ModelState.AddModelError("Predmet", "Predmet objekat je null.");
+            context.ModelState.AddModelError("PonavljanjeIspitnogRoka", "PonavljanjeIspitnogRoka objekat je null.");
             var problemDetails = new ValidationProblemDetails(context.ModelState)
             {
                 Status = StatusCodes.Status400BadRequest
@@ -28,9 +28,9 @@ public class ValidateDodajPredmetFilter : ActionFilterAttribute
         }
         else
         {
-            if (_context.Predmeti == null)
+            if (_context.PonavljanjaIspitnihRokova == null)
             {
-                context.ModelState.AddModelError("Predmet", "Tabela Predmeti ne postoji.");
+                context.ModelState.AddModelError("PonavljanjeIspitnogRoka", "Tabela PonavljanjaIspitnihRokova ne postoji.");
                 var problemDetails = new ValidationProblemDetails(context.ModelState)
                 {
                     Status = StatusCodes.Status404NotFound
@@ -39,18 +39,15 @@ public class ValidateDodajPredmetFilter : ActionFilterAttribute
             }
             else
             {
-                var postojeciPredmet = _context.Predmeti.FirstOrDefault(x =>
-                    predmet.Akreditacija != null && x.Akreditacija != null &&
-                    !string.IsNullOrWhiteSpace(predmet.Akreditacija.Naziv) &&
-                    !string.IsNullOrWhiteSpace(x.Akreditacija.Naziv) &&
-                    !string.IsNullOrWhiteSpace(predmet.Naziv) &&
-                    !string.IsNullOrWhiteSpace(x.Naziv) &&
-                    predmet.Naziv.ToLower() == x.Naziv.ToLower()
+                var postojecePonavljanjeIspitnogRoka = _context.PonavljanjaIspitnihRokova.FirstOrDefault(x =>
+                    !string.IsNullOrWhiteSpace(ponavljanjeIspitnogRoka.Datum) &&
+                    !string.IsNullOrWhiteSpace(x.Datum) &&
+                    ponavljanjeIspitnogRoka.Datum.ToLower() == x.Datum.ToLower()
                     );
 
-                if (postojeciPredmet != null)
+                if (postojecePonavljanjeIspitnogRoka != null)
                 {
-                    context.ModelState.AddModelError("Predmet", "Predmet vec postoji.");
+                    context.ModelState.AddModelError("PonavljanjeIspitnogRoka", "Ponavljanje ispitnog roka vec postoji.");
                     var problemDetails = new ValidationProblemDetails(context.ModelState)
                     {
                         Status = StatusCodes.Status400BadRequest

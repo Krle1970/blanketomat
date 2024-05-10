@@ -32,7 +32,7 @@ public class BlanketController : ControllerBase
 
         var response = new PaginationResponseDTO<Blanket>
         {
-            Response = blanketi,
+            Podaci = blanketi,
             BrojStranica = (int)brojStranica,
             TrenutnaStranica = page
         };
@@ -48,9 +48,10 @@ public class BlanketController : ControllerBase
     }
       
     [HttpPost]
+    [TypeFilter(typeof(ValidateDodajBlanketFilter))]
     public async Task<ActionResult> DodajBlanket([FromBody]Blanket blanket) 
     {
-        await _context.Blanketi.AddAsync(blanket);
+        _context.Blanketi.Add(blanket);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(VratiBlanket),
@@ -71,7 +72,7 @@ public class BlanketController : ControllerBase
         blanketZaAzuriranje.Zadaci = blanket.Zadaci;
 
         await _context.SaveChangesAsync();
-        return NoContent();
+        return Ok(blanketZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
@@ -82,7 +83,6 @@ public class BlanketController : ControllerBase
         _context.Blanketi.Remove(blanketZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok(blanketZaBrisanje);
+        return NoContent();
     }
-
 }

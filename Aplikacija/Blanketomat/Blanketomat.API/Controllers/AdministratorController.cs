@@ -9,7 +9,7 @@ namespace Blanketomat.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
- public class AdministratorController : ControllerBase
+public class AdministratorController : ControllerBase
 {
     private readonly BlanketomatContext _context;
 
@@ -18,20 +18,26 @@ namespace Blanketomat.API.Controllers;
         _context = context;
     }
 
+    [HttpGet]
+    public async Task<ActionResult> VratiSveAdministratore()
+    {
+        return Ok(await _context.Administratori.ToListAsync());
+    }
+
     [HttpGet("{page}/{count}")]
     public async Task<ActionResult> VratiAdministratore(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Administratori.Count() / (float)brojRezultata);
 
-        var admin = await _context.Administratori
+        var administratori = await _context.Administratori
             .Skip((page - 1) * brojRezultata)
             .Take(brojRezultata)
             .ToListAsync();
 
         var response = new PaginationResponseDTO<Administrator>
         {
-            Response = admin,
+            Podaci = administratori,
             BrojStranica = (int)brojStranica,
             TrenutnaStranica = page
         };
@@ -47,37 +53,39 @@ namespace Blanketomat.API.Controllers;
     }
 
     [HttpPost]
-    public async Task<ActionResult> DodajAdministratora([FromBody]Administrator admin)
+    [TypeFilter(typeof(ValidateDodajAdministratoraFilter))]
+    public async Task<ActionResult> DodajAdministratora([FromBody]Administrator administrator)
     {
-        await _context.Administratori.AddAsync(admin);
+        _context.Administratori.Add(administrator);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(VratiAdministratora), 
-            new { id = admin.Id }, 
-            admin);
+            new { id = administrator.Id }, 
+            administrator
+            );
     }
 
     [HttpPut]
-    public async Task<ActionResult> AzurirajAdministratora([FromBody]Administrator admin)
+    [TypeFilter(typeof(ValidateAzurirajAdministratoraFilter))]
+    public async Task<ActionResult> AzurirajAdministratora([FromBody]Administrator administrator)
     {
-        var adminZaAzuriranje = HttpContext.Items["admin"] as Administrator;
-        adminZaAzuriranje!.Ime=admin.Ime;
-        adminZaAzuriranje.Email=admin.Email;
-        adminZaAzuriranje.Password=admin.Password;
+        var administratorZaAzuriranje = HttpContext.Items["administrator"] as Administrator;
+        administratorZaAzuriranje!.Ime = administrator.Ime;
+        administratorZaAzuriranje.Email = administrator.Email;
+        administratorZaAzuriranje.Password = administrator.Password;
 
         await _context.SaveChangesAsync();
-        return NoContent();
+        return Ok(administratorZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
     [TypeFilter(typeof(ValidateIdFilter<Administrator>))]
     public async Task<ActionResult> ObrisiAdministratora(int id)
     {
-        var adminZaBrisanje = await _context.Administratori.FindAsync(id);
-        _context.Administratori.Remove(adminZaBrisanje!);
+        var administratorZaBrisanje = await _context.Administratori.FindAsync(id);
+        _context.Administratori.Remove(administratorZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok(adminZaBrisanje);
+        return NoContent();
     }
-
 }

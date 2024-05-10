@@ -31,7 +31,7 @@ public class OblastController : ControllerBase
 
         var response = new PaginationResponseDTO<Oblast>
         {
-            Response = oblasti,
+            Podaci = oblasti,
             BrojStranica = (int)brojStranica,
             TrenutnaStranica = page
         };
@@ -41,23 +41,26 @@ public class OblastController : ControllerBase
 
     [HttpGet("{id}")]
     [TypeFilter(typeof(ValidateIdFilter<Oblast>))]
-    public async Task<ActionResult> VratiOblasti(int id)
+    public async Task<ActionResult> VratiOblast(int id)
     {
         return Ok(await _context.Oblasti.FindAsync(id));
     }
 
     [HttpPost]
+    [TypeFilter(typeof(ValidateDodajOblastFilter))]
     public async Task<ActionResult> DodajOblast([FromBody]Oblast oblast)
     {
-        await _context.Oblasti.AddAsync(oblast);
+        _context.Oblasti.Add(oblast);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(VratiOblasti),
+        return CreatedAtAction(nameof(VratiOblast),
             new { id = oblast.Id },
-            oblast);
+            oblast
+            );
     }
 
     [HttpPut]
+    [TypeFilter(typeof(ValidateAzurirajOblastFilter))]
     public async Task<ActionResult> AzurirajOblast([FromBody]Oblast oblast)
     {
         var oblastZaAzuriranje = HttpContext.Items["oblast"] as Oblast;
@@ -67,7 +70,7 @@ public class OblastController : ControllerBase
         oblastZaAzuriranje.Blanketi=oblast.Blanketi;
        
         await _context.SaveChangesAsync();
-        return NoContent();
+        return Ok(oblastZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
@@ -78,6 +81,6 @@ public class OblastController : ControllerBase
         _context.Oblasti.Remove(oblastZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok(oblastZaBrisanje);
+        return NoContent();
     }
 }

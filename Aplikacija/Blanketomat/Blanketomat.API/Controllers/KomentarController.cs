@@ -31,7 +31,7 @@ public class KomentarController : ControllerBase
 
         var response = new PaginationResponseDTO<Komentar>
         {
-            Response = komentari,
+            Podaci = komentari,
             BrojStranica = (int)brojStranica,
             TrenutnaStranica = page
         };
@@ -47,31 +47,33 @@ public class KomentarController : ControllerBase
     }
 
     [HttpPost]
-        public async Task<ActionResult> DodajKomentar([FromBody]Komentar komentar)
+    [TypeFilter(typeof(ValidateDodajKomentaFilter))]
+    public async Task<ActionResult> DodajKomentar([FromBody]Komentar komentar)
     {
-        await _context.Komentari.AddAsync(komentar);
+        _context.Komentari.Add(komentar);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(VratiKomentar),
             new { id = komentar.Id },
-            komentar);
+            komentar
+            );
     }
 
     [HttpPut]
-    
+    [TypeFilter(typeof(ValidateAzurirajKomentarFilter))]
     public async Task<ActionResult> AzurirajKomentar([FromBody]Komentar komentar)
     {
         var komentarZaAzuriranje = HttpContext.Items["komentar"] as Komentar;
-        
-        komentarZaAzuriranje!.Tekst=komentar.Tekst;
-        komentarZaAzuriranje.Slike=komentar.Slike;
-        komentarZaAzuriranje.Lajkovi=komentar.Lajkovi;
-        komentarZaAzuriranje.StudentPostavio=komentar.StudentPostavio;
-        komentarZaAzuriranje.ProfesoriLiked=komentar.ProfesoriLiked;
-        komentarZaAzuriranje.AsistentiLiked=komentar.AsistentiLiked;
+
+        komentarZaAzuriranje!.Tekst = komentar.Tekst;
+        komentarZaAzuriranje.Lajkovi = komentar.Lajkovi;
+        komentarZaAzuriranje.Slika = komentar.Slika;
+        komentarZaAzuriranje.StudentPostavio = komentar.StudentPostavio;
+        komentarZaAzuriranje.ProfesoriLiked = komentar.ProfesoriLiked;
+        komentarZaAzuriranje.AsistentiLiked = komentar.AsistentiLiked;
 
         await _context.SaveChangesAsync();
-        return NoContent();
+        return Ok(komentarZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
@@ -82,6 +84,6 @@ public class KomentarController : ControllerBase
         _context.Komentari.Remove(KomentarZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok(KomentarZaBrisanje);
+        return NoContent();
     }
 }

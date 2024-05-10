@@ -5,21 +5,21 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Blanketomat.API.Filters;
 
-public class ValidateDodajPredmetFilter : ActionFilterAttribute
+public class ValidateDodajSmerFilter : ActionFilterAttribute
 {
     private readonly BlanketomatContext _context;
 
-    public ValidateDodajPredmetFilter(BlanketomatContext context)
+    public ValidateDodajSmerFilter(BlanketomatContext context)
     {
         _context = context;
     }
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        var predmet = context.ActionArguments["predmet"] as Predmet;
-        if (predmet == null)
+        var smer = context.ActionArguments["smer"] as Smer;
+        if (smer == null)
         {
-            context.ModelState.AddModelError("Predmet", "Predmet objekat je null.");
+            context.ModelState.AddModelError("Smer", "Smer objekat je null.");
             var problemDetails = new ValidationProblemDetails(context.ModelState)
             {
                 Status = StatusCodes.Status400BadRequest
@@ -28,9 +28,9 @@ public class ValidateDodajPredmetFilter : ActionFilterAttribute
         }
         else
         {
-            if (_context.Predmeti == null)
+            if (_context.Smerovi == null)
             {
-                context.ModelState.AddModelError("Predmet", "Tabela Predmeti ne postoji.");
+                context.ModelState.AddModelError("Smer", "Tabela Smerovi ne postoji.");
                 var problemDetails = new ValidationProblemDetails(context.ModelState)
                 {
                     Status = StatusCodes.Status404NotFound
@@ -39,18 +39,15 @@ public class ValidateDodajPredmetFilter : ActionFilterAttribute
             }
             else
             {
-                var postojeciPredmet = _context.Predmeti.FirstOrDefault(x =>
-                    predmet.Akreditacija != null && x.Akreditacija != null &&
-                    !string.IsNullOrWhiteSpace(predmet.Akreditacija.Naziv) &&
-                    !string.IsNullOrWhiteSpace(x.Akreditacija.Naziv) &&
-                    !string.IsNullOrWhiteSpace(predmet.Naziv) &&
+                var postojeciSmer = _context.Smerovi.FirstOrDefault(x =>
+                    !string.IsNullOrWhiteSpace(smer.Naziv) &&
                     !string.IsNullOrWhiteSpace(x.Naziv) &&
-                    predmet.Naziv.ToLower() == x.Naziv.ToLower()
+                    smer.Naziv.ToLower() == x.Naziv.ToLower()
                     );
 
-                if (postojeciPredmet != null)
+                if (postojeciSmer != null)
                 {
-                    context.ModelState.AddModelError("Predmet", "Predmet vec postoji.");
+                    context.ModelState.AddModelError("Smer", "Smer vec postoji.");
                     var problemDetails = new ValidationProblemDetails(context.ModelState)
                     {
                         Status = StatusCodes.Status400BadRequest

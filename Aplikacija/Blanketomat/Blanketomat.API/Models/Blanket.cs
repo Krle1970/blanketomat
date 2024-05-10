@@ -14,7 +14,7 @@ public class Blanket
     // Kategorija - I kolok, II kolok, Ispit...
     [MaxLength(30)]
     public required string Kategorija { get; set; }
-    public PonavljanjeRoka? IspitniRok { get; set; }
+    public PonavljanjeIspitnogRoka? IspitniRok { get; set; }
     public List<Pitanje>? Pitanja { get; set; }
     public List<Zadatak>? Zadaci { get; set; }
 }
