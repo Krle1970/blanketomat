@@ -1,5 +1,7 @@
 ﻿using Blanketomat.API.Context;
+using Blanketomat.API.DTOs;
 using Blanketomat.API.Filters.AuthenticationFilters;
+using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blanketomat.API.Controllers;
@@ -17,8 +19,9 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost]
     [TypeFilter(typeof(ValidateAuthenticationLoginFilter))]
-    public ActionResult Login(string email, string password, string accountType)
+    public ActionResult Login([FromBody] LoginDTO? user)
     {
-        return NoContent();
+        string fullName = user!.FullName!;
+        return Ok(fullName);
     }
 }

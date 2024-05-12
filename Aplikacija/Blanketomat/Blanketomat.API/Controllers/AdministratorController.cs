@@ -20,12 +20,14 @@ public class AdministratorController : ControllerBase
     }
 
     [HttpGet]
+    [TypeFilter(typeof(ValidateDbSetFilter<Administrator>))]
     public async Task<ActionResult> VratiSveAdministratore()
     {
         return Ok(await _context.Administratori.ToListAsync());
     }
 
     [HttpGet("{page}/{count}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Administrator>))]
     public async Task<ActionResult> VratiAdministratore(int page, int count)
     {
         var brojRezultata = count;
@@ -47,6 +49,7 @@ public class AdministratorController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Administrator>))]
     [TypeFilter(typeof(ValidateIdFilter<Administrator>))]
     public async Task<ActionResult> VratiAdministratora(int id)
     {
@@ -80,6 +83,7 @@ public class AdministratorController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Administrator>))]
     [TypeFilter(typeof(ValidateIdFilter<Administrator>))]
     public async Task<ActionResult> ObrisiAdministratora(int id)
     {

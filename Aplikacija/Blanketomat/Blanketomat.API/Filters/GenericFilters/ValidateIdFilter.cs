@@ -14,8 +14,6 @@ public class ValidateIdFilter<T> : ActionFilterAttribute where T : class
     }
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        //base.OnActionExecuting(context);
-
         var Id = context.ActionArguments["id"] as int?;
         if (Id.HasValue)
         {
