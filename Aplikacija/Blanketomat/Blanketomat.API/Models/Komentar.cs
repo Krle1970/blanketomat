@@ -8,7 +8,7 @@ public class Komentar
     public int Id { get; set; }
     public required string Tekst { get; set; }
     public int Lajkovi { get; set; }
-    public required string Slika { get; set; }
+    public List<Slika>? Slika { get; set; }
     public Student? StudentPostavio { get; set; }
     public List<Profesor>? ProfesoriLiked { get; set; }
     public List<Asistent>? AsistentiLiked { get; set; }

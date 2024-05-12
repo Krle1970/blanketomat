@@ -261,6 +261,7 @@ namespace Blanketomat.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Tip = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Kategorija = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Putanja = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IspitniRokId = table.Column<int>(type: "int", nullable: true),
                     OblastId = table.Column<int>(type: "int", nullable: true),
                     PodoblastId = table.Column<int>(type: "int", nullable: true)
@@ -341,7 +342,6 @@ namespace Blanketomat.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Tekst = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Lajkovi = table.Column<int>(type: "int", nullable: false),
-                    Slika = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StudentPostavioId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -474,6 +474,49 @@ namespace Blanketomat.API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Slike",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Putanja = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    KomentarId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Slike", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Slike_Komentari_KomentarId",
+                        column: x => x.KomentarId,
+                        principalTable: "Komentari",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BlanketSlika",
+                columns: table => new
+                {
+                    BlanketiId = table.Column<int>(type: "int", nullable: false),
+                    SlikeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BlanketSlika", x => new { x.BlanketiId, x.SlikeId });
+                    table.ForeignKey(
+                        name: "FK_BlanketSlika_Blanketi_BlanketiId",
+                        column: x => x.BlanketiId,
+                        principalTable: "Blanketi",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BlanketSlika_Slike_SlikeId",
+                        column: x => x.SlikeId,
+                        principalTable: "Slike",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Asistenti_SmerId",
                 table: "Asistenti",
@@ -508,6 +551,11 @@ namespace Blanketomat.API.Migrations
                 name: "IX_BlanketPitanje_PitanjaId",
                 table: "BlanketPitanje",
                 column: "PitanjaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BlanketSlika_SlikeId",
+                table: "BlanketSlika",
+                column: "SlikeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BlanketZadatak_ZadaciId",
@@ -560,6 +608,11 @@ namespace Blanketomat.API.Migrations
                 column: "SmerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Slike_KomentarId",
+                table: "Slike",
+                column: "KomentarId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Studenti_AkreditacijaId",
                 table: "Studenti",
                 column: "AkreditacijaId");
@@ -596,6 +649,9 @@ namespace Blanketomat.API.Migrations
                 name: "BlanketPitanje");
 
             migrationBuilder.DropTable(
+                name: "BlanketSlika");
+
+            migrationBuilder.DropTable(
                 name: "BlanketZadatak");
 
             migrationBuilder.DropTable(
@@ -614,19 +670,22 @@ namespace Blanketomat.API.Migrations
                 name: "Pitanja");
 
             migrationBuilder.DropTable(
+                name: "Slike");
+
+            migrationBuilder.DropTable(
                 name: "Blanketi");
 
             migrationBuilder.DropTable(
                 name: "Zadaci");
 
             migrationBuilder.DropTable(
-                name: "Komentari");
-
-            migrationBuilder.DropTable(
                 name: "Profesori");
 
             migrationBuilder.DropTable(
                 name: "Predmeti");
+
+            migrationBuilder.DropTable(
+                name: "Komentari");
 
             migrationBuilder.DropTable(
                 name: "PonavljanjaIspitnihRokova");

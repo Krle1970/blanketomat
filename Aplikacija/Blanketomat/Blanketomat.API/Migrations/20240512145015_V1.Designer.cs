@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blanketomat.API.Migrations
 {
     [DbContext(typeof(BlanketomatContext))]
-    [Migration("20240510190358_V1")]
+    [Migration("20240512145015_V1")]
     partial class V1
     {
         /// <inheritdoc />
@@ -68,6 +68,21 @@ namespace Blanketomat.API.Migrations
                     b.HasIndex("PitanjaId");
 
                     b.ToTable("BlanketPitanje");
+                });
+
+            modelBuilder.Entity("BlanketSlika", b =>
+                {
+                    b.Property<int>("BlanketiId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SlikeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BlanketiId", "SlikeId");
+
+                    b.HasIndex("SlikeId");
+
+                    b.ToTable("BlanketSlika");
                 });
 
             modelBuilder.Entity("BlanketZadatak", b =>
@@ -191,6 +206,10 @@ namespace Blanketomat.API.Migrations
                     b.Property<int?>("PodoblastId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Putanja")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Tip")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -235,10 +254,6 @@ namespace Blanketomat.API.Migrations
 
                     b.Property<int>("Lajkovi")
                         .HasColumnType("int");
-
-                    b.Property<string>("Slika")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("StudentPostavioId")
                         .HasColumnType("int");
@@ -407,6 +422,28 @@ namespace Blanketomat.API.Migrations
                     b.HasIndex("SmerId");
 
                     b.ToTable("Profesori");
+                });
+
+            modelBuilder.Entity("Blanketomat.API.Models.Slika", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("KomentarId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Putanja")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KomentarId");
+
+                    b.ToTable("Slike");
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Smer", b =>
@@ -590,6 +627,21 @@ namespace Blanketomat.API.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("BlanketSlika", b =>
+                {
+                    b.HasOne("Blanketomat.API.Models.Blanket", null)
+                        .WithMany()
+                        .HasForeignKey("BlanketiId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Blanketomat.API.Models.Slika", null)
+                        .WithMany()
+                        .HasForeignKey("SlikeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BlanketZadatak", b =>
                 {
                     b.HasOne("Blanketomat.API.Models.Blanket", null)
@@ -682,6 +734,15 @@ namespace Blanketomat.API.Migrations
                     b.Navigation("Smer");
                 });
 
+            modelBuilder.Entity("Blanketomat.API.Models.Slika", b =>
+                {
+                    b.HasOne("Blanketomat.API.Models.Komentar", "Komentar")
+                        .WithMany("Slika")
+                        .HasForeignKey("KomentarId");
+
+                    b.Navigation("Komentar");
+                });
+
             modelBuilder.Entity("Blanketomat.API.Models.Student", b =>
                 {
                     b.HasOne("Blanketomat.API.Models.Akreditacija", "Akreditacija")
@@ -767,6 +828,11 @@ namespace Blanketomat.API.Migrations
             modelBuilder.Entity("Blanketomat.API.Models.IspitniRok", b =>
                 {
                     b.Navigation("Ponavljanja");
+                });
+
+            modelBuilder.Entity("Blanketomat.API.Models.Komentar", b =>
+                {
+                    b.Navigation("Slika");
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Oblast", b =>
