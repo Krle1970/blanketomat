@@ -19,7 +19,8 @@ public class Profesor
 
     [MaxLength(30)]
     public required string Password { get; set; }
-    public Smer? Smer { get; set; }
+    public List<Smer>? Smerovi { get; set; }
     public List<Predmet>? Predmeti { get; set; }
+    public Katedra? Katedra { get; set; }
     public List<Komentar>? LajkovaniKomentari { get; set; }
 }

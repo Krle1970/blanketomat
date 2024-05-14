@@ -73,6 +73,7 @@ public class SmerController : ControllerBase
     {
         var smerZaAzuriranje = HttpContext.Items["smer"] as Smer;
         smerZaAzuriranje!.Naziv = smer.Naziv;
+        smerZaAzuriranje.Katedra = smer.Katedra;
         smerZaAzuriranje.Predmeti = smer.Predmeti;
         smerZaAzuriranje.Profesori = smer.Profesori;
         smerZaAzuriranje.Asistenti = smer.Asistenti;

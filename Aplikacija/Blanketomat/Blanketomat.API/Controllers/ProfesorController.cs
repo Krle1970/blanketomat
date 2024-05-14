@@ -69,7 +69,8 @@ public class ProfesorController : ControllerBase
         profesorZaAzuriranje.Prezime = profesor.Prezime;
         profesorZaAzuriranje.Email = profesor.Email;
         profesorZaAzuriranje.Password = profesor.Password;
-        profesorZaAzuriranje.Smer = profesor.Smer;
+        profesorZaAzuriranje.Katedra = profesor.Katedra;
+        profesorZaAzuriranje.Smerovi = profesor.Smerovi;
         profesorZaAzuriranje.Predmeti = profesor.Predmeti;
 
         await _context.SaveChangesAsync();

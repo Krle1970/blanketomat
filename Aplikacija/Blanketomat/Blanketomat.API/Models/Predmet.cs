@@ -13,6 +13,8 @@ public class Predmet
     [MaxLength(4)]
     public required string Godina { get; set; }
     public Akreditacija? Akreditacija { get; set; }
+    public List<Blanket>? Blanketi { get; set; }
+    public Katedra? Katedra { get; set; }
     public Smer? Smer { get; set; }
     public List<Profesor>? Profesori { get; set; }
     public List<Asistent>? Asistenti { get; set; }

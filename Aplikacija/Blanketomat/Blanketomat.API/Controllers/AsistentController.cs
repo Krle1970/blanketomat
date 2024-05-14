@@ -70,7 +70,8 @@ public class AsistentController : ControllerBase
         asistentZaAzuriranje.Prezime = asistent.Prezime;
         asistentZaAzuriranje.Email = asistent.Email;
         asistentZaAzuriranje.Password = asistent.Password;
-        asistentZaAzuriranje.Smer = asistent.Smer;
+        asistentZaAzuriranje.Katedra = asistent.Katedra;
+        asistentZaAzuriranje.Smerovi = asistent.Smerovi;
         asistentZaAzuriranje.Predmeti = asistent.Predmeti;
 
         await _context.SaveChangesAsync();

@@ -16,6 +16,7 @@ public class Blanket
     public required string Kategorija { get; set; }
     public required string Putanja { get; set; }
     public List<Slika>? Slike { get; set; }
+    public Predmet? Predmet { get; set; }
     public PonavljanjeIspitnogRoka? IspitniRok { get; set; }
     public List<Pitanje>? Pitanja { get; set; }
     public List<Zadatak>? Zadaci { get; set; }

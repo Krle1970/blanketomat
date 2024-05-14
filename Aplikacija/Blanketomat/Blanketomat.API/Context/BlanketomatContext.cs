@@ -26,4 +26,5 @@ public class BlanketomatContext : DbContext
     public DbSet<Zadatak> Zadaci { get; set; }
     public DbSet<Komentar> Komentari { get; set; }
     public DbSet<Slika> Slike { get; set; }
+    public DbSet<Katedra> Katedre { get; set; }
 }

@@ -2,16 +2,15 @@
 
 namespace Blanketomat.API.Models;
 
-public class Smer
+public class Katedra
 {
     [Key]
     public int Id { get; set; }
 
     [MaxLength(40)]
     public required string Naziv { get; set; }
-    public Katedra? Katedra { get; set; }
+    public List<Smer>? Smerovi { get; set; }
     public List<Predmet>? Predmeti { get; set; }
     public List<Profesor>? Profesori { get; set; }
     public List<Asistent>? Asistenti { get; set; }
-    public List<Student>? Studenti { get; set; }
 }
