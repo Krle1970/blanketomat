@@ -38,6 +38,7 @@ body {
   font-weight: bold;
   font-size: larger;
   width: 300px;
+  margin-bottom: 40px;
   
 }
 .card-header {
@@ -48,10 +49,9 @@ body {
 .card-body {
   display: flex;                  /* Omogućava korišćenje flexbox-a */
   flex-direction: column;         /* Postavlja elemente vertikalno */
-  justify-content: space-around; /* Raspoređuje elemente na vrh, sredinu, i dno */
+  justify-content: space-around;
+  padding:30px; /* Raspoređuje elemente na vrh, sredinu, i dno */
 }
-
-
 .form-label {
   font-weight: bold; /* Podebljani font za labele */
 }
@@ -61,7 +61,8 @@ body {
   font-size:20px ; /* Podebljani font za labele */
   border: 2px solid rgb(152, 168, 169);
   padding-top: 20px;
-  margin-bottom: 10px ;
+  margin-bottom: 20px ;
+  
  
 }
 .form-control:focus {
@@ -97,9 +98,6 @@ body {
 {
   margin-bottom: 100px;
 }
-
-
-
 footer {
   position: fixed;
   left: 0;
