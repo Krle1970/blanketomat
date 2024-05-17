@@ -1,0 +1,216 @@
+body {
+  font-weight:bold;
+  color: #000000;
+  font-family: 'Arial', sans-serif;
+  background-image: url('pozadina.jpg'); /* Putanja do vaše slike */
+  background-size: cover; /* Obezbeđuje da se cela slika uklapa */
+  background-position: center; /* Centrira sliku */
+  background-repeat: no-repeat; /* Omogućava ponavljanje slike ako ne popuni celu površinu */
+ /* background-image: linear-gradient(90deg, #8400ff, #0400ff); /* Postavlja belu boju pozadine za prazne delove oko slike */
+  background-attachment: fixed; /* Slika ostaje fiksirana dok se sadržaj stranice skroluje */
+  min-height: 100vh; /* Minimalna visina body elementa je 100% od visine viewport-a */
+  overflow: hidden;
+}
+.card {
+  background: rgb(255, 255, 255);  /* Poluprozirna kartica za bolju vidljivost teksta */
+  border: 2px solid #0400ff;
+  border-radius: 10%;
+  /*transform: scale(0.8);*/
+  min-height: 400px;
+  max-height: 500px;
+  transition:  background-color 0.3s ease-in-out,opacity 0.5s ease-in-out;
+  opacity: 0.8;
+  width: 150%; /* Osigurava da kartica i slika zauzimaju punu širinu svojih kontejnera */
+  max-width: 600px;
+}
+.card:hover {
+   /* Animacija zumiranja kartice pri prelasku mišem */
+ 
+  opacity: 1;
+}
+.form-control, .btn-primary {
+  border-radius: 10px; /* Zaobljeni uglovi */
+  transition: all 0.3s ease-in-out;
+}
+.btn-primary {
+  background-image: linear-gradient(90deg, #8400ff, #0400ff); /* Gradient za dugme */
+  border: none;
+  font-weight: bold;
+  font-size: larger;
+  width: 300px;
+  
+}
+.card-header {
+  background: transparent; /* Transparentni header */
+  margin-bottom: 10px;
+  border: none;
+}
+.card-body {
+  display: flex;                  /* Omogućava korišćenje flexbox-a */
+  flex-direction: column;         /* Postavlja elemente vertikalno */
+  justify-content: space-around; /* Raspoređuje elemente na vrh, sredinu, i dno */
+}
+
+
+.form-label {
+  font-weight: bold; /* Podebljani font za labele */
+}
+.form-control {
+  background: none;
+  font-weight: bold;
+  font-size:20px ; /* Podebljani font za labele */
+  border: 2px solid rgb(152, 168, 169);
+  padding-top: 20px;
+  margin-bottom: 10px ;
+ 
+}
+.form-control:focus {
+  box-shadow: 11px 11px 51px rgba(0, 0, 0, 0.25); /* Svetlucavi efekat pri fokusu */
+  border-color: rgb(46, 85, 255);
+}
+.form-control:focus, .btn-primary:hover {
+  transform: scale(1); /* Lagano povećanje elementa pri fokusu ili prelasku mišem */
+}
+.col-md-6
+{
+  margin-top: 150px;
+  display: flex; /* Omogućava flexbox unutar kolone */
+  justify-content: center; /* Centrira sadržaj unutar kolone horizontalno */
+  flex-direction: column; /* Elementi unutar kolone se slažu vertikalno */
+  align-items: center; /* Centrira elemente unutar kolone vertikalno */
+}
+.img-fluid {
+  max-width: 80%;
+  min-width: 10%;
+  height: auto;  /* Obezbeđuje da slika bude responzivna */
+  border-radius: 38%;
+  box-shadow: 1px 1px 50px 10px rgba(0, 0, 0, 0.3);
+  opacity: 0.9;
+ margin-right: 70px;
+}
+
+.userlozinka
+{
+  margin-bottom: 100px;
+}
+.user
+{
+  margin-bottom: 100px;
+}
+
+
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  background-image: linear-gradient(90deg, #8400ff, #0400ff);
+  color: white;
+  text-align: center;
+  padding: 8px 18px; /* Dodajte padding sa strane za bolje razdvajanje */
+  font-family: 'Arial', sans-serif;
+  display: flex; /* Omogućava korišćenje flexbox-a */
+  justify-content: space-between; /* Razdvaja divove na suprotne strane */
+}
+
+.footer-left, .footer-right {
+  padding: 0 15px; /* Dodaje unutrašnji prostor */
+}
+
+.footer-right a {
+  color: white; /* Postavlja boju linka na belu */
+  text-decoration: none; /* Uklanja podcrtavanje */
+}
+
+.footer-right a:hover {
+  text-decoration: underline; /* Dodaje podcrtavanje na hover */
+}
+
+@media (max-width: 768px) {
+  .row {
+      flex-direction: column-reverse; /* Menja redosled elemenata tako da slika ide prva */
+  }
+  .img-fluid {
+      order: 1; /* Stavlja sliku na vrh */
+      margin-right: 0; /* Uklanja margin sa desne strane */
+      width: 100%; /* Postavlja širinu slike na 100% kontejnera */
+  }
+  .card {
+      order: 2; /* Stavlja karticu ispod slike */
+      width: 100%; /* Postavlja širinu kartice na 100% kontejnera */
+      transform: scale(1); /* Poništava bilo kakvu transformaciju skale */
+  }
+  .btn-primary {
+width: 200px; /* Dugme zauzima punu širinu kolone na malim uređajima */
+font-size: medium; /* Smanjenje veličine fonta za bolje uklapanje */
+padding: 8px 10px; /* Manji padding */
+}
+}
+
+/* Stilovi za labelu iznad dropdown-a */
+.role-label {
+      font-size: 18px;
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      text-decoration: underline;
+      align-self: flex-start; /* Poravnanje na levu stranu */
+      width: 100%; /* Osigurava punu kontrolu nad širinom */
+      text-align: left; /* Tekst poravnan levo */
+  }
+
+  /* Specifični stilovi za dropdown meni */
+.select-role .form-control {
+      width: 30%; /* Širina dropdown-a manja od polja za unos */
+      padding: 8px 12px; /* Manji padding za tanji izgled */
+      font-size: 18px; /* Manji font size od polja za unos */
+      border-radius: 5px; /* Blago zaobljeni uglovi */
+      border: 3px solid rgb(152, 168, 169); /* Plavi obrub */
+      background-color: #cce5ff; /* Svetlija pozadina */
+      box-shadow: none; /* Uklanja svetlucavi efekat pri fokusu */
+      transition: background-color 0.2s ease-in-out;
+      align-self: flex-start;
+      
+}
+.select-role .form-control:active, .select-role .form-control:focus {
+      background-color: #ffffff; /* Promena boje u belo kada je aktivno */
+  }
+
+  /* Media query za responsivnost */
+@media (max-width: 768px) {
+      .select-role .form-control, .role-label {
+          width: 100%; /* Puna širina na manjim uređajima */
+      }
+}
+@media (max-width: 1245px) {
+    .img-fluid {
+        display: none; /* Sakriva sliku */
+        }
+        .col-md-6 {
+        margin-top: 0; /* Resetuje margine */
+        display: flex; /* Održava prikaz flexbox-a */
+        justify-content: center; /* Centrira login box horizontalno */
+        align-items: center; /* Centrira login box vertikalno */
+        height: 100vh; /* Postavlja visinu kolone na visinu viewport-a */
+        width: 100%; /* Postavlja širinu kolone na 100% */
+        }
+        .row {
+        flex-direction: column-reverse; /* Promena redosleda prikaza elemenata */
+        align-items: center; /* Centrira elemente vertikalno u `row` */
+        }
+        .card {
+        transform: none; /* Poništava transformaciju skale */
+        width: 100%; /* Širina kartice je 100% */
+        max-width: 100%; /* Maksimalna širina kartice je 100% */
+        }
+    }
+
+
+    /* Dodavanje strelice kao pozadinskog elementa */
+      #role {
+            background: url('data:image/svg+xml;charset=UTF-8,<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="black" xmlns="http://www.w3.org/2000/svg"><path d="M6 9l6 6 6-6"/></svg>') no-repeat;
+            background-position: right 10px center; /* Pozicioniranje strelice */
+            background-size: 22px; /* Veličina strelice */
+            }
