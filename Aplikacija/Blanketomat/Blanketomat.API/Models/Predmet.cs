@@ -7,12 +7,15 @@ public class Predmet
     [Key]
     public int Id { get; set; }
 
-    [MaxLength(50)]
+    [MinLength(3, ErrorMessage = "Naziv predmeta mora imati minimum 3 karaktera")]
+    [MaxLength(50, ErrorMessage = "Naziv predmeta moze imati maksimalno 50 karaktera")]
     public required string Naziv { get; set; }
 
-    [MaxLength(4)]
+    [MinLength(1, ErrorMessage = "Godina na kojoj je predmet mora imati minimum 1 karaktera")]
+    [MaxLength(4, ErrorMessage = "Godina na kojoj je predmet moze imati maksimalno 4 karaktera")]
     public required string Godina { get; set; }
     public Akreditacija? Akreditacija { get; set; }
+    public List<Oblast>? Oblasti { get; set; }
     public List<Blanket>? Blanketi { get; set; }
     public Katedra? Katedra { get; set; }
     public Smer? Smer { get; set; }

@@ -7,7 +7,8 @@ public class Katedra
     [Key]
     public int Id { get; set; }
 
-    [MaxLength(40)]
+    [MinLength(5, ErrorMessage = "Naziv katedre mora imati minimum 5 karaktera")]
+    [MaxLength(50, ErrorMessage = "Naziv katedre moze imati maksimalno 50 karaktera")]
     public required string Naziv { get; set; }
     public List<Smer>? Smerovi { get; set; }
     public List<Predmet>? Predmeti { get; set; }

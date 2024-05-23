@@ -37,24 +37,24 @@ public class ValidateDodajPonavljanjeIspitnogRokaFilter : ActionFilterAttribute
                 };
                 context.Result = new NotFoundObjectResult(problemDetails);
             }
-            else
-            {
-                var postojecePonavljanjeIspitnogRoka = _context.PonavljanjaIspitnihRokova.FirstOrDefault(x =>
-                    !string.IsNullOrWhiteSpace(ponavljanjeIspitnogRoka.Datum) &&
-                    !string.IsNullOrWhiteSpace(x.Datum) &&
-                    ponavljanjeIspitnogRoka.Datum.ToLower() == x.Datum.ToLower()
-                    );
+            //else
+            //{
+            //    var postojecePonavljanjeIspitnogRoka = _context.PonavljanjaIspitnihRokova.FirstOrDefault(x =>
+            //        !string.IsNullOrWhiteSpace(ponavljanjeIspitnogRoka.Datum) &&
+            //        !string.IsNullOrWhiteSpace(x.Datum) &&
+            //        ponavljanjeIspitnogRoka.Datum.ToLower() == x.Datum.ToLower()
+            //        );
 
-                if (postojecePonavljanjeIspitnogRoka != null)
-                {
-                    context.ModelState.AddModelError("PonavljanjeIspitnogRoka", "Ponavljanje ispitnog roka vec postoji.");
-                    var problemDetails = new ValidationProblemDetails(context.ModelState)
-                    {
-                        Status = StatusCodes.Status400BadRequest
-                    };
-                    context.Result = new BadRequestObjectResult(problemDetails);
-                }
-            }
+            //    if (postojecePonavljanjeIspitnogRoka != null)
+            //    {
+            //        context.ModelState.AddModelError("PonavljanjeIspitnogRoka", "Ponavljanje ispitnog roka vec postoji.");
+            //        var problemDetails = new ValidationProblemDetails(context.ModelState)
+            //        {
+            //            Status = StatusCodes.Status400BadRequest
+            //        };
+            //        context.Result = new BadRequestObjectResult(problemDetails);
+            //    }
+            //}
         }
     }
 }

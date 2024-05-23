@@ -37,6 +37,21 @@ namespace Blanketomat.API.Migrations
                     b.ToTable("AsistentKomentar");
                 });
 
+            modelBuilder.Entity("AsistentOdgovor", b =>
+                {
+                    b.Property<int>("AsistentiVerifikovaliId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LajkovaniOdgovoriId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AsistentiVerifikovaliId", "LajkovaniOdgovoriId");
+
+                    b.HasIndex("LajkovaniOdgovoriId");
+
+                    b.ToTable("AsistentOdgovor");
+                });
+
             modelBuilder.Entity("AsistentPredmet", b =>
                 {
                     b.Property<int>("AsistentiId")
@@ -122,18 +137,29 @@ namespace Blanketomat.API.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("Ime")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<string>("Password")
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Prezime")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -168,26 +194,32 @@ namespace Blanketomat.API.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("Ime")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<int?>("KatedraId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<int?>("KatedraId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Prezime")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -209,8 +241,8 @@ namespace Blanketomat.API.Migrations
 
                     b.Property<string>("Kategorija")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("OblastId")
                         .HasColumnType("int");
@@ -227,8 +259,8 @@ namespace Blanketomat.API.Migrations
 
                     b.Property<string>("Tip")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
@@ -253,8 +285,8 @@ namespace Blanketomat.API.Migrations
 
                     b.Property<string>("Naziv")
                         .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("Id");
 
@@ -271,8 +303,8 @@ namespace Blanketomat.API.Migrations
 
                     b.Property<string>("Naziv")
                         .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -287,6 +319,9 @@ namespace Blanketomat.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("BlanketId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Lajkovi")
                         .HasColumnType("int");
 
@@ -295,9 +330,12 @@ namespace Blanketomat.API.Migrations
 
                     b.Property<string>("Tekst")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BlanketId");
 
                     b.HasIndex("StudentPostavioId");
 
@@ -317,9 +355,45 @@ namespace Blanketomat.API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int?>("PredmetId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("PredmetId");
+
                     b.ToTable("Oblasti");
+                });
+
+            modelBuilder.Entity("Blanketomat.API.Models.Odgovor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("KomentarId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Lajkovi")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StudentPostavioId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tekst")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KomentarId");
+
+                    b.HasIndex("StudentPostavioId");
+
+                    b.ToTable("Odgovori");
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Pitanje", b =>
@@ -333,12 +407,10 @@ namespace Blanketomat.API.Migrations
                     b.Property<int?>("OblastId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Slika")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Tekst")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
@@ -360,7 +432,12 @@ namespace Blanketomat.API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int?>("OblastId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OblastId");
 
                     b.ToTable("Podoblasti");
                 });
@@ -373,13 +450,16 @@ namespace Blanketomat.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Datum")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<DateOnly>("Datum")
+                        .HasColumnType("date");
 
                     b.Property<int?>("IspitniRokId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Naziv")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("Id");
 
@@ -436,26 +516,32 @@ namespace Blanketomat.API.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("Ime")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<int?>("KatedraId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<int?>("KatedraId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Prezime")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -475,13 +561,28 @@ namespace Blanketomat.API.Migrations
                     b.Property<int?>("KomentarId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("OdgovorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PitanjeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Putanja")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ZadatakId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("KomentarId");
+
+                    b.HasIndex("OdgovorId");
+
+                    b.HasIndex("PitanjeId");
+
+                    b.HasIndex("ZadatakId");
 
                     b.ToTable("Slike");
                 });
@@ -499,8 +600,8 @@ namespace Blanketomat.API.Migrations
 
                     b.Property<string>("Naziv")
                         .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -522,26 +623,32 @@ namespace Blanketomat.API.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("Ime")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Prezime")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int?>("SmerId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -563,21 +670,14 @@ namespace Blanketomat.API.Migrations
                     b.Property<int?>("OblastId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PodoblastId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Slika")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Tekst")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OblastId");
-
-                    b.HasIndex("PodoblastId");
 
                     b.ToTable("Zadaci");
                 });
@@ -595,6 +695,36 @@ namespace Blanketomat.API.Migrations
                     b.HasIndex("ProfesoriLikedId");
 
                     b.ToTable("KomentarProfesor");
+                });
+
+            modelBuilder.Entity("OdgovorProfesor", b =>
+                {
+                    b.Property<int>("LajkovaniOdgovoriId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProfesoriVerifikovaliId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LajkovaniOdgovoriId", "ProfesoriVerifikovaliId");
+
+                    b.HasIndex("ProfesoriVerifikovaliId");
+
+                    b.ToTable("OdgovorProfesor");
+                });
+
+            modelBuilder.Entity("PodoblastZadatak", b =>
+                {
+                    b.Property<int>("PodoblastId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ZadaciId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PodoblastId", "ZadaciId");
+
+                    b.HasIndex("ZadaciId");
+
+                    b.ToTable("PodoblastZadatak");
                 });
 
             modelBuilder.Entity("PredmetProfesor", b =>
@@ -653,6 +783,21 @@ namespace Blanketomat.API.Migrations
                     b.HasOne("Blanketomat.API.Models.Komentar", null)
                         .WithMany()
                         .HasForeignKey("LajkovaniKomentariId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AsistentOdgovor", b =>
+                {
+                    b.HasOne("Blanketomat.API.Models.Asistent", null)
+                        .WithMany()
+                        .HasForeignKey("AsistentiVerifikovaliId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Blanketomat.API.Models.Odgovor", null)
+                        .WithMany()
+                        .HasForeignKey("LajkovaniOdgovoriId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -766,9 +911,39 @@ namespace Blanketomat.API.Migrations
 
             modelBuilder.Entity("Blanketomat.API.Models.Komentar", b =>
                 {
+                    b.HasOne("Blanketomat.API.Models.Blanket", "Blanket")
+                        .WithMany("Komentari")
+                        .HasForeignKey("BlanketId");
+
                     b.HasOne("Blanketomat.API.Models.Student", "StudentPostavio")
                         .WithMany("PostavljeniKomentari")
                         .HasForeignKey("StudentPostavioId");
+
+                    b.Navigation("Blanket");
+
+                    b.Navigation("StudentPostavio");
+                });
+
+            modelBuilder.Entity("Blanketomat.API.Models.Oblast", b =>
+                {
+                    b.HasOne("Blanketomat.API.Models.Predmet", "Predmet")
+                        .WithMany("Oblasti")
+                        .HasForeignKey("PredmetId");
+
+                    b.Navigation("Predmet");
+                });
+
+            modelBuilder.Entity("Blanketomat.API.Models.Odgovor", b =>
+                {
+                    b.HasOne("Blanketomat.API.Models.Komentar", "Komentar")
+                        .WithMany("Odgovori")
+                        .HasForeignKey("KomentarId");
+
+                    b.HasOne("Blanketomat.API.Models.Student", "StudentPostavio")
+                        .WithMany("PostavljeniOdgovori")
+                        .HasForeignKey("StudentPostavioId");
+
+                    b.Navigation("Komentar");
 
                     b.Navigation("StudentPostavio");
                 });
@@ -777,6 +952,15 @@ namespace Blanketomat.API.Migrations
                 {
                     b.HasOne("Blanketomat.API.Models.Oblast", "Oblast")
                         .WithMany("Pitanja")
+                        .HasForeignKey("OblastId");
+
+                    b.Navigation("Oblast");
+                });
+
+            modelBuilder.Entity("Blanketomat.API.Models.Podoblast", b =>
+                {
+                    b.HasOne("Blanketomat.API.Models.Oblast", "Oblast")
+                        .WithMany("Podoblasti")
                         .HasForeignKey("OblastId");
 
                     b.Navigation("Oblast");
@@ -827,7 +1011,25 @@ namespace Blanketomat.API.Migrations
                         .WithMany("Slika")
                         .HasForeignKey("KomentarId");
 
+                    b.HasOne("Blanketomat.API.Models.Odgovor", "Odgovor")
+                        .WithMany("Slike")
+                        .HasForeignKey("OdgovorId");
+
+                    b.HasOne("Blanketomat.API.Models.Pitanje", "Pitanje")
+                        .WithMany("Slika")
+                        .HasForeignKey("PitanjeId");
+
+                    b.HasOne("Blanketomat.API.Models.Zadatak", "Zadatak")
+                        .WithMany("Slika")
+                        .HasForeignKey("ZadatakId");
+
                     b.Navigation("Komentar");
+
+                    b.Navigation("Odgovor");
+
+                    b.Navigation("Pitanje");
+
+                    b.Navigation("Zadatak");
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Smer", b =>
@@ -860,13 +1062,7 @@ namespace Blanketomat.API.Migrations
                         .WithMany("Zadaci")
                         .HasForeignKey("OblastId");
 
-                    b.HasOne("Blanketomat.API.Models.Podoblast", "Podoblast")
-                        .WithMany("Zadaci")
-                        .HasForeignKey("PodoblastId");
-
                     b.Navigation("Oblast");
-
-                    b.Navigation("Podoblast");
                 });
 
             modelBuilder.Entity("KomentarProfesor", b =>
@@ -880,6 +1076,36 @@ namespace Blanketomat.API.Migrations
                     b.HasOne("Blanketomat.API.Models.Profesor", null)
                         .WithMany()
                         .HasForeignKey("ProfesoriLikedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OdgovorProfesor", b =>
+                {
+                    b.HasOne("Blanketomat.API.Models.Odgovor", null)
+                        .WithMany()
+                        .HasForeignKey("LajkovaniOdgovoriId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Blanketomat.API.Models.Profesor", null)
+                        .WithMany()
+                        .HasForeignKey("ProfesoriVerifikovaliId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PodoblastZadatak", b =>
+                {
+                    b.HasOne("Blanketomat.API.Models.Podoblast", null)
+                        .WithMany()
+                        .HasForeignKey("PodoblastId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Blanketomat.API.Models.Zadatak", null)
+                        .WithMany()
+                        .HasForeignKey("ZadaciId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -936,6 +1162,11 @@ namespace Blanketomat.API.Migrations
                     b.Navigation("Studenti");
                 });
 
+            modelBuilder.Entity("Blanketomat.API.Models.Blanket", b =>
+                {
+                    b.Navigation("Komentari");
+                });
+
             modelBuilder.Entity("Blanketomat.API.Models.IspitniRok", b =>
                 {
                     b.Navigation("Ponavljanja");
@@ -954,6 +1185,8 @@ namespace Blanketomat.API.Migrations
 
             modelBuilder.Entity("Blanketomat.API.Models.Komentar", b =>
                 {
+                    b.Navigation("Odgovori");
+
                     b.Navigation("Slika");
                 });
 
@@ -963,14 +1196,24 @@ namespace Blanketomat.API.Migrations
 
                     b.Navigation("Pitanja");
 
+                    b.Navigation("Podoblasti");
+
                     b.Navigation("Zadaci");
+                });
+
+            modelBuilder.Entity("Blanketomat.API.Models.Odgovor", b =>
+                {
+                    b.Navigation("Slike");
+                });
+
+            modelBuilder.Entity("Blanketomat.API.Models.Pitanje", b =>
+                {
+                    b.Navigation("Slika");
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Podoblast", b =>
                 {
                     b.Navigation("Blanketi");
-
-                    b.Navigation("Zadaci");
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.PonavljanjeIspitnogRoka", b =>
@@ -981,6 +1224,8 @@ namespace Blanketomat.API.Migrations
             modelBuilder.Entity("Blanketomat.API.Models.Predmet", b =>
                 {
                     b.Navigation("Blanketi");
+
+                    b.Navigation("Oblasti");
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Smer", b =>
@@ -993,6 +1238,13 @@ namespace Blanketomat.API.Migrations
             modelBuilder.Entity("Blanketomat.API.Models.Student", b =>
                 {
                     b.Navigation("PostavljeniKomentari");
+
+                    b.Navigation("PostavljeniOdgovori");
+                });
+
+            modelBuilder.Entity("Blanketomat.API.Models.Zadatak", b =>
+                {
+                    b.Navigation("Slika");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,6 +2,7 @@ using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
 using Blanketomat.API.Filters.AdministratorFilters;
 using Blanketomat.API.Filters.GenericFilters;
+using Blanketomat.API.Helper;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,16 +20,17 @@ public class AdministratorController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet("administratori")]
     [TypeFilter(typeof(ValidateDbSetFilter<Administrator>))]
-    public async Task<ActionResult> VratiSveAdministratore()
+    public async Task<ActionResult<List<Administrator>>> VratiSveAdministratore()
     {
         return Ok(await _context.Administratori.ToListAsync());
     }
 
-    [HttpGet("{page}/{count}")]
+    [HttpGet]
     [TypeFilter(typeof(ValidateDbSetFilter<Administrator>))]
-    public async Task<ActionResult> VratiAdministratore(int page, int count)
+    [ValidatePaginationFilter]
+    public async Task<ActionResult<PaginationResponseDTO<Administrator>>> VratiAdministratore(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Administratori.Count() / (float)brojRezultata);
@@ -51,9 +53,9 @@ public class AdministratorController : ControllerBase
     [HttpGet("{id}")]
     [TypeFilter(typeof(ValidateDbSetFilter<Administrator>))]
     [TypeFilter(typeof(ValidateIdFilter<Administrator>))]
-    public async Task<ActionResult> VratiAdministratora(int id)
+    public ActionResult<Administrator> VratiAdministratora(int id)
     {
-        return Ok(await _context.Administratori.FindAsync(id));
+        return Ok(HttpContext.Items["entity"]);
     }
 
     [HttpPost]
@@ -69,14 +71,30 @@ public class AdministratorController : ControllerBase
             );
     }
 
-    [HttpPut]
-    [TypeFilter(typeof(ValidateAzurirajAdministratoraFilter))]
-    public async Task<ActionResult> AzurirajAdministratora([FromBody]Administrator administrator)
+    [HttpPut("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Administrator>))]
+    [TypeFilter(typeof(ValidateIdFilter<Administrator>))]
+    [TypeFilter(typeof(ValidateAzurirajAdministratoraFilter<Administrator>))]
+    public async Task<ActionResult<Administrator>> AzurirajAdministratora(int id, [FromBody]AdministratorDTO administrator)
     {
-        var administratorZaAzuriranje = HttpContext.Items["administrator"] as Administrator;
-        administratorZaAzuriranje!.Ime = administrator.Ime;
-        administratorZaAzuriranje.Email = administrator.Email;
-        administratorZaAzuriranje.Password = administrator.Password;
+        // iz ValidateIdFilter-a
+        var administratorZaAzuriranje = HttpContext.Items["entity"] as Administrator;
+
+        if (administratorZaAzuriranje != null)
+        {
+            administratorZaAzuriranje.Ime = administrator.Ime;
+            administratorZaAzuriranje.Prezime = administrator.Prezime;
+            administratorZaAzuriranje.Email = administrator.Email;
+
+            PasswordManager.CreatePasswordHash(administrator.Password, out byte[] newPasswordHash, out byte[] newPasswordSalt);
+            administratorZaAzuriranje.PasswordHash = newPasswordHash;
+            administratorZaAzuriranje.PasswordSalt = newPasswordSalt;
+        }
+
+        //var administratorZaAzuriranje = HttpContext.Items["administrator"] as Administrator;
+        //administratorZaAzuriranje!.Ime = administrator.Ime;
+        //administratorZaAzuriranje.Email = administrator.Email;
+        //administratorZaAzuriranje.Password = administrator.Password;
 
         await _context.SaveChangesAsync();
         return Ok(administratorZaAzuriranje);
@@ -87,7 +105,7 @@ public class AdministratorController : ControllerBase
     [TypeFilter(typeof(ValidateIdFilter<Administrator>))]
     public async Task<ActionResult> ObrisiAdministratora(int id)
     {
-        var administratorZaBrisanje = await _context.Administratori.FindAsync(id);
+        var administratorZaBrisanje = HttpContext.Items["entity"] as Administrator;
         _context.Administratori.Remove(administratorZaBrisanje!);
         await _context.SaveChangesAsync();
 

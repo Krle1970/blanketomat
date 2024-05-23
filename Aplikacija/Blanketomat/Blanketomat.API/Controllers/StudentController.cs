@@ -68,7 +68,7 @@ public class StudentController : ControllerBase
         studentZaAzuriranje!.Ime = student.Ime;
         studentZaAzuriranje.Prezime = student.Prezime;
         studentZaAzuriranje.Email = student.Email;
-        studentZaAzuriranje.Password = student.Password;
+        //studentZaAzuriranje.Password = student.Password;
         studentZaAzuriranje.Akreditacija = student.Akreditacija;
         studentZaAzuriranje.Smer = student.Smer;
         studentZaAzuriranje.Predmeti = student.Predmeti;

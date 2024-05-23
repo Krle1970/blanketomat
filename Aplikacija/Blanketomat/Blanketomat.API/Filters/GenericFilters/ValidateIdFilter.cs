@@ -14,10 +14,10 @@ public class ValidateIdFilter<T> : ActionFilterAttribute where T : class
     }
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        var Id = context.ActionArguments["id"] as int?;
-        if (Id.HasValue)
+        var id = context.ActionArguments["id"] as int?;
+        if (id != null)
         {
-            if (Id.Value <= 0)
+            if (id <= 0)
             {
                 context.ModelState.AddModelError($"{typeof(T).Name}", $"Id" + " je nevalidan.");
                 var problemDetails = new ValidationProblemDetails(context.ModelState)
@@ -28,7 +28,7 @@ public class ValidateIdFilter<T> : ActionFilterAttribute where T : class
             }
             else
             {
-                var entity = _context.Set<T>().Find(Id.Value);
+                var entity = _context.Set<T>().Find(id);
 
                 if (entity == null)
                 {
@@ -39,7 +39,20 @@ public class ValidateIdFilter<T> : ActionFilterAttribute where T : class
                     };
                     context.Result = new NotFoundObjectResult(problemDetails);
                 }
+                else
+                {
+                    context.HttpContext.Items["entity"] = entity;
+                }
             }
+        }
+        else
+        {
+            context.ModelState.AddModelError($"{typeof(T).Name}", "Id nije naveden");
+            var problemDetails = new ValidationProblemDetails(context.ModelState)
+            {
+                Status = StatusCodes.Status400BadRequest
+            };
+            context.Result = new BadRequestObjectResult(problemDetails);
         }
     }
 }

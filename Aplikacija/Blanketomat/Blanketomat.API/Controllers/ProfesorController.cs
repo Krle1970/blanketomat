@@ -68,7 +68,7 @@ public class ProfesorController : ControllerBase
         profesorZaAzuriranje!.Ime = profesor.Ime;
         profesorZaAzuriranje.Prezime = profesor.Prezime;
         profesorZaAzuriranje.Email = profesor.Email;
-        profesorZaAzuriranje.Password = profesor.Password;
+        //profesorZaAzuriranje.Password = profesor.Password;
         profesorZaAzuriranje.Katedra = profesor.Katedra;
         profesorZaAzuriranje.Smerovi = profesor.Smerovi;
         profesorZaAzuriranje.Predmeti = profesor.Predmeti;

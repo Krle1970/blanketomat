@@ -14,7 +14,7 @@ public class ValidateDodajAdministratoraFilter : ActionFilterAttribute
         _context = context;
     }
 
-    public override void OnActionExecuting(ActionExecutingContext context)
+    public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         var administrator = context.ActionArguments["administrator"] as Administrator;
         if (administrator == null)
@@ -56,5 +56,7 @@ public class ValidateDodajAdministratoraFilter : ActionFilterAttribute
                 }
             }
         }
+
+        await next();
     }
 }
