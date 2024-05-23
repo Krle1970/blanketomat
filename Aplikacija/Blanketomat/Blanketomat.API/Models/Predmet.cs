@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Blanketomat.API.Models.Validations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Blanketomat.API.Models;
 
@@ -13,6 +14,7 @@ public class Predmet
 
     [MinLength(1, ErrorMessage = "Godina na kojoj je predmet mora imati minimum 1 karaktera")]
     [MaxLength(4, ErrorMessage = "Godina na kojoj je predmet moze imati maksimalno 4 karaktera")]
+    [PredmetGodinaValidation]
     public required string Godina { get; set; }
     public Akreditacija? Akreditacija { get; set; }
     public List<Oblast>? Oblasti { get; set; }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Blanketomat.API.Models.Validations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Blanketomat.API.Models;
 
@@ -10,11 +11,13 @@ public class Blanket
     // Tip - pismeni, usmeni, oba
     [MinLength(3, ErrorMessage = "Tip blanketa mora imati minimalno 3 karaktera")]
     [MaxLength(20, ErrorMessage = "Tip blanketa moze imati maksimalno 20 karaktera")]
+    [TipBlanketaValidation]
     public required string Tip { get; set; }
 
     // Kategorija - I kolok, II kolok, Ispit...
     [MinLength(5, ErrorMessage = "Kategorija blanketa mora imati minimalno 5 karaktera")]
     [MaxLength(50, ErrorMessage = "Kategorija blanketa moze imati maksimalno 50 karaktera")]
+    [KategorijaBlanketaValidation]
     public required string Kategorija { get; set; }
 
     [MinLength(3, ErrorMessage = "Putanja mora imati minimalno 3 karaktera")]
