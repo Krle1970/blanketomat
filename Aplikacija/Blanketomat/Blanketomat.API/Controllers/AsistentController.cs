@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Blanketomat.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class AsistentController : ControllerBase
 {
@@ -19,7 +19,6 @@ public class AsistentController : ControllerBase
         _context = context;
     }
 
-   
     [HttpGet("{page}/{count}")]
     public async Task<ActionResult> VratiAsistente(int page, int count)
     {

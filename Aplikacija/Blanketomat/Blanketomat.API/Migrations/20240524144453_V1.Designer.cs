@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blanketomat.API.Migrations
 {
     [DbContext(typeof(BlanketomatContext))]
-    [Migration("20240523205544_V1")]
+    [Migration("20240524144453_V1")]
     partial class V1
     {
         /// <inheritdoc />
@@ -487,9 +487,6 @@ namespace Blanketomat.API.Migrations
                         .HasMaxLength(4)
                         .HasColumnType("nvarchar(4)");
 
-                    b.Property<int?>("KatedraId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Naziv")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -501,8 +498,6 @@ namespace Blanketomat.API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AkreditacijaId");
-
-                    b.HasIndex("KatedraId");
 
                     b.HasIndex("SmerId");
 
@@ -984,17 +979,11 @@ namespace Blanketomat.API.Migrations
                         .WithMany("Predmeti")
                         .HasForeignKey("AkreditacijaId");
 
-                    b.HasOne("Blanketomat.API.Models.Katedra", "Katedra")
-                        .WithMany("Predmeti")
-                        .HasForeignKey("KatedraId");
-
                     b.HasOne("Blanketomat.API.Models.Smer", "Smer")
                         .WithMany("Predmeti")
                         .HasForeignKey("SmerId");
 
                     b.Navigation("Akreditacija");
-
-                    b.Navigation("Katedra");
 
                     b.Navigation("Smer");
                 });
@@ -1178,8 +1167,6 @@ namespace Blanketomat.API.Migrations
             modelBuilder.Entity("Blanketomat.API.Models.Katedra", b =>
                 {
                     b.Navigation("Asistenti");
-
-                    b.Navigation("Predmeti");
 
                     b.Navigation("Profesori");
 

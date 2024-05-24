@@ -53,7 +53,7 @@ public class KatedraController : ControllerBase
         var katedraZaAzuriranje = HttpContext.Items["katedra"] as Katedra;
         katedraZaAzuriranje!.Naziv = katedra.Naziv;
         katedraZaAzuriranje.Smerovi = katedra.Smerovi;
-        katedraZaAzuriranje.Predmeti = katedra.Predmeti;
+        //katedraZaAzuriranje.Predmeti = katedra.Predmeti;
         katedraZaAzuriranje.Profesori = katedra.Profesori;
         katedraZaAzuriranje.Asistenti = katedra.Asistenti;
 

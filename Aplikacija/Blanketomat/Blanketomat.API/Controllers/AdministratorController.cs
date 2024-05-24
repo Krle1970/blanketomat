@@ -60,14 +60,23 @@ public class AdministratorController : ControllerBase
 
     [HttpPost]
     [TypeFilter(typeof(ValidateDodajAdministratoraFilter))]
-    public async Task<ActionResult> DodajAdministratora([FromBody]Administrator administrator)
+    public async Task<ActionResult> DodajAdministratora([FromBody]AdministratorDTO administrator)
     {
-        _context.Administratori.Add(administrator);
+        PasswordManager.CreatePasswordHash(administrator.Password, out byte[] passwordHash, out byte[] passwordSalt);
+        var admin = new Administrator
+        {
+            Ime = administrator.Ime,
+            Prezime = administrator.Prezime,
+            Email = administrator.Email,
+            PasswordHash = passwordHash,
+            PasswordSalt = passwordSalt
+        };
+        _context.Administratori.Add(admin);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(VratiAdministratora), 
-            new { id = administrator.Id }, 
-            administrator
+            new { id = admin.Id }, 
+            admin
             );
     }
 
@@ -91,11 +100,6 @@ public class AdministratorController : ControllerBase
             administratorZaAzuriranje.PasswordSalt = newPasswordSalt;
         }
 
-        //var administratorZaAzuriranje = HttpContext.Items["administrator"] as Administrator;
-        //administratorZaAzuriranje!.Ime = administrator.Ime;
-        //administratorZaAzuriranje.Email = administrator.Email;
-        //administratorZaAzuriranje.Password = administrator.Password;
-
         await _context.SaveChangesAsync();
         return Ok(administratorZaAzuriranje);
     }
@@ -103,12 +107,13 @@ public class AdministratorController : ControllerBase
     [HttpDelete("{id}")]
     [TypeFilter(typeof(ValidateDbSetFilter<Administrator>))]
     [TypeFilter(typeof(ValidateIdFilter<Administrator>))]
-    public async Task<ActionResult> ObrisiAdministratora(int id)
+    public async Task<ActionResult<string>> ObrisiAdministratora(int id)
     {
+        // iz ValidateIdFilter-a
         var administratorZaBrisanje = HttpContext.Items["entity"] as Administrator;
         _context.Administratori.Remove(administratorZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return NoContent();
+        return Ok("Administrator uspešno obrisan");
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Blanketomat.API.Context;
+using Blanketomat.API.DTOs;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -14,12 +15,12 @@ public class ValidateDodajAdministratoraFilter : ActionFilterAttribute
         _context = context;
     }
 
-    public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+    public override void OnActionExecuting(ActionExecutingContext context)
     {
-        var administrator = context.ActionArguments["administrator"] as Administrator;
+        var administrator = context.ActionArguments["administrator"] as AdministratorDTO;
         if (administrator == null)
         {
-            context.ModelState.AddModelError("Administrator", "Administrator objekat je null.");
+            context.ModelState.AddModelError("Administrator", "Administrator objekat je null");
             var problemDetails = new ValidationProblemDetails(context.ModelState)
             {
                 Status = StatusCodes.Status400BadRequest
@@ -28,35 +29,21 @@ public class ValidateDodajAdministratoraFilter : ActionFilterAttribute
         }
         else
         {
-            if (_context.Administratori == null)
+            var postojeciAdministrator = _context.Administratori.FirstOrDefault(x =>
+                !string.IsNullOrWhiteSpace(administrator.Email) &&
+                !string.IsNullOrWhiteSpace(x.Email) &&
+                administrator.Email.ToLower() == x.Email.ToLower()
+                );
+
+            if (postojeciAdministrator != null)
             {
-                context.ModelState.AddModelError("Administrator", "Tabela Administratori ne postoji.");
+                context.ModelState.AddModelError("Administrator", "Administrator sa ovom email adresom vec postoji");
                 var problemDetails = new ValidationProblemDetails(context.ModelState)
                 {
-                    Status = StatusCodes.Status404NotFound
+                    Status = StatusCodes.Status400BadRequest
                 };
-                context.Result = new NotFoundObjectResult(problemDetails);
-            }
-            else
-            {
-                var postojeciAdministrator = _context.Administratori.FirstOrDefault(x =>
-                    !string.IsNullOrWhiteSpace(administrator.Email) &&
-                    !string.IsNullOrWhiteSpace(x.Email) &&
-                    administrator.Email.ToLower() == x.Email.ToLower()
-                    );
-
-                if (postojeciAdministrator != null)
-                {
-                    context.ModelState.AddModelError("Administrator", "Administrator vec postoji.");
-                    var problemDetails = new ValidationProblemDetails(context.ModelState)
-                    {
-                        Status = StatusCodes.Status400BadRequest
-                    };
-                    context.Result = new BadRequestObjectResult(problemDetails);
-                }
+                context.Result = new BadRequestObjectResult(problemDetails);
             }
         }
-
-        await next();
     }
 }

@@ -188,7 +188,6 @@ namespace Blanketomat.API.Migrations
                     Naziv = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Godina = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false),
                     AkreditacijaId = table.Column<int>(type: "int", nullable: true),
-                    KatedraId = table.Column<int>(type: "int", nullable: true),
                     SmerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -198,11 +197,6 @@ namespace Blanketomat.API.Migrations
                         name: "FK_Predmeti_Akreditacije_AkreditacijaId",
                         column: x => x.AkreditacijaId,
                         principalTable: "Akreditacije",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Predmeti_Katedre_KatedraId",
-                        column: x => x.KatedraId,
-                        principalTable: "Katedre",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Predmeti_Smerovi_SmerId",
@@ -852,11 +846,6 @@ namespace Blanketomat.API.Migrations
                 name: "IX_Predmeti_AkreditacijaId",
                 table: "Predmeti",
                 column: "AkreditacijaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Predmeti_KatedraId",
-                table: "Predmeti",
-                column: "KatedraId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Predmeti_SmerId",

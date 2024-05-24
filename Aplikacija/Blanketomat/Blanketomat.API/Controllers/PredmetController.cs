@@ -68,7 +68,7 @@ public class PredmetController : ControllerBase
         predmetZaAzuriranje!.Naziv = predmet.Naziv;
         predmetZaAzuriranje.Godina = predmet.Godina;
         predmetZaAzuriranje.Akreditacija = predmet.Akreditacija;
-        predmetZaAzuriranje.Katedra = predmet.Katedra;
+        //predmetZaAzuriranje.Katedra = predmet.Katedra;
         predmetZaAzuriranje.Smer = predmet.Smer;
         predmetZaAzuriranje.Profesori = predmet.Profesori;
         predmetZaAzuriranje.Asistenti = predmet.Asistenti;

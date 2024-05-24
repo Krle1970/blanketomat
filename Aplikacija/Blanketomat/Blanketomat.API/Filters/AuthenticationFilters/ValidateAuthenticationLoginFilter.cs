@@ -4,6 +4,8 @@ using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
+using System.Web;
 
 namespace Blanketomat.API.Filters.AuthenticationFilters;
 
@@ -18,6 +20,21 @@ public class ValidateAuthenticationLoginFilter : ActionFilterAttribute
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {
+        if (!context.HttpContext.Request.Headers.TryGetValue("Authorization", out StringValues authHeader))
+        {
+            context.ModelState.AddModelError("Authorization", "Authorization header nije naveden");
+            var problemDetails = new ValidationProblemDetails(context.ModelState)
+            {
+                Status = StatusCodes.Status401Unauthorized
+            };
+            context.Result = new NotFoundObjectResult(problemDetails);
+        }
+
+        if (context.HttpContext.User.Identity.IsAuthenticated)
+        {
+
+        }
+
         //try
         //{
         //    var user = context.ActionArguments["user"] as LoginDTO;

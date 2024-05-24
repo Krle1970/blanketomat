@@ -1,5 +1,5 @@
 ﻿using Blanketomat.API.Context;
-using Blanketomat.API.Models;
+using Blanketomat.API.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -16,10 +16,9 @@ public class ValidateDodajAkreditacijuFilter : ActionFilterAttribute
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        var akreditacija = context.ActionArguments["akreditacija"] as Akreditacija;
-        if (akreditacija == null)
+        if (!context.ModelState.IsValid)
         {
-            context.ModelState.AddModelError("Akreditacija", "Akreditacija objekat je null.");
+            context.ModelState.AddModelError("Akreditacija", "Akreditacija objekat nije validan");
             var problemDetails = new ValidationProblemDetails(context.ModelState)
             {
                 Status = StatusCodes.Status400BadRequest
@@ -28,32 +27,21 @@ public class ValidateDodajAkreditacijuFilter : ActionFilterAttribute
         }
         else
         {
-            if (_context.Akreditacije == null)
+            var akreditacija = context.ActionArguments["novaAkreditacija"] as AkreditacijaDTO;
+            var postojecaAkreditacija = _context.Akreditacije.FirstOrDefault(x =>
+                !string.IsNullOrWhiteSpace(akreditacija!.Naziv) &&
+                !string.IsNullOrWhiteSpace(x.Naziv) &&
+                akreditacija.Naziv.ToLower() == x.Naziv.ToLower()
+                );
+
+            if (postojecaAkreditacija != null)
             {
-                context.ModelState.AddModelError("Akreditacija", "Tabela Akreditacije ne postoji.");
+                context.ModelState.AddModelError("Akreditacija", "Akreditacija vec postoji.");
                 var problemDetails = new ValidationProblemDetails(context.ModelState)
                 {
-                    Status = StatusCodes.Status404NotFound
+                    Status = StatusCodes.Status400BadRequest
                 };
-                context.Result = new NotFoundObjectResult(problemDetails);
-            }
-            else
-            {
-                var postojecaAkreditacija = _context.Akreditacije.FirstOrDefault(x =>
-                    !string.IsNullOrWhiteSpace(akreditacija.Naziv) &&
-                    !string.IsNullOrWhiteSpace(x.Naziv) &&
-                    akreditacija.Naziv.ToLower() == x.Naziv.ToLower()
-                    );
-
-                if (postojecaAkreditacija != null)
-                {
-                    context.ModelState.AddModelError("Akreditacija", "Akreditacija vec postoji.");
-                    var problemDetails = new ValidationProblemDetails(context.ModelState)
-                    {
-                        Status = StatusCodes.Status400BadRequest
-                    };
-                    context.Result = new BadRequestObjectResult(problemDetails);
-                }
+                context.Result = new BadRequestObjectResult(problemDetails);
             }
         }
     }
