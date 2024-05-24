@@ -1,4 +1,5 @@
 ﻿using Blanketomat.API.Context;
+using Blanketomat.API.DTOs.IspitniRokDTOs;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -16,7 +17,7 @@ public class ValidateAzurirajIspitniRokFilter : ActionFilterAttribute
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        var ispitniRok = context.ActionArguments["ispitniRok"] as IspitniRok;
+        var ispitniRok = context.ActionArguments["ispitniRok"] as AzurirajIspitniRokDTO;
         if (ispitniRok == null)
         {
             context.ModelState.AddModelError("IspitniRok", "IspitniRok objekat je null.");
@@ -25,48 +26,6 @@ public class ValidateAzurirajIspitniRokFilter : ActionFilterAttribute
                 Status = StatusCodes.Status400BadRequest
             };
             context.Result = new NotFoundObjectResult(problemDetails);
-        }
-        else
-        {
-            var ispitniRokId = ispitniRok.Id;
-            if (ispitniRokId <= 0)
-            {
-                context.ModelState.AddModelError("IspitniRok", "Nevalidan Id.");
-                var problemDetails = new ValidationProblemDetails(context.ModelState)
-                {
-                    Status = StatusCodes.Status400BadRequest
-                };
-                context.Result = new NotFoundObjectResult(problemDetails);
-            }
-            else
-            {
-                if (_context.IspitniRokovi == null)
-                {
-                    context.ModelState.AddModelError("IspitniRok", "Tabela IspitniRokovi ne postoji.");
-                    var problemDetails = new ValidationProblemDetails(context.ModelState)
-                    {
-                        Status = StatusCodes.Status404NotFound
-                    };
-                    context.Result = new NotFoundObjectResult(problemDetails);
-                }
-                else
-                {
-                    var ispitniRokZaAzuriranje = _context.IspitniRokovi.Find(ispitniRokId);
-                    if (ispitniRokZaAzuriranje == null)
-                    {
-                        context.ModelState.AddModelError("IspitniRok", "Ispitni rok ne postoji u bazi podataka.");
-                        var problemDetails = new ValidationProblemDetails(context.ModelState)
-                        {
-                            Status = StatusCodes.Status404NotFound
-                        };
-                        context.Result = new NotFoundObjectResult(problemDetails);
-                    }
-                    else
-                    {
-                        context.HttpContext.Items["ispitniRok"] = ispitniRokZaAzuriranje;
-                    }
-                }
-            }
         }
     }
 }

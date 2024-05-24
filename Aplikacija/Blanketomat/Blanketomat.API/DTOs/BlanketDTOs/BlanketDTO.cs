@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Blanketomat.API.DTOs.BlanketDTOs;
 
+// mora da postoji zbog validacija za Tip i Kategoriju blanketa (razliciti DTO objekti
+// se prosledjuju u DodajBlanket i AzurirajBlanket funkcijama)
 public class BlanketDTO
 {
     [MinLength(3, ErrorMessage = "Tip blanketa mora imati minimalno 3 karaktera")]

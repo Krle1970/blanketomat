@@ -1,5 +1,5 @@
 ﻿using Blanketomat.API.Context;
-using Blanketomat.API.Models;
+using Blanketomat.API.DTOs.IspitniRokDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -16,10 +16,10 @@ public class ValidateDodajIspitniRokFilter : ActionFilterAttribute
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        var ispitniRok = context.ActionArguments["ispitniRok"] as IspitniRok;
-        if (ispitniRok == null)
+        var ispitniRok = context.ActionArguments["noviIspitniRok"] as DodajIspitniRokDTO;
+        if (!context.ModelState.IsValid)
         {
-            context.ModelState.AddModelError("IspitniRok", "IspitniRok objekat je null.");
+            context.ModelState.AddModelError("IspitniRok", "Ispitni rok objekat je navalidan");
             var problemDetails = new ValidationProblemDetails(context.ModelState)
             {
                 Status = StatusCodes.Status400BadRequest
@@ -28,32 +28,20 @@ public class ValidateDodajIspitniRokFilter : ActionFilterAttribute
         }
         else
         {
-            if (_context.IspitniRokovi == null)
+            var postojeciIspitniRok = _context.IspitniRokovi.FirstOrDefault(x =>
+                !string.IsNullOrWhiteSpace(ispitniRok!.Naziv) &&
+                !string.IsNullOrWhiteSpace(x.Naziv) &&
+                ispitniRok.Naziv.ToLower() == x.Naziv.ToLower()
+                );
+
+            if (postojeciIspitniRok != null)
             {
-                context.ModelState.AddModelError("IspitniRok", "Tabela IspitniRokovi ne postoji.");
+                context.ModelState.AddModelError("IspitniRok", "Ispitni rok vec postoji.");
                 var problemDetails = new ValidationProblemDetails(context.ModelState)
                 {
-                    Status = StatusCodes.Status404NotFound
+                    Status = StatusCodes.Status400BadRequest
                 };
-                context.Result = new NotFoundObjectResult(problemDetails);
-            }
-            else
-            {
-                var postojeciIspitniRok = _context.IspitniRokovi.FirstOrDefault(x =>
-                    !string.IsNullOrWhiteSpace(ispitniRok.Naziv) &&
-                    !string.IsNullOrWhiteSpace(x.Naziv) &&
-                    ispitniRok.Naziv.ToLower() == x.Naziv.ToLower()
-                    );
-
-                if (postojeciIspitniRok != null)
-                {
-                    context.ModelState.AddModelError("IspitniRok", "Ispitni rok vec postoji.");
-                    var problemDetails = new ValidationProblemDetails(context.ModelState)
-                    {
-                        Status = StatusCodes.Status400BadRequest
-                    };
-                    context.Result = new BadRequestObjectResult(problemDetails);
-                }
+                context.Result = new BadRequestObjectResult(problemDetails);
             }
         }
     }
