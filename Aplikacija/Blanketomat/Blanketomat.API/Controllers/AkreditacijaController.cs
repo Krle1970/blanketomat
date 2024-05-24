@@ -109,7 +109,6 @@ public class AkreditacijaController : ControllerBase
     [HttpPut("{id}")]
     [TypeFilter(typeof(ValidateDbSetFilter<Akreditacija>))]
     [TypeFilter(typeof(ValidateIdFilter<Akreditacija>))]
-    [ValidateAzurirajAkreditacijuFilter]
     public async Task<ActionResult> AzurirajAkreditaciju(int id, [FromBody]AkreditacijaDTO akreditacija)
     {
         // iz ValidateIdFilter-a
