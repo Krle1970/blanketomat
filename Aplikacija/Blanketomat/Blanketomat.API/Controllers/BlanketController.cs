@@ -1,6 +1,6 @@
 using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
-using Blanketomat.API.Filters.BlanketFilters;
+using Blanketomat.API.DTOs.BlanketDTOs;
 using Blanketomat.API.Filters.GenericFilters;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Blanketomat.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class BlanketController : ControllerBase
 {
@@ -19,7 +19,16 @@ public class BlanketController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("{page}/{count}")]
+    [HttpGet("blanketi")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Blanket>))]
+    public ActionResult<IEnumerable<Blanket>> VratiSveBlankete()
+    {
+        return _context.Blanketi;
+    }
+
+    [HttpGet]
+    [TypeFilter(typeof(ValidateDbSetFilter<Blanket>))]
+    [ValidatePaginationFilter]
     public async Task<ActionResult> VratiBlankete(int page, int count)
     {
         
@@ -42,16 +51,85 @@ public class BlanketController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Blanket>))]
     [TypeFilter(typeof(ValidateIdFilter<Blanket>))]
-    public async Task<ActionResult> VratiBlanket(int id)
+    public ActionResult<Blanket> VratiBlanket(int id)
     {
-        return Ok(await _context.Blanketi.FindAsync(id));
+        return Ok(HttpContext.Items["entity"] as Blanket);
     }
       
     [HttpPost]
-    [TypeFilter(typeof(ValidateDodajBlanketFilter))]
-    public async Task<ActionResult> DodajBlanket([FromBody]Blanket blanket) 
+    [TypeFilter(typeof(ValidateDbSetFilter<Blanket>))]
+    //[ValidateDodajBlanketFilter]
+    public async Task<ActionResult> DodajBlanket([FromBody]DodajBlanketDTO noviBlanket) 
     {
+        Blanket blanket = new Blanket
+        {
+            Tip = noviBlanket.Tip,
+            Kategorija = noviBlanket.Kategorija,
+            Putanja = noviBlanket.Putanja
+        };
+
+        if (noviBlanket.SlikeIds != null)
+        {
+            Slika? slika;
+            for (int i = 0; i < noviBlanket.SlikeIds.Count(); i++)
+            {
+                slika = await _context.Slike.FindAsync(noviBlanket.SlikeIds[i]);
+                if (slika != null)
+                {
+                    if (!blanket.Slike!.Contains(slika))
+                        blanket.Slike.Add(slika);
+                }
+            }
+        }
+
+        if (noviBlanket.PredmetId != null)
+        {
+            Predmet? predmet = await _context.Predmeti.FindAsync(noviBlanket.PredmetId);
+            if (predmet != null)
+            {
+                blanket.Predmet = predmet;
+            }
+        }
+
+        if (noviBlanket.PonavljanjeIspitnogRokaId != null)
+        {
+            PonavljanjeIspitnogRoka? ponavljanjeIspitnogRoka = await _context.PonavljanjaIspitnihRokova.FindAsync(noviBlanket.PonavljanjeIspitnogRokaId);
+            if (ponavljanjeIspitnogRoka != null)
+            {
+                blanket.IspitniRok = ponavljanjeIspitnogRoka;
+            }
+        }
+
+        if (noviBlanket.PitanjaIds != null)
+        {
+            Pitanje? pitanje;
+            for (int i = 0; i < noviBlanket.PitanjaIds.Count(); i++)
+            {
+                pitanje = await _context.Pitanja.FindAsync(noviBlanket.PitanjaIds[i]);
+                if (pitanje != null)
+                {
+                    if (!blanket.Pitanja!.Contains(pitanje))
+                        blanket.Pitanja.Add(pitanje);
+                }
+            }
+        }
+
+        if (noviBlanket.ZadaciIds != null)
+        {
+            Zadatak? zadatak;
+            for (int i = 0; i < noviBlanket.ZadaciIds.Count(); i++)
+            {
+                zadatak = await _context.Zadaci.FindAsync(noviBlanket.ZadaciIds[i]);
+                if (zadatak != null)
+                {
+                    if (!blanket.Zadaci!.Contains(zadatak))
+                        blanket.Zadaci.Add(zadatak);
+                }
+            }
+        }
+
         _context.Blanketi.Add(blanket);
         await _context.SaveChangesAsync();
 
@@ -61,29 +139,106 @@ public class BlanketController : ControllerBase
             );
     }
 
-    [HttpPut]
-    [TypeFilter(typeof(ValidateAzurirajBlanketFilter))]
-    public async Task<ActionResult> AzurirajBlanket([FromBody]Blanket blanket)
+    [HttpPut("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Blanket>))]
+    [TypeFilter(typeof(ValidateIdFilter<Blanket>))]
+    public async Task<ActionResult> AzurirajBlanket(int id, [FromBody]AzurirajBlanketDTO blanket)
     {
-        var blanketZaAzuriranje = HttpContext.Items["blanket"] as Blanket;
+        // iz ValidateIdFilter-a
+        var blanketZaAzuriranje = HttpContext.Items["entity"] as Blanket;
+
         blanketZaAzuriranje!.Tip = blanket.Tip;
         blanketZaAzuriranje.Kategorija = blanket.Kategorija;
-        blanketZaAzuriranje.IspitniRok = blanket.IspitniRok;
-        blanketZaAzuriranje.Pitanja = blanket.Pitanja;
-        blanketZaAzuriranje.Zadaci = blanket.Zadaci;
+        blanketZaAzuriranje.Putanja = blanket.Putanja;
+
+        if (blanket.SlikeIds != null)
+        {
+            Slika? slika;
+            for (int i = 0; i < blanket.SlikeIds.Count(); i++)
+            {
+                slika = await _context.Slike.FindAsync(blanket.SlikeIds[i]);
+                if (slika != null)
+                {
+                    if (!blanketZaAzuriranje.Slike!.Contains(slika))
+                        blanketZaAzuriranje.Slike.Add(slika);
+                }
+            }
+        }
+
+        if (blanket.PredmetId != null)
+        {
+            Predmet? predmet = await _context.Predmeti.FindAsync(blanket.PredmetId);
+            if (predmet != null)
+            {
+                blanketZaAzuriranje.Predmet = predmet;
+            }
+        }
+
+        if (blanket.PonavljanjeIspitnogRokaId != null)
+        {
+            PonavljanjeIspitnogRoka? ponavljanjeIspitnogRoka = await _context.PonavljanjaIspitnihRokova.FindAsync(blanket.PonavljanjeIspitnogRokaId);
+            if (ponavljanjeIspitnogRoka != null)
+            {
+                blanketZaAzuriranje.IspitniRok = ponavljanjeIspitnogRoka;
+            }
+        }
+
+        if (blanket.PitanjaIds != null)
+        {
+            Pitanje? pitanje;
+            for (int i = 0; i < blanket.PitanjaIds.Count(); i++)
+            {
+                pitanje = await _context.Pitanja.FindAsync(blanket.PitanjaIds[i]);
+                if (pitanje != null)
+                {
+                    if (!blanketZaAzuriranje.Pitanja!.Contains(pitanje))
+                        blanketZaAzuriranje.Pitanja.Add(pitanje);
+                }
+            }
+        }
+
+        if (blanket.ZadaciIds != null)
+        {
+            Zadatak? zadatak;
+            for (int i = 0; i < blanket.ZadaciIds.Count(); i++)
+            {
+                zadatak = await _context.Zadaci.FindAsync(blanket.ZadaciIds[i]);
+                if (zadatak != null)
+                {
+                    if (!blanketZaAzuriranje.Zadaci!.Contains(zadatak))
+                        blanketZaAzuriranje.Zadaci.Add(zadatak);
+                }
+            }
+        }
+
+        if (blanket.KomentariIds != null)
+        {
+            Komentar? komentar;
+            for (int i = 0; i < blanket.KomentariIds.Count(); i++)
+            {
+                komentar = await _context.Komentari.FindAsync(blanket.KomentariIds[i]);
+                if (komentar != null)
+                {
+                    if (!blanketZaAzuriranje.Komentari!.Contains(komentar))
+                        blanketZaAzuriranje.Komentari.Add(komentar);
+                }
+            }
+        }
 
         await _context.SaveChangesAsync();
         return Ok(blanketZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Blanket>))]
     [TypeFilter(typeof(ValidateIdFilter<Blanket>))]
-    public async Task<ActionResult> ObrisiBlanket(int id)
+    public async Task<ActionResult<string>> ObrisiBlanket(int id)
     {
-        var blanketZaBrisanje = await _context.Blanketi.FindAsync(id);
+        // iz ValidateIdFilter-a
+        var blanketZaBrisanje = HttpContext.Items["entity"] as Blanket;
         _context.Blanketi.Remove(blanketZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return NoContent();
+        return Ok("Blanket uspešno izbrisan");
     }
 }

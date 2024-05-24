@@ -54,7 +54,7 @@ public class AsistentController : ControllerBase
     [TypeFilter(typeof(ValidateIdFilter<Asistent>))]
     public ActionResult<Asistent> VratiAsistenta(int id)
     {
-        return Ok(HttpContext.Items["entity"]);
+        return Ok(HttpContext.Items["entity"] as Asistent);
     }
 
     [HttpPut("{id}")]
