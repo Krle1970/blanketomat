@@ -1,4 +1,5 @@
 ﻿using Blanketomat.API.Context;
+using Blanketomat.API.DTOs.SlikaDTOs;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -16,45 +17,21 @@ public class ValidateDodajSlikuFilter : ActionFilterAttribute
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        var slika = context.ActionArguments["slika"] as Slika;
-        if (slika == null)
+        var slika = context.ActionArguments["novaSlika"] as DodajSlikuDTO;
+        var postojecaSlika = _context.Slike.FirstOrDefault(x =>
+            !string.IsNullOrWhiteSpace(slika!.Putanja) &&
+            !string.IsNullOrWhiteSpace(x.Putanja) &&
+            slika.Putanja.ToLower() == x.Putanja.ToLower()
+            );
+
+        if (postojecaSlika != null)
         {
-            context.ModelState.AddModelError("Slika", "Slika objekat je null.");
+            context.ModelState.AddModelError("Slika", "Slika vec postoji");
             var problemDetails = new ValidationProblemDetails(context.ModelState)
             {
                 Status = StatusCodes.Status400BadRequest
             };
             context.Result = new BadRequestObjectResult(problemDetails);
-        }
-        else
-        {
-            if (_context.Slike == null)
-            {
-                context.ModelState.AddModelError("Slika", "Tabela Slike ne postoji.");
-                var problemDetails = new ValidationProblemDetails(context.ModelState)
-                {
-                    Status = StatusCodes.Status404NotFound
-                };
-                context.Result = new NotFoundObjectResult(problemDetails);
-            }
-            else
-            {
-                var postojecaSlika = _context.Slike.FirstOrDefault(x =>
-                    !string.IsNullOrWhiteSpace(slika.Putanja) &&
-                    !string.IsNullOrWhiteSpace(x.Putanja) &&
-                    slika.Putanja.ToLower() == x.Putanja.ToLower()
-                    );
-
-                if (postojecaSlika != null)
-                {
-                    context.ModelState.AddModelError("Slika", "Slika vec postoji.");
-                    var problemDetails = new ValidationProblemDetails(context.ModelState)
-                    {
-                        Status = StatusCodes.Status400BadRequest
-                    };
-                    context.Result = new BadRequestObjectResult(problemDetails);
-                }
-            }
         }
     }
 }
