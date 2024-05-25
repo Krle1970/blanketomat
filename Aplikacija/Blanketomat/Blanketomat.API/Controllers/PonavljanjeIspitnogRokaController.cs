@@ -1,15 +1,15 @@
 ﻿using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
+using Blanketomat.API.DTOs.PonavljanjeIspitnogRokaDTOs;
 using Blanketomat.API.Filters.GenericFilters;
 using Blanketomat.API.Filters.PonavljanjeIspitnogRokaFilters;
 using Blanketomat.API.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Blanketomat.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class PonavljanjeIspitnogRokaController : ControllerBase
 {
@@ -20,8 +20,10 @@ public class PonavljanjeIspitnogRokaController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("{page}/{count}")]
-    public async Task<ActionResult> VratiPonavljanjaIspitnihRokova(int page, int count)
+    [HttpGet]
+    [TypeFilter(typeof(ValidateDbSetFilter<PonavljanjeIspitnogRoka>))]
+    [ValidatePaginationFilter]
+    public async Task<ActionResult<PaginationResponseDTO<PonavljanjeIspitnogRoka>>> VratiPonavljanjaIspitnihRokova(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.PonavljanjaIspitnihRokova.Count() / (float)brojRezultata);
@@ -42,16 +44,34 @@ public class PonavljanjeIspitnogRokaController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<PonavljanjeIspitnogRoka>))]
     [TypeFilter(typeof(ValidateIdFilter<PonavljanjeIspitnogRoka>))]
-    public async Task<ActionResult> VratiPonavljanjeIspitnogRoka(int id)
+    public ActionResult<PonavljanjeIspitnogRoka> VratiPonavljanjeIspitnogRoka(int id)
     {
-        return Ok(await _context.PonavljanjaIspitnihRokova.FindAsync(id));
+        // iz ValidateIdFilter-a
+        return Ok(HttpContext.Items["entity"] as PonavljanjeIspitnogRoka);
     }
 
     [HttpPost]
+    [TypeFilter(typeof(ValidateDbSetFilter<PonavljanjeIspitnogRoka>))]
     [TypeFilter(typeof(ValidateDodajPonavljanjeIspitnogRokaFilter))]
-    public async Task<ActionResult> DodajPonavljanjeRoka([FromBody] PonavljanjeIspitnogRoka ponavljanjeIspitnogRoka)
+    public async Task<ActionResult> DodajPonavljanjeRoka([FromBody] DodajPonavljanjeIspitnogRokaDTO novoPonavljanjeIspitnogRoka)
     {
+        PonavljanjeIspitnogRoka ponavljanjeIspitnogRoka = new PonavljanjeIspitnogRoka
+        {
+            Naziv = novoPonavljanjeIspitnogRoka.Naziv,
+            Datum = novoPonavljanjeIspitnogRoka.Datum
+        };
+
+        if (novoPonavljanjeIspitnogRoka.IspitniRokId != null)
+        {
+            IspitniRok? ispitniRok = await _context.IspitniRokovi.FindAsync(novoPonavljanjeIspitnogRoka.IspitniRokId);
+            if (ispitniRok != null)
+            {
+                ponavljanjeIspitnogRoka.IspitniRok = ispitniRok;
+            }
+        }
+
         _context.PonavljanjaIspitnihRokova.Add(ponavljanjeIspitnogRoka);
         await _context.SaveChangesAsync();
 
@@ -61,27 +81,53 @@ public class PonavljanjeIspitnogRokaController : ControllerBase
             );
     }
 
-    [HttpPut]
-    [TypeFilter(typeof(ValidateAzurirajPonavljanjeIspitnogRoka))]
-    public async Task<ActionResult> AzurirajPonavljanjeIspitnogRoka([FromBody] PonavljanjeIspitnogRoka ponavljanjeIspitnogRoka)
+    [HttpPut("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<PonavljanjeIspitnogRoka>))]
+    [TypeFilter(typeof(ValidateIdFilter<PonavljanjeIspitnogRoka>))]
+    public async Task<ActionResult<PonavljanjeIspitnogRoka>> AzurirajPonavljanjeIspitnogRoka(int id, [FromBody] AzurirajPonavljanjeIspitnogRokaDTO ponavljanjeIspitnogRoka)
     {
-        var ponavljanjeIspitnogRokaZaAzuriranje = HttpContext.Items["ponavljanjeIspitnogRoka"] as PonavljanjeIspitnogRoka;
-        ponavljanjeIspitnogRokaZaAzuriranje!.Datum = ponavljanjeIspitnogRoka.Datum;
-        ponavljanjeIspitnogRokaZaAzuriranje.IspitniRok = ponavljanjeIspitnogRoka.IspitniRok;
-        ponavljanjeIspitnogRokaZaAzuriranje.Blanketi = ponavljanjeIspitnogRoka.Blanketi;
+        // id ValidateIdFilter-a
+        var ponavljanjeIspitnogRokaZaAzuriranje = HttpContext.Items["entity"] as PonavljanjeIspitnogRoka;
+        ponavljanjeIspitnogRokaZaAzuriranje!.Naziv = ponavljanjeIspitnogRoka.Naziv;
+        ponavljanjeIspitnogRokaZaAzuriranje.Datum = ponavljanjeIspitnogRoka.Datum;
+
+        if (ponavljanjeIspitnogRoka.IspitniRokId != null)
+        {
+            IspitniRok? ispitniRok = await _context.IspitniRokovi.FindAsync(ponavljanjeIspitnogRoka.IspitniRokId);
+            if (ispitniRok != null)
+            {
+                ponavljanjeIspitnogRokaZaAzuriranje.IspitniRok = ispitniRok;
+            }
+        }
+
+        if (ponavljanjeIspitnogRoka.BlanketiIds != null)
+        {
+            Blanket? blanket;
+            for (int i = 0; i < ponavljanjeIspitnogRoka.BlanketiIds.Count(); i++)
+            {
+                blanket = await _context.Blanketi.FindAsync(ponavljanjeIspitnogRoka.BlanketiIds[i]);
+                if (blanket != null)
+                {
+                    if (!ponavljanjeIspitnogRokaZaAzuriranje.Blanketi!.Contains(blanket))
+                        ponavljanjeIspitnogRokaZaAzuriranje.Blanketi.Add(blanket);
+                }
+            }
+        }
 
         await _context.SaveChangesAsync();
         return Ok(ponavljanjeIspitnogRokaZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<PonavljanjeIspitnogRoka>))]
     [TypeFilter(typeof(ValidateIdFilter<PonavljanjeIspitnogRoka>))]
-    public async Task<ActionResult> ObrisiPonavljanjeIspitnogRoka(int id)
+    public async Task<ActionResult<string>> ObrisiPonavljanjeIspitnogRoka(int id)
     {
-        var ponavljanjeIspitnogRokaZaBrisanje = await _context.PonavljanjaIspitnihRokova.FindAsync(id);
+        // iz ValidateIdFilter-a
+        var ponavljanjeIspitnogRokaZaBrisanje = HttpContext.Items["entity"] as PonavljanjeIspitnogRoka;
         _context.PonavljanjaIspitnihRokova.Remove(ponavljanjeIspitnogRokaZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return NoContent();
+        return Ok("Ponavljanje ispitnog roka uspešno obrisano");
     }
 }

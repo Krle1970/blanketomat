@@ -88,7 +88,7 @@ public class PodoblastController : ControllerBase
         _context.Podoblasti.Add(podoblast);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(Podoblast),
+        return CreatedAtAction(nameof(VratiPodoblast),
             new { id = podoblast.Id },
             podoblast
             );

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Blanketomat.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
