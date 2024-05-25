@@ -1,7 +1,8 @@
 ﻿using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
+using Blanketomat.API.DTOs.StudentDTOs;
 using Blanketomat.API.Filters.GenericFilters;
-using Blanketomat.API.Filters.StudentFilters;
+using Blanketomat.API.Helper;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,8 +20,10 @@ public class StudentController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("{page}/{count}")]
-    public async Task<ActionResult> VratiStudente(int page, int count)
+    [HttpGet]
+    [TypeFilter(typeof(ValidateDbSetFilter<Student>))]
+    [ValidatePaginationFilter]
+    public async Task<ActionResult<PaginationResponseDTO<Student>>> VratiStudente(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Studenti.Count() / (float)brojRezultata);
@@ -42,49 +45,102 @@ public class StudentController : ControllerBase
 
     [HttpGet("{id}")]
     [TypeFilter(typeof(ValidateIdFilter<Student>))]
-    public async Task<ActionResult> VratiStudenta(int id)
+    public ActionResult<Student> VratiStudenta(int id)
     {
-        return Ok(await _context.Studenti.FindAsync(id));
+        // iz ValidateIdFilter-a
+        return Ok(HttpContext.Items["entity"] as Student);
     }
 
-    [HttpPost]
-    [TypeFilter(typeof(ValidateDodajStudentaFilter))]
-    public async Task<ActionResult> DodajStudenta([FromBody]Student student)
+    [HttpPut("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Student>))]
+    [TypeFilter(typeof(ValidateIdFilter<Student>))]
+    public async Task<ActionResult> AzurirajStudenta(int id, [FromBody]AzurirajStudentaDTO student)
     {
-        _context.Studenti.Add(student);
-        await _context.SaveChangesAsync();
+        // iz ValidateIdFilter-a
+        var studentZaAzuriranje = HttpContext.Items["entity"] as Student;
 
-        return CreatedAtAction(nameof(VratiStudenta),
-            new { id = student.Id },
-            student
-            );
-    }
+        PasswordManager.CreatePasswordHash(student.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-    [HttpPut]
-    [TypeFilter(typeof(ValidateAzurirajStudentaFilter))]
-    public async Task<ActionResult> AzurirajStudenta([FromBody]Student student)
-    {
-        var studentZaAzuriranje = HttpContext.Items["student"] as Student;
         studentZaAzuriranje!.Ime = student.Ime;
         studentZaAzuriranje.Prezime = student.Prezime;
         studentZaAzuriranje.Email = student.Email;
-        //studentZaAzuriranje.Password = student.Password;
-        studentZaAzuriranje.Akreditacija = student.Akreditacija;
-        studentZaAzuriranje.Smer = student.Smer;
-        studentZaAzuriranje.Predmeti = student.Predmeti;
+        studentZaAzuriranje.PasswordHash = passwordHash;
+        studentZaAzuriranje.PasswordSalt = passwordSalt;
+        
+        if (student.AkreditacijaId != null)
+        {
+            Akreditacija? akreditacija = await _context.Akreditacije.FindAsync(student.AkreditacijaId);
+            if (akreditacija != null)
+            {
+                studentZaAzuriranje.Akreditacija = akreditacija;
+            }
+        }
+
+        if (student.SmerId != null)
+        {
+            Smer? smer = await _context.Smerovi.FindAsync(student.SmerId);
+            if (smer != null)
+            {
+                studentZaAzuriranje.Smer = smer;
+            }
+        }
+
+        if (student.PredmetiIds != null)
+        {
+            Predmet? predmet;
+            for (int i = 0; i < student.PredmetiIds.Count(); i++)
+            {
+                predmet = await _context.Predmeti.FindAsync(student.PredmetiIds[i]);
+                if (predmet != null)
+                {
+                    if (!studentZaAzuriranje.Predmeti!.Contains(predmet))
+                        studentZaAzuriranje.Predmeti.Add(predmet);
+                }
+            }
+        }
+
+        if (student.PostavljeniKomentariIds != null)
+        {
+            Komentar? komentar;
+            for (int i = 0; i < student.PostavljeniKomentariIds.Count(); i++)
+            {
+                komentar = await _context.Komentari.FindAsync(student.PostavljeniKomentariIds[i]);
+                if (komentar != null)
+                {
+                    if (!studentZaAzuriranje.PostavljeniKomentari!.Contains(komentar))
+                        studentZaAzuriranje.PostavljeniKomentari.Add(komentar);
+                }
+            }
+        }
+
+        if (student.PostavljeniOdgovoriIds != null)
+        {
+            Odgovor? odgovor;
+            for (int i = 0; i < student.PostavljeniOdgovoriIds.Count(); i++)
+            {
+                odgovor = await _context.Odgovori.FindAsync(student.PostavljeniOdgovoriIds[i]);
+                if (odgovor != null)
+                {
+                    if (!studentZaAzuriranje.PostavljeniOdgovori!.Contains(odgovor))
+                        studentZaAzuriranje.PostavljeniOdgovori.Add(odgovor);
+                }
+            }
+        }
 
         await _context.SaveChangesAsync();
         return Ok(studentZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Student>))]
     [TypeFilter(typeof(ValidateIdFilter<Student>))]
-    public async Task<ActionResult> ObrisiStudenta(int id)
+    public async Task<ActionResult<string>> ObrisiStudenta(int id)
     {
-        var studentZaBrisanje = await _context.Studenti.FindAsync(id);
+        // iz ValidateIdFilter-a
+        var studentZaBrisanje = HttpContext.Items["entity"] as Student;
         _context.Studenti.Remove(studentZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return NoContent();
+        return Ok("Student uspešno obrisan");
     }
 }
