@@ -6,7 +6,6 @@ using Blanketomat.API.Filters.OblastFilters;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace Blanketomat.API.Controllers;
 

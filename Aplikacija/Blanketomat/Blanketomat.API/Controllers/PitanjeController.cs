@@ -1,5 +1,6 @@
 using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
+using Blanketomat.API.DTOs.PitanjeDTOs;
 using Blanketomat.API.Filters.GenericFilters;
 using Blanketomat.API.Filters.PitanjeFilters;
 using Blanketomat.API.Models;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Blanketomat.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class PitanjeController : ControllerBase
 {
@@ -19,8 +20,10 @@ public class PitanjeController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("{page}/{count}")]
-    public async Task<ActionResult> VratiPitanja(int page, int count)
+    [HttpGet]
+    [TypeFilter(typeof(ValidateDbSetFilter<Pitanje>))]
+    [ValidatePaginationFilter]
+    public async Task<ActionResult<PaginationResponseDTO<Pitanje>>> VratiPitanja(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Pitanja.Count() / (float)brojRezultata);
@@ -41,16 +44,47 @@ public class PitanjeController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Pitanje>))]
     [TypeFilter(typeof(ValidateIdFilter<Pitanje>))]
-    public async Task<ActionResult> VratiPitanje(int id)
+    public ActionResult<Pitanje> VratiPitanje(int id)
     {
-        return Ok(await _context.Oblasti.FindAsync(id));
+        // iz ValidateIdFilter-a
+        return Ok(HttpContext.Items["entity"] as Pitanje);
     }
 
     [HttpPost]
+    [TypeFilter(typeof(ValidateDbSetFilter<Pitanje>))]
     [TypeFilter(typeof(ValidateDodajPitanjeFilter))]
-    public async Task<ActionResult> DodajPitanje([FromBody]Pitanje pitanje)
+    public async Task<ActionResult> DodajPitanje([FromBody]DodajPitanjeDTO novoPitanje)
     {
+        Pitanje pitanje = new Pitanje
+        {
+            Tekst = novoPitanje.Tekst
+        };
+
+        if (novoPitanje.SlikeIds != null)
+        {
+            Slika? slika;
+            for (int i = 0; i < novoPitanje.SlikeIds.Count(); i++)
+            {
+                slika = await _context.Slike.FindAsync(novoPitanje.SlikeIds[i]);
+                if (slika != null)
+                {
+                    if (!pitanje.Slika!.Contains(slika))
+                        pitanje.Slika.Add(slika);
+                }
+            }
+        }
+
+        if (novoPitanje.OblastId != null)
+        {
+            Oblast? oblast = await _context.Oblasti.FindAsync(novoPitanje.OblastId);
+            if (oblast != null)
+            {
+                pitanje.Oblast = oblast;
+            }
+        }
+
         _context.Pitanja.Add(pitanje);
         await _context.SaveChangesAsync();
 
@@ -60,29 +94,66 @@ public class PitanjeController : ControllerBase
             );
     }
 
-    [HttpPut]
-    [TypeFilter(typeof(ValidateAzurirajPitanjeFilter))]
-    public async Task<ActionResult> AzurirajPitanje([FromBody]Pitanje pitanje)
+    [HttpPut("{id}")]
+    [TypeFilter(typeof(ValidateIdFilter<Pitanje>))]
+    public async Task<ActionResult<Pitanje>> AzurirajPitanje(int id, [FromBody]AzurirajPitanjeDTO pitanje)
     {
-        var pitanjeZaAzuriranje = HttpContext.Items["pitanje"] as Pitanje;
+        // iz ValidateIdFilter-a
+        var pitanjeZaAzuriranje = HttpContext.Items["entity"] as Pitanje;
 
         pitanjeZaAzuriranje!.Tekst = pitanje.Tekst;
-        pitanjeZaAzuriranje.Slika = pitanje.Slika;
-        pitanjeZaAzuriranje.Oblast = pitanje.Oblast;
-        pitanjeZaAzuriranje.Blanketi = pitanje.Blanketi;
-        
+
+        if (pitanje.SlikeIds != null)
+        {
+            Slika? slika;
+            for (int i = 0; i < pitanje.SlikeIds.Count(); i++)
+            {
+                slika = await _context.Slike.FindAsync(pitanje.SlikeIds[i]);
+                if (slika != null)
+                {
+                    if (!pitanjeZaAzuriranje.Slika!.Contains(slika))
+                        pitanjeZaAzuriranje.Slika.Add(slika);
+                }
+            }
+        }
+
+        if (pitanje.OblastId != null)
+        {
+            Oblast? oblast = await _context.Oblasti.FindAsync(pitanje.OblastId);
+            if (oblast != null)
+            {
+                pitanjeZaAzuriranje.Oblast = oblast;
+            }
+        }
+
+        if (pitanje.BlanketiIds != null)
+        {
+            Blanket? blanket;
+            for (int i = 0; i < pitanje.BlanketiIds.Count(); i++)
+            {
+                blanket = await _context.Blanketi.FindAsync(pitanje.BlanketiIds[i]);
+                if (blanket != null)
+                {
+                    if (!pitanjeZaAzuriranje.Blanketi!.Contains(blanket))
+                        pitanjeZaAzuriranje.Blanketi.Add(blanket);
+                }
+            }
+        }
+
         await _context.SaveChangesAsync();
         return Ok(pitanjeZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Pitanje>))]
     [TypeFilter(typeof(ValidateIdFilter<Pitanje>))]
-    public async Task<ActionResult> ObrisiPitanje(int id)
+    public async Task<ActionResult<string>> ObrisiPitanje(int id)
     {
-        var pitanjaZaBrisanje = await _context.Pitanja.FindAsync(id);
-        _context.Pitanja.Remove(pitanjaZaBrisanje!);
+        // iz ValidateIdFilter-a
+        var pitanjeZaBrisanje = HttpContext.Items["entity"] as Pitanje;
+        _context.Pitanja.Remove(pitanjeZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return NoContent();
+        return Ok("Pitanje uspešno obrisano");
     }
 }
