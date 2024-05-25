@@ -1,5 +1,5 @@
 ﻿using Blanketomat.API.Context;
-using Blanketomat.API.Models;
+using Blanketomat.API.DTOs.SmerDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -16,45 +16,21 @@ public class ValidateDodajSmerFilter : ActionFilterAttribute
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        var smer = context.ActionArguments["smer"] as Smer;
-        if (smer == null)
+        var smer = context.ActionArguments["noviSmer"] as DodajSmerDTO;
+        var postojeciSmer = _context.Smerovi.FirstOrDefault(x =>
+            !string.IsNullOrWhiteSpace(smer!.Naziv) &&
+            !string.IsNullOrWhiteSpace(x.Naziv) &&
+            smer.Naziv.ToLower() == x.Naziv.ToLower()
+            );
+
+        if (postojeciSmer != null)
         {
-            context.ModelState.AddModelError("Smer", "Smer objekat je null.");
+            context.ModelState.AddModelError("Smer", "Smer vec postoji.");
             var problemDetails = new ValidationProblemDetails(context.ModelState)
             {
                 Status = StatusCodes.Status400BadRequest
             };
             context.Result = new BadRequestObjectResult(problemDetails);
-        }
-        else
-        {
-            if (_context.Smerovi == null)
-            {
-                context.ModelState.AddModelError("Smer", "Tabela Smerovi ne postoji.");
-                var problemDetails = new ValidationProblemDetails(context.ModelState)
-                {
-                    Status = StatusCodes.Status404NotFound
-                };
-                context.Result = new NotFoundObjectResult(problemDetails);
-            }
-            else
-            {
-                var postojeciSmer = _context.Smerovi.FirstOrDefault(x =>
-                    !string.IsNullOrWhiteSpace(smer.Naziv) &&
-                    !string.IsNullOrWhiteSpace(x.Naziv) &&
-                    smer.Naziv.ToLower() == x.Naziv.ToLower()
-                    );
-
-                if (postojeciSmer != null)
-                {
-                    context.ModelState.AddModelError("Smer", "Smer vec postoji.");
-                    var problemDetails = new ValidationProblemDetails(context.ModelState)
-                    {
-                        Status = StatusCodes.Status400BadRequest
-                    };
-                    context.Result = new BadRequestObjectResult(problemDetails);
-                }
-            }
         }
     }
 }
