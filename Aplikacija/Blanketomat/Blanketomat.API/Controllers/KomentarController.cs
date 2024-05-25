@@ -1,5 +1,6 @@
 using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
+using Blanketomat.API.DTOs.KomentarDTOs;
 using Blanketomat.API.Filters.GenericFilters;
 using Blanketomat.API.Filters.KomentarFilters;
 using Blanketomat.API.Models;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Blanketomat.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class KomentarController : ControllerBase
 {
@@ -19,8 +20,10 @@ public class KomentarController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("{page}/{count}")]
-    public async Task<ActionResult> VratiKomentare(int page, int count)
+    [HttpGet]
+    [TypeFilter(typeof(ValidateDbSetFilter<Komentar>))]
+    [ValidatePaginationFilter]
+    public async Task<ActionResult<PaginationResponseDTO<Komentar>>> VratiKomentare(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Komentari.Count() / (float)brojRezultata);
@@ -41,16 +44,57 @@ public class KomentarController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Komentar>))]
     [TypeFilter(typeof(ValidateIdFilter<Komentar>))]
-    public async Task<ActionResult> VratiKomentar(int id)
+    public ActionResult<Komentar> VratiKomentar(int id)
     {
-        return Ok(await _context.Komentari.FindAsync(id));
+        // iz ValidateIdFilter-a
+        return Ok(HttpContext.Items["entity"] as Komentar);
     }
 
     [HttpPost]
+    [TypeFilter(typeof(ValidateDbSetFilter<Komentar>))]
     [TypeFilter(typeof(ValidateDodajKomentaFilter))]
-    public async Task<ActionResult> DodajKomentar([FromBody]Komentar komentar)
+    public async Task<ActionResult> DodajKomentar([FromBody]DodajKomentarDTO noviKomentar)
     {
+        Komentar komentar = new Komentar
+        {
+            Tekst = noviKomentar.Tekst,
+            Lajkovi = 0
+        };
+
+        if (noviKomentar.BlanketId != null)
+        {
+            Blanket? blanket = await _context.Blanketi.FindAsync(noviKomentar.BlanketId);
+            if (blanket != null)
+            {
+                komentar.Blanket = blanket;
+            }
+        }
+
+        if (noviKomentar.SlikeIds != null)
+        {
+            Slika? slika;
+            for (int i = 0; i < noviKomentar.SlikeIds.Count(); i++)
+            {
+                slika = await _context.Slike.FindAsync(noviKomentar.SlikeIds[i]);
+                if (slika != null)
+                {
+                    if (!komentar.Slika!.Contains(slika))
+                        komentar.Slika.Add(slika);
+                }
+            }
+        }
+
+        if (noviKomentar.StudentPostavioId != null)
+        {
+            Student? student = await _context.Studenti.FindAsync(noviKomentar.StudentPostavioId);
+            if (student != null)
+            {
+                komentar.StudentPostavio = student;
+            }
+        }
+
         _context.Komentari.Add(komentar);
         await _context.SaveChangesAsync();
 
@@ -60,31 +104,63 @@ public class KomentarController : ControllerBase
             );
     }
 
-    [HttpPut]
-    [TypeFilter(typeof(ValidateAzurirajKomentarFilter))]
-    public async Task<ActionResult> AzurirajKomentar([FromBody]Komentar komentar)
+    [HttpPut("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Komentar>))]
+    [TypeFilter(typeof(ValidateIdFilter<Komentar>))]
+    public async Task<ActionResult<Komentar>> AzurirajKomentar(int id, [FromBody]AzurirajKomentarDTO komentar)
     {
-        var komentarZaAzuriranje = HttpContext.Items["komentar"] as Komentar;
+        // iz ValidateIdFilter-a
+        var komentarZaAzuriranje = HttpContext.Items["entity"] as Komentar;
 
         komentarZaAzuriranje!.Tekst = komentar.Tekst;
         komentarZaAzuriranje.Lajkovi = komentar.Lajkovi;
-        komentarZaAzuriranje.Slika = komentar.Slika;
-        komentarZaAzuriranje.StudentPostavio = komentar.StudentPostavio;
-        komentarZaAzuriranje.ProfesoriLiked = komentar.ProfesoriLiked;
-        komentarZaAzuriranje.AsistentiLiked = komentar.AsistentiLiked;
+
+        if (komentar.BlanketId != null)
+        {
+            Blanket? blanket = await _context.Blanketi.FindAsync(komentar.BlanketId);
+            if (blanket != null)
+            {
+                komentarZaAzuriranje.Blanket = blanket;
+            }
+        }
+
+        if (komentar.SlikeIds != null)
+        {
+            Slika? slika;
+            for (int i = 0; i < komentar.SlikeIds.Count(); i++)
+            {
+                slika = await _context.Slike.FindAsync(komentar.SlikeIds[i]);
+                if (slika != null)
+                {
+                    if (!komentarZaAzuriranje.Slika!.Contains(slika))
+                        komentarZaAzuriranje.Slika.Add(slika);
+                }
+            }
+        }
+
+        if (komentar.StudentPostavioId != null)
+        {
+            Student? student = await _context.Studenti.FindAsync(komentar.StudentPostavioId);
+            if (student != null)
+            {
+                komentarZaAzuriranje.StudentPostavio = student;
+            }
+        }
 
         await _context.SaveChangesAsync();
         return Ok(komentarZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Komentar>))]
     [TypeFilter(typeof(ValidateIdFilter<Komentar>))]
-    public async Task<ActionResult> ObrisiKomentar(int id)
+    public async Task<ActionResult<string>> ObrisiKomentar(int id)
     {
-        var KomentarZaBrisanje = await _context.Komentari.FindAsync(id);
+        // iz ValidateIdFilter-a
+        var KomentarZaBrisanje = HttpContext.Items["entity"] as Komentar;
         _context.Komentari.Remove(KomentarZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return NoContent();
+        return Ok("Komentar uspešno obrisan");
     }
 }

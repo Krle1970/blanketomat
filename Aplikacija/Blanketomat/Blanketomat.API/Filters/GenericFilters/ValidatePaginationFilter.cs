@@ -7,20 +7,32 @@ public class ValidatePaginationFilter : ActionFilterAttribute
 {
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        var pageNumber = context.ActionArguments["page"] as int?;
-        var itemsPerPage = context.ActionArguments["count"] as int?;
-
-        if (pageNumber != null && itemsPerPage != null)
+        try
         {
-            if (pageNumber <= 0 || itemsPerPage <= 0)
+            var pageNumber = context.ActionArguments["page"] as int?;
+            var itemsPerPage = context.ActionArguments["count"] as int?;
+
+            if (pageNumber != null && itemsPerPage != null)
             {
-                context.ModelState.AddModelError("Pagination", "Broj stranice i broj podataka po stranici moraju da budu pozitivni brojevi");
-                var problemDetails = new ValidationProblemDetails(context.ModelState)
+                if (pageNumber <= 0 || itemsPerPage <= 0)
                 {
-                    Status = StatusCodes.Status400BadRequest
-                };
-                context.Result = new BadRequestObjectResult(problemDetails);
+                    context.ModelState.AddModelError("Pagination", "Broj stranice i broj podataka po stranici moraju da budu pozitivni brojevi");
+                    var problemDetails = new ValidationProblemDetails(context.ModelState)
+                    {
+                        Status = StatusCodes.Status400BadRequest
+                    };
+                    context.Result = new BadRequestObjectResult(problemDetails);
+                }
             }
+        }
+        catch (KeyNotFoundException)
+        {
+            context.ModelState.AddModelError("Pagination", "Broj stranice i broj podataka po stranici su obavezni podaci");
+            var problemDetails = new ValidationProblemDetails(context.ModelState)
+            {
+                Status = StatusCodes.Status400BadRequest
+            };
+            context.Result = new BadRequestObjectResult(problemDetails);
         }
     }
 }
