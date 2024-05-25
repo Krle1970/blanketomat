@@ -1,14 +1,15 @@
 using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
+using Blanketomat.API.DTOs.ProfesorDTO;
 using Blanketomat.API.Filters.GenericFilters;
-using Blanketomat.API.Filters.ProfesorFilters;
+using Blanketomat.API.Helper;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Blanketomat.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class ProfesorController : ControllerBase
 {       
@@ -19,8 +20,10 @@ public class ProfesorController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("{page}/{count}")]
-    public async Task<ActionResult> VratiProfesore(int page, int count)
+    [HttpGet]
+    [TypeFilter(typeof(ValidateDbSetFilter<Profesor>))]
+    [ValidatePaginationFilter]
+    public async Task<ActionResult<PaginationResponseDTO<Profesor>>> VratiProfesore(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Profesori.Count() / (float)brojRezultata);
@@ -41,37 +44,93 @@ public class ProfesorController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Profesor>))]
     [TypeFilter(typeof(ValidateIdFilter<Profesor>))]
-    public async Task<ActionResult> VratiProfesora(int id)
+    public ActionResult<Profesor> VratiProfesora(int id)
     {
-        return Ok(await _context.Profesori.FindAsync(id));
+        // iz ValidateIdFilter-a
+        return Ok(HttpContext.Items["entity"] as Profesor);
     }
 
-    [HttpPost]
-    [TypeFilter(typeof(ValidateDodajProfesoraFilter))]
-    public async Task<ActionResult> DodajProfesora([FromBody] Profesor profesor)
+    [HttpPut("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Profesor>))]
+    public async Task<ActionResult<Profesor>> AzurirajProfesora(int id, [FromBody]AzurirajProfesoraDTO profesor)
     {
-        _context.Profesori.Add(profesor);
-        await _context.SaveChangesAsync();
+        // iz ValidateIdFilter-a
+        var profesorZaAzuriranje = HttpContext.Items["entity"] as Profesor;
 
-        return CreatedAtAction(nameof(VratiProfesora),
-            new { id = profesor.Id },
-            profesor
-            );
-    }
+        PasswordManager.CreatePasswordHash(profesor.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-    [HttpPut]
-    [TypeFilter(typeof(ValidateAzurirajProfesoraFilter))]
-    public async Task<ActionResult> AzurirajProfesora([FromBody]Profesor profesor)
-    {
-        var profesorZaAzuriranje = HttpContext.Items["profesor"] as Profesor;
         profesorZaAzuriranje!.Ime = profesor.Ime;
         profesorZaAzuriranje.Prezime = profesor.Prezime;
         profesorZaAzuriranje.Email = profesor.Email;
-        //profesorZaAzuriranje.Password = profesor.Password;
-        profesorZaAzuriranje.Katedra = profesor.Katedra;
-        profesorZaAzuriranje.Smerovi = profesor.Smerovi;
-        profesorZaAzuriranje.Predmeti = profesor.Predmeti;
+        profesorZaAzuriranje.PasswordHash = passwordHash;
+        profesorZaAzuriranje.PasswordSalt = passwordSalt;
+        
+        if (profesor.SmeroviIds != null)
+        {
+            Smer? smer;
+            for (int i = 0; i < profesor.SmeroviIds.Count(); i++)
+            {
+                smer = await _context.Smerovi.FindAsync(profesor.SmeroviIds[i]);
+                if (smer != null)
+                {
+                    if (!profesorZaAzuriranje.Smerovi!.Contains(smer))
+                        profesorZaAzuriranje.Smerovi.Add(smer);
+                }
+            }
+        }
+
+        if (profesor.PredmetiIds != null)
+        {
+            Predmet? predmet;
+            for (int i = 0; i < profesor.PredmetiIds.Count(); i++)
+            {
+                predmet = await _context.Predmeti.FindAsync(profesor.PredmetiIds[i]);
+                if (predmet != null)
+                {
+                    if (!profesorZaAzuriranje.Predmeti!.Contains(predmet))
+                        profesorZaAzuriranje.Predmeti.Add(predmet);
+                }
+            }
+        }
+
+        if (profesor.KatedraId != null)
+        {
+            Katedra? katedra = await _context.Katedre.FindAsync(profesor.KatedraId);
+            if (katedra != null)
+            {
+                profesorZaAzuriranje.Katedra = katedra;
+            }
+        }
+
+        if (profesor.LajkovaniKomentariIds != null)
+        {
+            Komentar? komentar;
+            for (int i = 0; i < profesor.LajkovaniKomentariIds.Count(); i++)
+            {
+                komentar = await _context.Komentari.FindAsync(profesor.LajkovaniKomentariIds[i]);
+                if (komentar != null)
+                {
+                    if (!profesorZaAzuriranje.LajkovaniKomentari!.Contains(komentar))
+                        profesorZaAzuriranje.LajkovaniKomentari.Add(komentar);
+                }
+            }
+        }
+
+        if (profesor.LajkovaniOdgovoriIds != null)
+        {
+            Odgovor? odgovor;
+            for (int i = 0; i < profesor.LajkovaniOdgovoriIds.Count(); i++)
+            {
+                odgovor = await _context.Odgovori.FindAsync(profesor.LajkovaniOdgovoriIds[i]);
+                if (odgovor != null)
+                {
+                    if (!profesorZaAzuriranje.LajkovaniOdgovori!.Contains(odgovor))
+                        profesorZaAzuriranje.LajkovaniOdgovori.Add(odgovor);
+                }
+            }
+        }
 
         await _context.SaveChangesAsync();
     
@@ -79,13 +138,15 @@ public class ProfesorController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Profesor>))]
     [TypeFilter(typeof(ValidateIdFilter<Profesor>))]
     public async Task<ActionResult> ObrisiProfesora(int id)
     {
-        var profesorZaBrisanje = await _context.Studenti.FindAsync(id);
-        _context.Studenti.Remove(profesorZaBrisanje!);
+        // iz ValidateIdFilter-a
+        var profesorZaBrisanje = HttpContext.Items["entity"] as Profesor;
+        _context.Profesori.Remove(profesorZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return NoContent();
+        return Ok("Profesor uspešno obrisan");
     }
 }
