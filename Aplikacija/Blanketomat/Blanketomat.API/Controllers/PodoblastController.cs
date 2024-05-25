@@ -1,5 +1,6 @@
 using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
+using Blanketomat.API.DTOs.PodoblastDTOs;
 using Blanketomat.API.Filters.GenericFilters;
 using Blanketomat.API.Filters.PodoblastFilters;
 using Blanketomat.API.Models;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Blanketomat.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class PodoblastController : ControllerBase
 {
@@ -19,8 +20,10 @@ public class PodoblastController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("{page}/{count}")]
-    public async Task<ActionResult> VratiPodoblasti(int page, int count)
+    [HttpGet]
+    [TypeFilter(typeof(ValidateDbSetFilter<Podoblast>))]
+    [ValidatePaginationFilter]
+    public async Task<ActionResult<PaginationResponseDTO<Podoblast>>> VratiPodoblasti(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Podoblasti.Count() / (float)brojRezultata);
@@ -41,16 +44,47 @@ public class PodoblastController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Podoblast>))]
     [TypeFilter(typeof(ValidateIdFilter<Podoblast>))]
-    public async Task<ActionResult> VratiPodoblast(int id)
+    public ActionResult<Podoblast> VratiPodoblast(int id)
     {
-        return Ok(await _context.Podoblasti.FindAsync(id));
+        // iz ValidateIdFilter-a
+        return Ok(HttpContext.Items["entity"] as Podoblast);
     }
 
     [HttpPost]
+    [TypeFilter(typeof(ValidateDbSetFilter<Podoblast>))]
     [TypeFilter(typeof(ValidateDodajPodoblastFilter))]
-    public async Task<ActionResult> DodajPodoblast([FromBody]Podoblast podoblast)
+    public async Task<ActionResult> DodajPodoblast([FromBody]DodajPodoblastDTO novaPodoblast)
     {
+        Podoblast podoblast = new Podoblast
+        {
+            Naziv = novaPodoblast.Naziv
+        };
+
+        if (novaPodoblast.OblastId != null)
+        {
+            Oblast? oblast = await _context.Oblasti.FindAsync(novaPodoblast.OblastId);
+            if (oblast != null)
+            {
+                podoblast.Oblast = oblast;
+            }
+        }
+
+        if (novaPodoblast.ZadaciIds != null)
+        {
+            Zadatak? zadatak;
+            for (int i = 0; i < novaPodoblast.ZadaciIds.Count(); i++)
+            {
+                zadatak = await _context.Zadaci.FindAsync(novaPodoblast.ZadaciIds[i]);
+                if (zadatak != null)
+                {
+                    if (!podoblast.Zadaci!.Contains(zadatak))
+                        podoblast.Zadaci.Add(zadatak);
+                }
+            }
+        }
+
         _context.Podoblasti.Add(podoblast);
         await _context.SaveChangesAsync();
 
@@ -60,28 +94,67 @@ public class PodoblastController : ControllerBase
             );
     }
 
-    [HttpPut]
-    [TypeFilter(typeof(ValidateAzurirajPodoblastFilter))]
-    public async Task<ActionResult> AzurirajPodoblast([FromBody]Podoblast podoblast)
+    [HttpPut("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Podoblast>))]
+    [TypeFilter(typeof(ValidateIdFilter<Podoblast>))]
+    public async Task<ActionResult<Podoblast>> AzurirajPodoblast(int id, [FromBody]AzurirajPodoblastDTO podoblast)
     {
-        var podoblastZaAzuriranje = HttpContext.Items["podoblast"] as Podoblast;
+        // iz ValidateIdFilter-a
+        var podoblastZaAzuriranje = HttpContext.Items["entity"] as Podoblast;
 
         podoblastZaAzuriranje!.Naziv = podoblast.Naziv;
-        podoblastZaAzuriranje.Zadaci = podoblast.Zadaci;
-        podoblastZaAzuriranje.Blanketi = podoblast.Blanketi;
-        
+
+        if (podoblast.OblastId != null)
+        {
+            Oblast? oblast = await _context.Oblasti.FindAsync(podoblast.OblastId);
+            if (oblast != null)
+            {
+                podoblastZaAzuriranje.Oblast = oblast;
+            }
+        }
+
+        if (podoblast.ZadaciIds != null)
+        {
+            Zadatak? zadatak;
+            for (int i = 0; i < podoblast.ZadaciIds.Count(); i++)
+            {
+                zadatak = await _context.Zadaci.FindAsync(podoblast.ZadaciIds[i]);
+                if (zadatak != null)
+                {
+                    if (!podoblastZaAzuriranje.Zadaci!.Contains(zadatak))
+                        podoblastZaAzuriranje.Zadaci.Add(zadatak);
+                }
+            }
+        }
+
+        if (podoblast.BlanketiIds != null)
+        {
+            Blanket? blanket;
+            for (int i = 0; i < podoblast.BlanketiIds.Count(); i++)
+            {
+                blanket = await _context.Blanketi.FindAsync(podoblast.BlanketiIds[i]);
+                if (blanket != null)
+                {
+                    if (!podoblastZaAzuriranje.Blanketi!.Contains(blanket))
+                        podoblastZaAzuriranje.Blanketi.Add(blanket);
+                }
+            }
+        }
+
         await _context.SaveChangesAsync();
         return Ok(podoblastZaAzuriranje);
     }
 
     [HttpDelete("{id}")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Podoblast>))]
     [TypeFilter(typeof(ValidateIdFilter<Podoblast>))]
-    public async Task<ActionResult> ObrisiPodoblast(int id)
+    public async Task<ActionResult<string>> ObrisiPodoblast(int id)
     {
-        var podoblastZaBrisanje = await _context.Podoblasti.FindAsync(id);
+        // iz ValidateIdFilter-a
+        var podoblastZaBrisanje = HttpContext.Items["entity"] as Podoblast;
         _context.Podoblasti.Remove(podoblastZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return NoContent();
+        return Ok("Podoblast uspešno obrisana");
     }
 }
