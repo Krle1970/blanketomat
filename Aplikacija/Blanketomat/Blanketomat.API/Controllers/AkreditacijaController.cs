@@ -54,6 +54,7 @@ public class AkreditacijaController : ControllerBase
     [TypeFilter(typeof(ValidateIdFilter<Akreditacija>))]
     public ActionResult<Akreditacija> VratiAkreditaciju(int id)
     {
+        // iz ValidateIdFilter-a
         return Ok(HttpContext.Items["entity"] as Akreditacija);
     }
 
