@@ -1,5 +1,6 @@
 using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
+using Blanketomat.API.DTOs.AsistentDTOs;
 using Blanketomat.API.Filters.GenericFilters;
 using Blanketomat.API.Helper;
 using Blanketomat.API.Models;
@@ -60,7 +61,7 @@ public class AsistentController : ControllerBase
     [HttpPut("{id}")]
     [TypeFilter(typeof(ValidateDbSetFilter<Asistent>))]
     [TypeFilter(typeof(ValidateIdFilter<Asistent>))]
-    public async Task<ActionResult<Asistent>> AzurirajAsistenta(int id, [FromBody]AsistentDTO asistent)
+    public async Task<ActionResult<Asistent>> AzurirajAsistenta(int id, [FromBody]AzurirajAsistentaDTO asistent)
     {
         // iz ValidateIdFilter-a
         var asistentZaAzuriranje = HttpContext.Items["entity"] as Asistent;
@@ -106,6 +107,34 @@ public class AsistentController : ControllerBase
                 {
                     if (!asistentZaAzuriranje.Predmeti!.Contains(predmet))
                         asistentZaAzuriranje.Predmeti.Add(predmet);
+                }
+            }
+        }
+
+        if (asistent.LajkovaniKomentariIds != null)
+        {
+            Komentar? komentar;
+            for (int i = 0; i < asistent.LajkovaniKomentariIds.Length; i++)
+            {
+                komentar = await _context.Komentari.FindAsync(asistent.LajkovaniKomentariIds[i]);
+                if (komentar != null)
+                {
+                    if (!asistentZaAzuriranje.LajkovaniKomentari!.Contains(komentar))
+                        asistentZaAzuriranje.LajkovaniKomentari.Add(komentar);
+                }
+            }
+        }
+
+        if (asistent.LajkovaniOdgovoriIds != null)
+        {
+            Odgovor? odgovor;
+            for (int i = 0; i < asistent.LajkovaniOdgovoriIds.Length; i++)
+            {
+                odgovor = await _context.Odgovori.FindAsync(asistent.LajkovaniOdgovoriIds[i]);
+                if (odgovor != null)
+                {
+                    if (!asistentZaAzuriranje.LajkovaniOdgovori!.Contains(odgovor))
+                        asistentZaAzuriranje.LajkovaniOdgovori.Add(odgovor);
                 }
             }
         }

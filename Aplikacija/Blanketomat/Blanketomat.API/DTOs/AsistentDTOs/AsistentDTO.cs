@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Blanketomat.API.DTOs;
+namespace Blanketomat.API.DTOs.AsistentDTOs;
 
 public class AsistentDTO
 {
@@ -20,7 +20,7 @@ public class AsistentDTO
     [MinLength(5, ErrorMessage = "Minimalna duzina sifre je 5 karaktera")]
     [MaxLength(30, ErrorMessage = "Maksimalna duzina sifre je 30 karaktera")]
     public required string Password { get; set; }
-    public int? KatedraId {  get; set; }
+    public int? KatedraId { get; set; }
     public int[]? SmeroviIds { get; set; }
     public int[]? PredmetiIds { get; set; }
 }

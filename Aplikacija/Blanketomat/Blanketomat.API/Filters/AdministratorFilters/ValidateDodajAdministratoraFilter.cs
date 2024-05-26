@@ -1,5 +1,5 @@
 ﻿using Blanketomat.API.Context;
-using Blanketomat.API.DTOs;
+using Blanketomat.API.DTOs.AdministratorDTOs;
 using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

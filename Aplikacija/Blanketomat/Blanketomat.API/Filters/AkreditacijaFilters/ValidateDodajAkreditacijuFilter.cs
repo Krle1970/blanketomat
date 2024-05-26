@@ -1,5 +1,5 @@
 ﻿using Blanketomat.API.Context;
-using Blanketomat.API.DTOs;
+using Blanketomat.API.DTOs.AkreditacijaDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 

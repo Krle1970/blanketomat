@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Blanketomat.API.DTOs;
+namespace Blanketomat.API.DTOs.AdministratorDTOs;
 
 public class AdministratorDTO
 {

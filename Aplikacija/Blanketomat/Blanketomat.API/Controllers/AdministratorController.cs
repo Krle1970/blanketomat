@@ -1,5 +1,6 @@
 using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
+using Blanketomat.API.DTOs.AdministratorDTOs;
 using Blanketomat.API.Filters.AdministratorFilters;
 using Blanketomat.API.Filters.GenericFilters;
 using Blanketomat.API.Helper;
