@@ -13,7 +13,7 @@ body {
 }
 .card {
   background: rgb(255, 255, 255);  /* Poluprozirna kartica za bolju vidljivost teksta */
-  border: 2px solid #0400ff;
+  border: 2px solid #000000;
   border-radius: 10%;
   /*transform: scale(0.8);*/
   min-height: 400px;
@@ -33,7 +33,7 @@ body {
   transition: all 0.3s ease-in-out;
 }
 .btn-primary {
-  background-image: linear-gradient(90deg, #8400ff, #0400ff); /* Gradient za dugme */
+  background-image: linear-gradient(90deg, #6f978b, #89978d); /* Gradient za dugme */
   border: none;
   font-weight: bold;
   font-size: larger;
@@ -104,7 +104,7 @@ footer {
   bottom: 0;
   width: 100%;
   height: 40px;
-  background-image: linear-gradient(90deg, #8400ff, #0400ff);
+  background-image: linear-gradient(90deg, #6f978b, #89978d);
   color: white;
   text-align: center;
   padding: 8px 18px; /* Dodajte padding sa strane za bolje razdvajanje */
@@ -165,8 +165,8 @@ padding: 8px 10px; /* Manji padding */
       padding: 8px 12px; /* Manji padding za tanji izgled */
       font-size: 18px; /* Manji font size od polja za unos */
       border-radius: 5px; /* Blago zaobljeni uglovi */
-      border: 3px solid rgb(152, 168, 169); /* Plavi obrub */
-      background-color: #cce5ff; /* Svetlija pozadina */
+      border: 3px solid rgb(0, 0, 0); /* Plavi obrub */
+      background-color: #769787; /* Svetlija pozadina */
       box-shadow: none; /* Uklanja svetlucavi efekat pri fokusu */
       transition: background-color 0.2s ease-in-out;
       align-self: flex-start;
