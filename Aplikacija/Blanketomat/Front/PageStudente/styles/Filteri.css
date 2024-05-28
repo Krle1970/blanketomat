@@ -1,0 +1,23 @@
+.filteri{
+    margin-top: 10px;
+    margin-left: 80px;
+    margin-right: 15px;
+    border: none;
+  }
+  .filter{
+    border: none !important ;
+  }
+  .form-group{
+    width: 100%; /* Širina form-group */
+    max-width: 100%;
+    height: 100%; /* Maksimalna širina za bolji izgled */
+    margin: 0 auto; /* Centriranje */
+    background-color: rgb(220, 231, 232); /* Lagana siva boja pozadine */
+    padding: 15px; /* Unutrašnji razmak */
+    border-radius: 10px; /* Zaobljeni uglovi */
+    border: none;
+    position: relative;
+    
+  }
+  
+  
