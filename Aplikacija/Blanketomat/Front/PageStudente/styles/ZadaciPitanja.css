@@ -1,0 +1,17 @@
+.container-fluid-custom{
+    margin-top: 10px;
+    margin-left: 80px;
+    margin-right: 15px;
+    border: none;
+}
+.task-card {
+    cursor: pointer ;
+    margin-bottom: 15px ;
+}
+.task-details {
+    display: none ;
+    margin-top: 10px ;
+}
+.dropdown-menu.show {
+    display: block ;
+}

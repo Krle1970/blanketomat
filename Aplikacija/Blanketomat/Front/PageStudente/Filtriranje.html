@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles/style.css">
     <link href="styles/Opste.css" rel="stylesheet">
-    <link href="styles/Generisanj.css" rel="stylesheet">
+    <link href="styles/Filteri.css" rel="stylesheet">
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
@@ -135,60 +135,84 @@
             </div>
             
         </div>
-        
+        <div class="col-sm-12 col-12 p-0 pb-1">
+            <div class="form-group">
+                <label for="search-rok">Odaberite rok:</label>
+            <input type="text" id="search-rok" class="form-control mb-2" placeholder="Pretražite rok">
+            <div class="dropdown-menu w-100" id="rok-dropdown">
+                <a class="dropdown-item" data-value="rok1">Jun</a>
+                <a class="dropdown-item" data-value="rok2">Januar</a>
+                <a class="dropdown-item" data-value="rok3">Oktobar</a>
+            </div>
+            </div>
+            
+        </div>
 
-        <!-- Radio button za odabir tipa ispita -->
-<div class="col-md-4 p-0 pb-1">
-    <div class="form-group">
-        <label>Odaberite tip:</label>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="tip" value="ispit" id="ispit">
-            <label class="form-check-label" for="ispit">Ispit</label>
+        <!-- Checkbox za odabir tipa ispita -->
+        <div class="col-md-4 p-0 pb-1">
+            <div class="form-group">
+                <label>Odaberite tip:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="ispit" id="ispit">
+                    <label class="form-check-label" for="ispit">Ispit</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="kolokvijum1" id="kolokvijum1">
+                    <label class="form-check-label" for="kolokvijum1">Kolokvijum 1</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="kolokvijum2" id="kolokvijum2">
+                    <label class="form-check-label" for="kolokvijum2">Kolokvijum 2</label>
+                </div>
+            </div>
+            
         </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="tip" value="kolokvijum1" id="kolokvijum1">
-            <label class="form-check-label" for="kolokvijum1">Kolokvijum 1</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="tip" value="kolokvijum2" id="kolokvijum2">
-            <label class="form-check-label" for="kolokvijum2">Kolokvijum 2</label>
-        </div>
-    </div>
-</div>
 
-<!-- Radio button za odabir tipa zadataka -->
-<div class="col-md-4 p-0 pb-1 p-0  ps-md-1">
-    <div class="form-group">
-        <label>Odaberite tip zadataka:</label>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="tipZadataka" value="teorija" id="teorija">
-            <label class="form-check-label" for="teorija">Teorija</label>
+        <!-- Checkbox za odabir tipa zadataka -->
+        <div class="col-md-4 p-0 pb-1 p-0  ps-md-1">
+            <div class="form-group">
+                <label>Odaberite tip zadataka:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="teorija" id="teorija">
+                    <label class="form-check-label" for="teorija">Teorija</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="zadaci" id="zadaci">
+                    <label class="form-check-label" for="zadaci">Zadaci</label>
+                </div>
+                <!-- Radio buttoni za izbor rešenja -->
+                <label class="pt-2">Izaberite opciju rešenja:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="resenje" value="sa_resenjem" id="sa_resenjem">
+                    <label class="form-check-label" for="sa_resenjem">Sa rešenjem</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="resenje" value="bez_resenja" id="bez_resenja">
+                    <label class="form-check-label" for="bez_resenja">Bez rešenja</label>
+                </div>
+            </div>
+            
         </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="tipZadataka" value="zadaci" id="zadaci">
-            <label class="form-check-label" for="zadaci">Zadaci</label>
-        </div>
-    </div>
-</div>
 
-<!-- Radio button za odabir akreditacije -->
-<div class="col-md-4 p-0 pb-1 ps-md-1">
-    <div class="form-group">
-        <label>Odaberite akreditaciju:</label>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="akreditacija" value="2019" id="2019">
-            <label class="form-check-label" for="2019">2019</label>
+        <div class="col-md-4 p-0 pb-1 ps-md-1">
+            <div class="form-group">
+                <label>Odaberite akreditaciju:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="2019" id="2019">
+                    <label class="form-check-label" for="2019">2019</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="2013" id="2013">
+                    <label class="form-check-label" for="2013">2013</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="2007" id="2007">
+                    <label class="form-check-label" for="2007">2007</label>
+                </div>
+                
+                
+            </div>
         </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="akreditacija" value="2013" id="2013">
-            <label class="form-check-label" for="2013">2013</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="akreditacija" value="2007" id="2007">
-            <label class="form-check-label" for="2007">2007</label>
-        </div>
-    </div>
-</div>
 
         <!-- Odabir različitih oblasti -->
         <div class="col-md-6 p-0 pb-1">
@@ -241,13 +265,13 @@
             
         </div>
         <div class="col-12 p-0 pt-2">
-            <button type="button" class="btn btn-primary w-100">Generiši</button>
+            <button type="button" class="btn btn-primary w-100">Pretraži</button>
         </div>
-      </div>
-   
-        
     </div>
+ 
+   </div>
 </div>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"

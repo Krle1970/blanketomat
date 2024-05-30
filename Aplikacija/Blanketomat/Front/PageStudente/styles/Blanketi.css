@@ -6,7 +6,7 @@
 
 }
 .card-header {
-    background-color: rgb(181, 204, 204) !important;
+    background-color: rgb(188, 206, 206) !important;/*  rgb(181, 204, 204)*/
     border-top-left-radius: 15px !important;
     border-top-right-radius: 15px !important;
     font-size: 1.5rem !important; /* Povećava veličinu fonta */
