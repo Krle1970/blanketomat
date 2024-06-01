@@ -7,10 +7,10 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
         const taskCard = document.createElement('div');
         taskCard.className = 'card task-card';
         taskCard.innerHTML = `
-            <div class="card-body">
+            <div class="card-body zadatak">
                 <h5 class="card-title">Zadatak ${i}</h5>
             </div>
-            <div class="task-details card-body">
+            <div class="task-details card-body unos">
                 <div class="form-group mb-3">
                     <input type="radio" name="task${i}" id="generisi${i}" value="generisi">
                     <label for="generisi${i}">Generiši</label>
@@ -50,7 +50,17 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
 
         taskCard.querySelector('.card-body').addEventListener('click', function() {
             const taskDetails = taskCard.querySelector('.task-details');
-            taskDetails.style.display = taskDetails.style.display === 'none' || taskDetails.style.display === '' ? 'block' : 'none';
+            if (taskDetails.classList.contains('show')) {
+                taskDetails.classList.remove('show');
+                setTimeout(() => {
+                    taskDetails.style.display = 'none';
+                }, 400); // Trajanje tranzicije u milisekundama
+            } else {
+                taskDetails.style.display = 'block';
+                setTimeout(() => {
+                    taskDetails.classList.add('show');
+                }, 10); // Kratko kašnjenje da se omogući animacija
+            }
         });
 
         taskCard.querySelectorAll(`input[name="task${i}"]`).forEach(radio => {
