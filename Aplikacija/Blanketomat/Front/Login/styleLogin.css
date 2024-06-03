@@ -203,12 +203,8 @@ padding: 8px 10px; /* Manji padding */
         width: 100%; /* Širina kartice je 100% */
         max-width: 100%; /* Maksimalna širina kartice je 100% */
         }
+    }      #role {
+    background: url('data:image/svg+xml;charset=UTF-8,<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="black" xmlns="http://www.w3.org/2000/svg"><path d="M6 9l6 6 6-6"/></svg>') no-repeat;
+    background-position: right 10px center; /* Pozicioniranje strelice */
+    background-size: 22px; /* Veličina strelice */
     }
-
-
-    /* Dodavanje strelice kao pozadinskog elementa */
-      #role {
-            background: url('data:image/svg+xml;charset=UTF-8,<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="black" xmlns="http://www.w3.org/2000/svg"><path d="M6 9l6 6 6-6"/></svg>') no-repeat;
-            background-position: right 10px center; /* Pozicioniranje strelice */
-            background-size: 22px; /* Veličina strelice */
-            }

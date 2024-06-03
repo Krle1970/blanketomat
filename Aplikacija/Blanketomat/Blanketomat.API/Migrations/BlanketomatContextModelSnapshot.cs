@@ -34,7 +34,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("LajkovaniKomentariId");
 
-                    b.ToTable("AsistentKomentar");
+                    b.ToTable("AsistentKomentar", (string)null);
                 });
 
             modelBuilder.Entity("AsistentOdgovor", b =>
@@ -49,7 +49,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("LajkovaniOdgovoriId");
 
-                    b.ToTable("AsistentOdgovor");
+                    b.ToTable("AsistentOdgovor", (string)null);
                 });
 
             modelBuilder.Entity("AsistentPredmet", b =>
@@ -64,7 +64,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("PredmetiId");
 
-                    b.ToTable("AsistentPredmet");
+                    b.ToTable("AsistentPredmet", (string)null);
                 });
 
             modelBuilder.Entity("AsistentSmer", b =>
@@ -79,7 +79,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("SmeroviId");
 
-                    b.ToTable("AsistentSmer");
+                    b.ToTable("AsistentSmer", (string)null);
                 });
 
             modelBuilder.Entity("BlanketPitanje", b =>
@@ -94,7 +94,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("PitanjaId");
 
-                    b.ToTable("BlanketPitanje");
+                    b.ToTable("BlanketPitanje", (string)null);
                 });
 
             modelBuilder.Entity("BlanketSlika", b =>
@@ -109,7 +109,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("SlikeId");
 
-                    b.ToTable("BlanketSlika");
+                    b.ToTable("BlanketSlika", (string)null);
                 });
 
             modelBuilder.Entity("BlanketZadatak", b =>
@@ -124,7 +124,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("ZadaciId");
 
-                    b.ToTable("BlanketZadatak");
+                    b.ToTable("BlanketZadatak", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Administrator", b =>
@@ -163,7 +163,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Administratori");
+                    b.ToTable("Administratori", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Akreditacija", b =>
@@ -181,7 +181,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Akreditacije");
+                    b.ToTable("Akreditacije", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Asistent", b =>
@@ -225,7 +225,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("KatedraId");
 
-                    b.ToTable("Asistenti");
+                    b.ToTable("Asistenti", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Blanket", b =>
@@ -272,7 +272,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("PredmetId");
 
-                    b.ToTable("Blanketi");
+                    b.ToTable("Blanketi", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.IspitniRok", b =>
@@ -290,7 +290,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("IspitniRokovi");
+                    b.ToTable("IspitniRokovi", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Katedra", b =>
@@ -308,7 +308,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Katedre");
+                    b.ToTable("Katedre", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Komentar", b =>
@@ -339,7 +339,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("StudentPostavioId");
 
-                    b.ToTable("Komentari");
+                    b.ToTable("Komentari", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Oblast", b =>
@@ -362,7 +362,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("PredmetId");
 
-                    b.ToTable("Oblasti");
+                    b.ToTable("Oblasti", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Odgovor", b =>
@@ -393,7 +393,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("StudentPostavioId");
 
-                    b.ToTable("Odgovori");
+                    b.ToTable("Odgovori", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Pitanje", b =>
@@ -416,7 +416,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("OblastId");
 
-                    b.ToTable("Pitanja");
+                    b.ToTable("Pitanja", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Podoblast", b =>
@@ -439,7 +439,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("OblastId");
 
-                    b.ToTable("Podoblasti");
+                    b.ToTable("Podoblasti", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.PonavljanjeIspitnogRoka", b =>
@@ -465,7 +465,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("IspitniRokId");
 
-                    b.ToTable("PonavljanjaIspitnihRokova");
+                    b.ToTable("PonavljanjaIspitnihRokova", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Predmet", b =>
@@ -498,7 +498,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("SmerId");
 
-                    b.ToTable("Predmeti");
+                    b.ToTable("Predmeti", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Profesor", b =>
@@ -542,7 +542,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("KatedraId");
 
-                    b.ToTable("Profesori");
+                    b.ToTable("Profesori", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Slika", b =>
@@ -579,7 +579,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("ZadatakId");
 
-                    b.ToTable("Slike");
+                    b.ToTable("Slike", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Smer", b =>
@@ -602,7 +602,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("KatedraId");
 
-                    b.ToTable("Smerovi");
+                    b.ToTable("Smerovi", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Student", b =>
@@ -651,7 +651,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("SmerId");
 
-                    b.ToTable("Studenti");
+                    b.ToTable("Studenti", (string)null);
                 });
 
             modelBuilder.Entity("Blanketomat.API.Models.Zadatak", b =>
@@ -674,7 +674,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("OblastId");
 
-                    b.ToTable("Zadaci");
+                    b.ToTable("Zadaci", (string)null);
                 });
 
             modelBuilder.Entity("KomentarProfesor", b =>
@@ -689,7 +689,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("ProfesoriLikedId");
 
-                    b.ToTable("KomentarProfesor");
+                    b.ToTable("KomentarProfesor", (string)null);
                 });
 
             modelBuilder.Entity("OdgovorProfesor", b =>
@@ -704,7 +704,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("ProfesoriVerifikovaliId");
 
-                    b.ToTable("OdgovorProfesor");
+                    b.ToTable("OdgovorProfesor", (string)null);
                 });
 
             modelBuilder.Entity("PodoblastZadatak", b =>
@@ -719,7 +719,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("ZadaciId");
 
-                    b.ToTable("PodoblastZadatak");
+                    b.ToTable("PodoblastZadatak", (string)null);
                 });
 
             modelBuilder.Entity("PredmetProfesor", b =>
@@ -734,7 +734,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("ProfesoriId");
 
-                    b.ToTable("PredmetProfesor");
+                    b.ToTable("PredmetProfesor", (string)null);
                 });
 
             modelBuilder.Entity("PredmetStudent", b =>
@@ -749,7 +749,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("StudentiId");
 
-                    b.ToTable("PredmetStudent");
+                    b.ToTable("PredmetStudent", (string)null);
                 });
 
             modelBuilder.Entity("ProfesorSmer", b =>
@@ -764,7 +764,7 @@ namespace Blanketomat.API.Migrations
 
                     b.HasIndex("SmeroviId");
 
-                    b.ToTable("ProfesorSmer");
+                    b.ToTable("ProfesorSmer", (string)null);
                 });
 
             modelBuilder.Entity("AsistentKomentar", b =>
