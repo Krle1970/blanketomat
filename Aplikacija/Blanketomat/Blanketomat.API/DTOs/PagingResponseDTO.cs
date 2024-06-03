@@ -1,6 +1,6 @@
 ﻿namespace Blanketomat.API.DTOs;
 
-public class PaginationResponseDTO<T>
+public class PagingResponseDTO<T>
 {
     public List<T> Podaci { get; set; } = new List<T>();
     public int BrojStranica { get; set; }

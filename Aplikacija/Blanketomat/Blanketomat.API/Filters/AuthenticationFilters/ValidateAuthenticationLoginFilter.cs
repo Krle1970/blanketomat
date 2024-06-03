@@ -20,20 +20,30 @@ public class ValidateAuthenticationLoginFilter : ActionFilterAttribute
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        if (!context.HttpContext.Request.Headers.TryGetValue("Authorization", out StringValues authHeader))
+        if (!context.ModelState.IsValid)
         {
-            context.ModelState.AddModelError("Authorization", "Authorization header nije naveden");
+            context.ModelState.AddModelError("Login", "Navedene vrednosti nisu validne");
             var problemDetails = new ValidationProblemDetails(context.ModelState)
             {
-                Status = StatusCodes.Status401Unauthorized
+                Status = StatusCodes.Status400BadRequest
             };
-            context.Result = new NotFoundObjectResult(problemDetails);
+            context.Result = new BadRequestObjectResult(problemDetails);
         }
 
-        if (context.HttpContext.User.Identity.IsAuthenticated)
-        {
+        //if (!context.HttpContext.Request.Headers.TryGetValue("Authorization", out StringValues authHeader))
+        //{
+        //    context.ModelState.AddModelError("Authorization", "Authorization header nije naveden");
+        //    var problemDetails = new ValidationProblemDetails(context.ModelState)
+        //    {
+        //        Status = StatusCodes.Status401Unauthorized
+        //    };
+        //    context.Result = new NotFoundObjectResult(problemDetails);
+        //}
 
-        }
+        //if (context.HttpContext.User.Identity.IsAuthenticated)
+        //{
+
+        //}
 
         //try
         //{

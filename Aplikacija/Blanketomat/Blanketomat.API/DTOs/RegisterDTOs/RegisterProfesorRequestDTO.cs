@@ -1,8 +1,6 @@
-﻿using Blanketomat.API.Models;
-using Blanketomat.API.Models.Validations;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Blanketomat.API.DTOs;
+namespace Blanketomat.API.DTOs.RegisterDTOs;
 
 public class RegisterProfesorRequestDTO
 {
@@ -22,7 +20,7 @@ public class RegisterProfesorRequestDTO
     [MinLength(5, ErrorMessage = "Minimalna duzina sifre je 5 karaktera")]
     [MaxLength(30, ErrorMessage = "Maksimalna duzina sifre je 30 karaktera")]
     public required string Password { get; set; }
-    public Katedra? Katedra { get; set; }
-    public List<Smer>? Smerovi { get; set; }
-    public List<Predmet>? Predmeti { get; set; }
+    public int? KatedraId { get; set; }
+    public int[]? SmeroviIds { get; set; }
+    public int[]? PredmetiIds { get; set; }
 }

@@ -31,7 +31,7 @@ public class AdministratorController : ControllerBase
     [HttpGet]
     [TypeFilter(typeof(ValidateDbSetFilter<Administrator>))]
     [ValidatePaginationFilter]
-    public async Task<ActionResult<PaginationResponseDTO<Administrator>>> VratiAdministratore(int page, int count)
+    public async Task<ActionResult<PagingResponseDTO<Administrator>>> VratiAdministratore(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Administratori.Count() / (float)brojRezultata);
@@ -41,7 +41,7 @@ public class AdministratorController : ControllerBase
             .Take(brojRezultata)
             .ToListAsync();
 
-        var response = new PaginationResponseDTO<Administrator>
+        var response = new PagingResponseDTO<Administrator>
         {
             Podaci = administratori,
             BrojStranica = (int)brojStranica,

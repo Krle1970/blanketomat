@@ -23,7 +23,7 @@ public class OblastController : ControllerBase
     [HttpGet]
     [TypeFilter(typeof(ValidateDbSetFilter<Oblast>))]
     [ValidatePaginationFilter]
-    public async Task<ActionResult<PaginationResponseDTO<Oblast>>> VratiOblasti(int page, int count)
+    public async Task<ActionResult<PagingResponseDTO<Oblast>>> VratiOblasti(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Oblasti.Count() / (float)brojRezultata);
@@ -33,7 +33,7 @@ public class OblastController : ControllerBase
             .Take(brojRezultata)
             .ToListAsync();
 
-        var response = new PaginationResponseDTO<Oblast>
+        var response = new PagingResponseDTO<Oblast>
         {
             Podaci = oblasti,
             BrojStranica = (int)brojStranica,

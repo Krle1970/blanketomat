@@ -30,7 +30,7 @@ public class AkreditacijaController : ControllerBase
     [HttpGet]
     [TypeFilter(typeof(ValidateDbSetFilter<Akreditacija>))]
     [ValidatePaginationFilter]
-    public async Task<ActionResult<PaginationResponseDTO<Akreditacija>>> VratiAkreditacije(int page, int count)
+    public async Task<ActionResult<PagingResponseDTO<Akreditacija>>> VratiAkreditacije(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Akreditacije.Count() / (float)brojRezultata);
@@ -40,7 +40,7 @@ public class AkreditacijaController : ControllerBase
             .Take(brojRezultata)
             .ToListAsync();
 
-        var response = new PaginationResponseDTO<Akreditacija>
+        var response = new PagingResponseDTO<Akreditacija>
         {
             Podaci = akreditacija,
             BrojStranica = (int)brojStranica,

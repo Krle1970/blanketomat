@@ -40,7 +40,7 @@ public class BlanketController : ControllerBase
             .Take(brojRezultata)
             .ToListAsync();
 
-        var response = new PaginationResponseDTO<Blanket>
+        var response = new PagingResponseDTO<Blanket>
         {
             Podaci = blanketi,
             BrojStranica = (int)brojStranica,

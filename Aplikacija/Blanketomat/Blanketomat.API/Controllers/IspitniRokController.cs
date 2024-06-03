@@ -30,7 +30,7 @@ public class IspitniRokController : ControllerBase
     [HttpGet]
     [TypeFilter(typeof(ValidateDbSetFilter<IspitniRok>))]
     [ValidatePaginationFilter]
-    public async Task<ActionResult<PaginationResponseDTO<IspitniRok>>> VratiIspitneRokove(int page, int count)
+    public async Task<ActionResult<PagingResponseDTO<IspitniRok>>> VratiIspitneRokove(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.IspitniRokovi.Count() / (float)brojRezultata);
@@ -40,7 +40,7 @@ public class IspitniRokController : ControllerBase
             .Take(brojRezultata)
             .ToListAsync();
 
-        var response = new PaginationResponseDTO<IspitniRok>
+        var response = new PagingResponseDTO<IspitniRok>
         {
             Podaci = ispitniRok,
             BrojStranica = (int)brojStranica,

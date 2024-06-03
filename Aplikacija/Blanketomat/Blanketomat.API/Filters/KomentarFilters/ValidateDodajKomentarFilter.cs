@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Blanketomat.API.Filters.KomentarFilters;
 
-public class ValidateDodajKomentaFilter : ActionFilterAttribute
+public class ValidateDodajKomentarFilter : ActionFilterAttribute
 {
     public override void OnActionExecuting(ActionExecutingContext context)
     {

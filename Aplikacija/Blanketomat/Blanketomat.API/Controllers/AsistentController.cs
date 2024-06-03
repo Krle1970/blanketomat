@@ -30,7 +30,7 @@ public class AsistentController : ControllerBase
     [HttpGet]
     [TypeFilter(typeof(ValidateDbSetFilter<Asistent>))]
     [ValidatePaginationFilter]
-    public async Task<ActionResult<PaginationResponseDTO<Asistent>>> VratiAsistente(int page, int count)
+    public async Task<ActionResult<PagingResponseDTO<Asistent>>> VratiAsistente(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Asistenti.Count() / (float)brojRezultata);
@@ -40,7 +40,7 @@ public class AsistentController : ControllerBase
             .Take(brojRezultata)
             .ToListAsync();
 
-        var response = new PaginationResponseDTO<Asistent>
+        var response = new PagingResponseDTO<Asistent>
         {
             Podaci = asistenti,
             BrojStranica = (int)brojStranica,

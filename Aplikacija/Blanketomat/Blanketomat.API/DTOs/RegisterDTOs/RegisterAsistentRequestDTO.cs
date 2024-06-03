@@ -1,9 +1,8 @@
-﻿using Blanketomat.API.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Blanketomat.API.DTOs;
+namespace Blanketomat.API.DTOs.RegisterDTOs;
 
-public class ProfesorLoginResponseDTO
+public class RegisterAsistentRequestDTO
 {
     [MinLength(3, ErrorMessage = "Minimalna duzina imena je 3 karaktera")]
     [MaxLength(30, ErrorMessage = "Maksimalna duzina imena je 30 karaktera")]
@@ -18,15 +17,10 @@ public class ProfesorLoginResponseDTO
     [MaxLength(60, ErrorMessage = "Maksimalna duzina email adrese je 60 karaktera")]
     public required string Email { get; set; }
 
-    [Required(ErrorMessage = "Password hash je obavezno polje")]
-    public required byte[] PasswordHash { get; set; }
-
-    [Required(ErrorMessage = "Password salt je obavezno polje")]
-    public required byte[] PasswordSalt { get; set; }
-    public string? Token { get; set; }
-    public List<Smer>? Smerovi { get; set; }
-    public List<Predmet>? Predmeti { get; set; }
-    public Katedra? Katedra { get; set; }
-    public List<Komentar>? LajkovaniKomentari { get; set; }
-    public List<Odgovor>? LajkovaniOdgovori { get; set; }
+    [MinLength(5, ErrorMessage = "Minimalna duzina sifre je 5 karaktera")]
+    [MaxLength(30, ErrorMessage = "Maksimalna duzina sifre je 30 karaktera")]
+    public required string Password { get; set; }
+    public int? KatedraId { get; set; }
+    public int[]? SmeroviIds { get; set; }
+    public int[]? PredmetiIds { get; set; }
 }

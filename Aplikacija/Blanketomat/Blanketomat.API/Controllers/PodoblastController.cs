@@ -23,7 +23,7 @@ public class PodoblastController : ControllerBase
     [HttpGet]
     [TypeFilter(typeof(ValidateDbSetFilter<Podoblast>))]
     [ValidatePaginationFilter]
-    public async Task<ActionResult<PaginationResponseDTO<Podoblast>>> VratiPodoblasti(int page, int count)
+    public async Task<ActionResult<PagingResponseDTO<Podoblast>>> VratiPodoblasti(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Podoblasti.Count() / (float)brojRezultata);
@@ -33,7 +33,7 @@ public class PodoblastController : ControllerBase
             .Take(brojRezultata)
             .ToListAsync();
 
-        var response = new PaginationResponseDTO<Podoblast>
+        var response = new PagingResponseDTO<Podoblast>
         {
             Podaci = poblast,
             BrojStranica = (int)brojStranica,

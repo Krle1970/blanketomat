@@ -1,7 +1,7 @@
 ﻿using Blanketomat.API.Models.Validations;
 using System.ComponentModel.DataAnnotations;
 
-namespace Blanketomat.API.DTOs;
+namespace Blanketomat.API.DTOs.LoginDTOs;
 
 public class LoginRequestDTO
 {
@@ -14,7 +14,7 @@ public class LoginRequestDTO
     [MaxLength(30, ErrorMessage = "Maksimalna duzina sifre je 30 karaktera")]
     public required string Password { get; set; }
 
+    [AccountTypeValidation]
     [Required(ErrorMessage = "Tip naloga je obavezno polje")]
-    [TipBlanketaValidation]
     public required string AccountType { get; set; }
 }

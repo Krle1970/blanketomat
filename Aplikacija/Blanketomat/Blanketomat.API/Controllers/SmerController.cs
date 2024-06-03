@@ -30,7 +30,7 @@ public class SmerController : ControllerBase
     [HttpGet]
     [TypeFilter(typeof(ValidateDbSetFilter<Smer>))]
     [ValidatePaginationFilter]
-    public async Task<ActionResult<PaginationResponseDTO<Smer>>> VratiSmerove(int page, int count)
+    public async Task<ActionResult<PagingResponseDTO<Smer>>> VratiSmerove(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Smerovi.Count() / (float)brojRezultata);
@@ -40,7 +40,7 @@ public class SmerController : ControllerBase
             .Take(brojRezultata)
             .ToListAsync();
 
-        var response = new PaginationResponseDTO<Smer>
+        var response = new PagingResponseDTO<Smer>
         {
             Podaci = smerovi,
             BrojStranica = (int)brojStranica,

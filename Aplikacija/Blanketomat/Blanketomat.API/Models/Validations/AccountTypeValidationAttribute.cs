@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Blanketomat.API.DTOs.LoginDTOs;
+using System.ComponentModel.DataAnnotations;
 
 namespace Blanketomat.API.Models.Validations
 {
@@ -6,12 +7,12 @@ namespace Blanketomat.API.Models.Validations
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            var tipNaloga = validationContext.ObjectInstance as string;
+            var user = validationContext.ObjectInstance as LoginRequestDTO;
 
-            if (tipNaloga != null)
+            if (user != null)
             {
-                if (tipNaloga != "Administrator" || tipNaloga != "Profesor" || tipNaloga != "Asistent" || 
-                    tipNaloga != "Student")
+                if (user.AccountType != "Administrator" && user.AccountType != "Profesor" && user.AccountType != "Asistent" && 
+                    user.AccountType != "Student")
                 {
                     return new ValidationResult("Tip naloga mora biti Administrator, Profesor, Asistent ili Student");
                 }

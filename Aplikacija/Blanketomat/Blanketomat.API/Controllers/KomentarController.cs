@@ -23,7 +23,7 @@ public class KomentarController : ControllerBase
     [HttpGet]
     [TypeFilter(typeof(ValidateDbSetFilter<Komentar>))]
     [ValidatePaginationFilter]
-    public async Task<ActionResult<PaginationResponseDTO<Komentar>>> VratiKomentare(int page, int count)
+    public async Task<ActionResult<PagingResponseDTO<Komentar>>> VratiKomentare(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Komentari.Count() / (float)brojRezultata);
@@ -33,7 +33,7 @@ public class KomentarController : ControllerBase
             .Take(brojRezultata)
             .ToListAsync();
 
-        var response = new PaginationResponseDTO<Komentar>
+        var response = new PagingResponseDTO<Komentar>
         {
             Podaci = komentari,
             BrojStranica = (int)brojStranica,
@@ -54,7 +54,7 @@ public class KomentarController : ControllerBase
 
     [HttpPost]
     [TypeFilter(typeof(ValidateDbSetFilter<Komentar>))]
-    [TypeFilter(typeof(ValidateDodajKomentaFilter))]
+    [TypeFilter(typeof(ValidateDodajKomentarFilter))]
     public async Task<ActionResult> DodajKomentar([FromBody]DodajKomentarDTO noviKomentar)
     {
         Komentar komentar = new Komentar
@@ -144,6 +144,34 @@ public class KomentarController : ControllerBase
             if (student != null)
             {
                 komentarZaAzuriranje.StudentPostavio = student;
+            }
+        }
+
+        if (komentar.AsistentiLikedIds != null)
+        {
+            Asistent? asistent;
+            for (int i = 0; i < komentar.AsistentiLikedIds.Count(); i++)
+            {
+                asistent = await _context.Asistenti.FindAsync(komentar.AsistentiLikedIds[i]);
+                if (asistent != null)
+                {
+                    if (!komentarZaAzuriranje.AsistentiLiked!.Contains(asistent))
+                        komentarZaAzuriranje.AsistentiLiked.Add(asistent);
+                }
+            }
+        }
+
+        if (komentar.ProfesoriLikedIds != null)
+        {
+            Profesor? profesor;
+            for (int i = 0; i < komentar.ProfesoriLikedIds.Count(); i++)
+            {
+                profesor = await _context.Profesori.FindAsync(komentar.ProfesoriLikedIds[i]);
+                if (profesor != null)
+                {
+                    if (!komentarZaAzuriranje.ProfesoriLiked!.Contains(profesor))
+                        komentarZaAzuriranje.ProfesoriLiked.Add(profesor);
+                }
             }
         }
 
