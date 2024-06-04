@@ -52,8 +52,10 @@
     border-bottom-color: white;
     padding-top: 5px;
   }
-  .blanketi{
-    margin-top: 10px;
+  .container-fluid-custom{
+    margin-top: 0px;
     margin-left: 80px;
     margin-right: 15px;
-  }
+    border: none;
+}
+  

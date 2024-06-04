@@ -1,0 +1,52 @@
+.comment-container {
+    margin-top: 20px;
+}
+.comment {
+    position: relative;
+    background-color: rgb(188, 206, 206) !important;
+    border: solid !important;
+    border-color: rgb(176, 198, 198) !important;
+    border-radius: 30px !important;
+    border: 10px;
+    margin-bottom: 20px;
+    padding-left: 10px;
+    padding-top: 5px ;
+}
+.comment .replies {
+    margin-left: 40px;
+    display: none;
+}
+.comment .show-replies {
+    cursor: pointer;
+    color: rgb(34, 124, 124) !important;
+    text-decoration: underline;
+}
+.likes-list {
+    display: none;
+
+}
+.likes-list {
+    display: none;
+    margin-left: 20px;
+}
+.likes-toggle {
+    cursor: pointer;
+    color: blue;
+}
+.container-fluid-custom{
+    margin-top: 0px;
+    margin-left: 80px;
+    margin-right: 15px;
+    border: none;
+}
+.Korisnik{
+    color: rgb(47, 58, 58) ;
+}
+.replie{
+    padding-left: 7px;
+    background-color: rgb(245, 248, 248) !important;
+    border-radius: 15px;
+}
+.replies{
+    margin-right: 5px;
+}

@@ -1,0 +1,79 @@
+ input:focus, textarea:focus, select:focus, button:focus {
+    outline-color: rgb(208, 207, 207) !important; /* Promenite boju u željenu */
+    outline-width: 1px !important; /* Debljina obruba */
+    transition: outline-color 0.1s ease-in-out, outline-width 0.1s ease-in-out !important; /* Brzina tranzicije */
+}
+
+/* Promena boje fokusa za sve input elemente */
+.form-control:focus {
+    border-color: rgb(208, 207, 207) !important; /* Boja obruba polja */
+    box-shadow: 0 0 0 0.2rem rgb(208, 207, 207) !important; /* Sjenka oko polja */
+}
+input[type="radio"]:focus,
+input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: none;
+}
+/* Prilagodba checkbox i radio button */
+input[type="checkbox"],
+input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-clip: content-box;
+    border: 2px solid rgb(113, 123, 123);
+    background-color: #fff;
+    border-radius: 50%;
+    vertical-align: middle;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+input[type="checkbox"] {
+    border-radius: 5px; /* Pravougaonik za checkbox */
+}
+
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+    background-color: rgb(113, 123, 123);/* Tamnija boja */
+    border-color: rgb(113, 123, 123); /* Tamnija boja */
+}
+
+input[type="checkbox"]:checked::before,
+input[type="radio"]:checked::before {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 10px;
+    margin: 3px;
+    background-color: #fff;
+    border-radius: 50%;
+}
+
+input[type="checkbox"]:checked::after,
+input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 28px;
+    height: 28px;
+    border-radius: 40%; /* Za radio dugme */
+    background-color: rgba(169, 169, 169, 0.25); /* Blaga senka */
+    box-shadow: 0 0 8px rgba(169, 169, 169, 0.5); /* Sjenka */
+    z-index: -1;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="checkbox"]:checked::after {
+    border-radius: 3px; /* Pravougaonik za checkbox */
+}
+button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }

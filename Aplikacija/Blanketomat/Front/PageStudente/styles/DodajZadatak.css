@@ -10,12 +10,11 @@
 }
 
 .task-details {
-    display: none  ;
+    
     margin-top: 10px ;
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.5s ease-out, padding 0.5s ease-out;
-    padding: 0 1rem;
+    overflow: visible; /* Omogućava prikaz svih sadržaja */
+    max-height: none; /* Onemogućava ograničenje visine */
+    padding: 1rem; /* Dodaje padding */
     
 }
 .task-details.show {
@@ -48,3 +47,9 @@
     border-radius: 30px;
     color: rgb(87, 87, 87) !important;
 }
+
+
+.btn{
+    background-color: rgb(183, 194, 195) !important; 
+    border-color: rgb(207, 219, 220) !important;
+  }  

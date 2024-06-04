@@ -28,3 +28,9 @@
     color: rgb(240, 244, 248);
     
 }
+.Naslov{
+  color: rgb(118, 144, 144) !important;
+  font-size: 50px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  margin-bottom: 0px;
+}

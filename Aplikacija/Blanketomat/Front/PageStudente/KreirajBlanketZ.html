@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles/sidebar.css">
     <link href="styles/Opste.css" rel="stylesheet">
-    <link href="styles/Generisanj.css" rel="stylesheet">
+    <link href="styles/ZadaciPitanja.css" rel="stylesheet">
     <link href="styles/input.css" rel="stylesheet">
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -126,143 +126,32 @@
     </aside>
 </div>
 </div>
-<div class="container-fluid-custom filteri">
-    <div class="card p-3 filter">
-        <div class="row redd">
-            <p class="Naslov">Generiši blankete</p>
-          <!-- Pretraga predmeta -->
-        <div class="col-sm-12 col-12 p-0 pb-1">
-            <div class="form-group">
-                <label for="search-predmeti">Odaberite predmet:</label>
-            <input type="text" id="search-predmeti" class="form-control mb-2" placeholder="Pretražite predmete">
-            <div class="dropdown-menu w-100" id="predmeti-dropdown">
-                <a class="dropdown-item" data-value="predmet1">Matematika 1</a>
-                <a class="dropdown-item" data-value="predmet2">Fizika</a>
-                <a class="dropdown-item" data-value="predmet3">Matematika 2</a>
-            </div>
-            </div>
-            
-        </div>
-        
-
-        <!-- Radio button za odabir tipa ispita -->
-<div class="col-md-4 p-0 pb-1">
+<div class="container-fluid-custom p-3">
+    <p class="Naslov">Kreiraj blanket</p>
     <div class="form-group">
-        <label>Odaberite tip:</label>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="tip" value="ispit" id="ispit">
-            <label class="form-check-label" for="ispit">Ispit</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="tip" value="kolokvijum1" id="kolokvijum1">
-            <label class="form-check-label" for="kolokvijum1">Kolokvijum 1</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="tip" value="kolokvijum2" id="kolokvijum2">
-            <label class="form-check-label" for="kolokvijum2">Kolokvijum 2</label>
+        <label for="task-number" style="color: rgb(87, 87, 87) !important;">Unesite broj zadataka:</label>
+        <input type="number" id="task-number" class="form-control" placeholder="Broj zadataka" min="1">
+        <button id="generate-tasks" class="btn btn-primary mt-2">Generiši</button>
+    </div>
+    <div id="tasks-container" class="mt-3"></div>
+    <div class="row justify-content-center">
+        <div class="col-8 p-0 pt-2">
+            <button type="button" class="btn btn-primary w-100">Kreiraj</button>
         </div>
     </div>
 </div>
 
-<!-- Radio button za odabir tipa zadataka -->
-<div class="col-md-4 p-0 pb-1 p-0  ps-md-1">
-    <div class="form-group">
-        <label>Odaberite tip zadataka:</label>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="tipZadataka" value="teorija" id="teorija">
-            <label class="form-check-label" for="teorija">Teorija</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="tipZadataka" value="zadaci" id="zadaci">
-            <label class="form-check-label" for="zadaci">Zadaci</label>
-        </div>
-    </div>
-</div>
 
-<!-- Radio button za odabir akreditacije -->
-<div class="col-md-4 p-0 pb-1 ps-md-1">
-    <div class="form-group">
-        <label>Odaberite akreditaciju:</label>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="akreditacija" value="2019" id="2019">
-            <label class="form-check-label" for="2019">2019</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="akreditacija" value="2013" id="2013">
-            <label class="form-check-label" for="2013">2013</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="akreditacija" value="2007" id="2007">
-            <label class="form-check-label" for="2007">2007</label>
-        </div>
-    </div>
-</div>
-
-<div class="col-md-6 p-0 pb-1">
-    <div class="form-group">
-        <label for="oblasti">Odaberite oblasti:</label>
-        <input type="text" id="search-oblasti" class="form-control mb-2" placeholder="Pretražite oblasti">
-        <select multiple class="form-control" id="oblasti" style="color: rgb(87, 87, 87) !important;">
-            <option value="oblast1">Algebra</option>
-            <option value="oblast2">Matrice</option>
-            <option value="oblast3">Funkcije</option>
-            <option value="oblast4">Analiticka</option>
-        </select>
-    </div>
    
-</div>
 
-<!-- Lista odabranih oblasti -->
-<div class="col-md-6 p-0  ps-md-1 pt-sm-1 pt-md-0 pt-1 pb-1">
-    <div class="form-group">
-        <label>Odabrane oblasti:</label>
-    <ul class="list-group" id="selected-oblasti" >
-        <!-- Odabrane oblasti će biti dodane ovde -->
-    </ul>
-    </div>
-    
-</div>
 
-<div class="col-md-6 p-0 ">
-    <div class="form-group">
-        <label for="podoblasti">Odaberite podoblasti:</label>
-        <input type="text" id="search-podoblasti" class="form-control mb-2" placeholder="Pretražite podoblasti">
-        <select multiple class="form-control" id="podoblasti" style="color: rgb(87, 87, 87) !important;">
-            <option value="podoblast1">Unutrasnje ulancavanje</option>
-            <option value="podoblast2">Dvostruki</option>
-            <option value="podoblast3">Jednostruki</option>
-            <option value="podoblast4">Binarni</option>
-        </select>
-    </div>
-   
-</div>
-
-<!-- Lista odabranih oblasti -->
-<div class="col-md-6 p-0  ps-md-1 pt-sm-1 pt-md-0 pt-1 ">
-    <div class="form-group">
-        <label>Odabrane podoblasti:</label>
-    <ul class="list-group" id="selected-podoblasti">
-        <!-- Odabrane oblasti će biti dodane ovde -->
-    </ul>
-    </div>
-    
-</div>
-<div class="col-12 p-0 pt-2">
-    <button type="button" class="btn btn-primary w-100">Generiši</button>
-</div>
-</div>
-
-        
-    </div>
-</div>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="skripte/script.js"></script>
-    <script src="skripte/Generisanje.js"></script>
+    <script src="skripte/ZadaciPitanja.js"></script>
 </body>
 </body>
 </html>
