@@ -2,11 +2,11 @@
 
 namespace Blanketomat.API.DTOs.KatedraDTOs;
 
-public class KatedraBasicDTO
+public class KatedraListDTO
 {
     public required int Id { get; set; }
     public required string Naziv { get; set; }
-    public List<SmerBasicDTO>? Smerovi { get; set; }
+    public List<SmerIdNazivDTO>? Smerovi { get; set; }
     public required int BrojProfesora { get; set; }
     public required int BrojAsistenata { get; set; }
 }

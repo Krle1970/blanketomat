@@ -2,7 +2,7 @@
 
 namespace Blanketomat.API.DTOs.SmerDTOs;
 
-public class SmerBasicDTO
+public class SmerListDTO
 {
     public required int Id { get; set; }
     public required string Naziv { get; set; }

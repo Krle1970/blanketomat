@@ -41,47 +41,11 @@ public class AuthController : ControllerBase
             Prezime = user.Prezime,
             Email = user.Email,
             PasswordHash = passwordHash,
-            PasswordSalt = passwordSalt
+            PasswordSalt = passwordSalt,
+            Katedra = user.Katedra,
+            Smerovi = user.Smerovi,
+            Predmeti = user.Predmeti
         };
-
-        if (user.KatedraId != null)
-        {
-            Katedra? katedra = await _context.Katedre.FindAsync(user.KatedraId);
-            if (katedra != null)
-            {
-                profesor.Katedra = katedra;
-            }
-        }
-
-        if (user.SmeroviIds != null)
-        {
-            profesor.Smerovi = new List<Smer>();
-            Smer? smer;
-            for (int i = 0; i < user.SmeroviIds.Count(); i++)
-            {
-                smer = await _context.Smerovi.FindAsync(user.SmeroviIds[i]);
-                if (smer != null)
-                {
-                    if (!profesor.Smerovi!.Contains(smer))
-                        profesor.Smerovi.Add(smer);
-                }
-            }
-        }
-
-        if (user.PredmetiIds != null)
-        {
-            Predmet? predmet;
-            profesor.Predmeti = new List<Predmet>();
-            for (int i = 0; i < user.PredmetiIds.Count(); i++)
-            {
-                predmet = await _context.Predmeti.FindAsync(user.PredmetiIds[i]);
-                if (predmet != null)
-                {
-                    if (!profesor.Predmeti!.Contains(predmet))
-                        profesor.Predmeti.Add(predmet);
-                }
-            }
-        }
 
         _context.Profesori.Add(profesor);
         await _context.SaveChangesAsync();
@@ -101,47 +65,11 @@ public class AuthController : ControllerBase
             Prezime = user.Prezime,
             Email = user.Email,
             PasswordHash = passwordHash,
-            PasswordSalt = passwordSalt
+            PasswordSalt = passwordSalt,
+            Katedra = user.Katedra,
+            Smerovi = user.Smerovi,
+            Predmeti = user.Predmeti
         };
-
-        if (user.KatedraId != null)
-        {
-            Katedra? katedra = await _context.Katedre.FindAsync(user.KatedraId);
-            if (katedra != null)
-            {
-                asistent.Katedra = katedra;
-            }
-        }
-
-        if (user.SmeroviIds != null)
-        {
-            asistent.Smerovi = new List<Smer>();
-            Smer? smer;
-            for (int i = 0; i < user.SmeroviIds.Count(); i++)
-            {
-                smer = await _context.Smerovi.FindAsync(user.SmeroviIds[i]);
-                if (smer != null)
-                {
-                    if (!asistent.Smerovi!.Contains(smer))
-                        asistent.Smerovi.Add(smer);
-                }
-            }
-        }
-
-        if (user.PredmetiIds != null)
-        {
-            Predmet? predmet;
-            asistent.Predmeti = new List<Predmet>();
-            for (int i = 0; i < user.PredmetiIds.Count(); i++)
-            {
-                predmet = await _context.Predmeti.FindAsync(user.PredmetiIds[i]);
-                if (predmet != null)
-                {
-                    if (!asistent.Predmeti!.Contains(predmet))
-                        asistent.Predmeti.Add(predmet);
-                }
-            }
-        }
 
         _context.Asistenti.Add(asistent);
         await _context.SaveChangesAsync();
@@ -161,41 +89,11 @@ public class AuthController : ControllerBase
             Prezime = user.Prezime,
             Email = user.Email,
             PasswordHash = passwordHash,
-            PasswordSalt = passwordSalt
+            PasswordSalt = passwordSalt,
+            Akreditacija = user.Akreditacija,
+            Smer = user.Smer,
+            Predmeti = user.Predmeti
         };
-
-        if (user.AkreditacijaId != null)
-        {
-            Akreditacija? akreditacija = await _context.Akreditacije.FindAsync(user.AkreditacijaId);
-            if (akreditacija != null)
-            {
-                student.Akreditacija = akreditacija;
-            }
-        }
-
-        if (user.SmerId != null)
-        {
-            Smer? smer = await _context.Smerovi.FindAsync(user.SmerId);
-            if (smer != null)
-            {
-                student.Smer = smer;
-            }
-        }
-
-        if (user.PredmetiIds != null)
-        {
-            Predmet? predmet;
-            student.Predmeti = new List<Predmet>();
-            for (int i = 0; i < user.PredmetiIds.Count(); i++)
-            {
-                predmet = await _context.Predmeti.FindAsync(user.PredmetiIds[i]);
-                if (predmet != null)
-                {
-                    if (!student.Predmeti.Contains(predmet))
-                        student.Predmeti.Add(predmet);
-                }
-            }
-        }
 
         _context.Studenti.Add(student);
         await _context.SaveChangesAsync();
