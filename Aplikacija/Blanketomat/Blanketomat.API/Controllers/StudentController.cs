@@ -66,66 +66,8 @@ public class StudentController : ControllerBase
         studentZaAzuriranje.Email = student.Email;
         studentZaAzuriranje.PasswordHash = passwordHash;
         studentZaAzuriranje.PasswordSalt = passwordSalt;
-        
-        if (student.AkreditacijaId != null)
-        {
-            Akreditacija? akreditacija = await _context.Akreditacije.FindAsync(student.AkreditacijaId);
-            if (akreditacija != null)
-            {
-                studentZaAzuriranje.Akreditacija = akreditacija;
-            }
-        }
-
-        if (student.SmerId != null)
-        {
-            Smer? smer = await _context.Smerovi.FindAsync(student.SmerId);
-            if (smer != null)
-            {
-                studentZaAzuriranje.Smer = smer;
-            }
-        }
-
-        if (student.PredmetiIds != null)
-        {
-            Predmet? predmet;
-            for (int i = 0; i < student.PredmetiIds.Count(); i++)
-            {
-                predmet = await _context.Predmeti.FindAsync(student.PredmetiIds[i]);
-                if (predmet != null)
-                {
-                    if (!studentZaAzuriranje.Predmeti!.Contains(predmet))
-                        studentZaAzuriranje.Predmeti.Add(predmet);
-                }
-            }
-        }
-
-        if (student.PostavljeniKomentariIds != null)
-        {
-            Komentar? komentar;
-            for (int i = 0; i < student.PostavljeniKomentariIds.Count(); i++)
-            {
-                komentar = await _context.Komentari.FindAsync(student.PostavljeniKomentariIds[i]);
-                if (komentar != null)
-                {
-                    if (!studentZaAzuriranje.PostavljeniKomentari!.Contains(komentar))
-                        studentZaAzuriranje.PostavljeniKomentari.Add(komentar);
-                }
-            }
-        }
-
-        if (student.PostavljeniOdgovoriIds != null)
-        {
-            Odgovor? odgovor;
-            for (int i = 0; i < student.PostavljeniOdgovoriIds.Count(); i++)
-            {
-                odgovor = await _context.Odgovori.FindAsync(student.PostavljeniOdgovoriIds[i]);
-                if (odgovor != null)
-                {
-                    if (!studentZaAzuriranje.PostavljeniOdgovori!.Contains(odgovor))
-                        studentZaAzuriranje.PostavljeniOdgovori.Add(odgovor);
-                }
-            }
-        }
+        studentZaAzuriranje.PostavljeniKomentari = student.PostavljeniKomentari;
+        studentZaAzuriranje.PostavljeniOdgovori = student.PostavljeniOdgovori;
 
         await _context.SaveChangesAsync();
         return Ok(studentZaAzuriranje);

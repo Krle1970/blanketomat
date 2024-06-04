@@ -1,4 +1,5 @@
-﻿using Blanketomat.API.Models.Validations;
+﻿using Blanketomat.API.Models;
+using Blanketomat.API.Models.Validations;
 using System.ComponentModel.DataAnnotations;
 
 namespace Blanketomat.API.DTOs.PredmetDTOs;
@@ -13,10 +14,10 @@ public class PredmetDTO
     [MaxLength(4, ErrorMessage = "Godina na kojoj je predmet moze imati maksimalno 4 karaktera")]
     [PredmetGodinaValidation]
     public required string Godina { get; set; }
-    public int? AkreditacijaId { get; set; }
-    public int[]? OblastiIds { get; set; }
-    public int? SmerId { get; set; }
-    public int[]? ProfesoriIds { get; set; }
-    public int[]? AsistentiIds { get; set; }
-    public int[]? StudentiIds { get; set; }
+    public Akreditacija? Akreditacija { get; set; }
+    public List<Oblast>? Oblasti { get; set; }
+    public Smer? Smer { get; set; }
+    public List<Profesor>? Profesori { get; set; }
+    public List<Asistent>? Asistenti { get; set; }
+    public List<Student>? Studenti { get; set; }
 }

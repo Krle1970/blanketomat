@@ -85,20 +85,7 @@ public class IspitniRokController : ControllerBase
         // iz ValidateIdFilter-a
         var rokZaAzuriranje = HttpContext.Items["entity"] as IspitniRok;
         rokZaAzuriranje!.Naziv = ispitniRok.Naziv;
-        
-        if (ispitniRok.PonavljanjaIspitnihRokovaIds != null)
-        {
-            PonavljanjeIspitnogRoka? ponavljanjeIspitnogRoka;
-            for (int i = 0; i < ispitniRok.PonavljanjaIspitnihRokovaIds.Count(); i++)
-            {
-                ponavljanjeIspitnogRoka = await _context.PonavljanjaIspitnihRokova.FindAsync(ispitniRok.PonavljanjaIspitnihRokovaIds[i]);
-                if (ponavljanjeIspitnogRoka != null)
-                {
-                    if (!rokZaAzuriranje.Ponavljanja!.Contains(ponavljanjeIspitnogRoka))
-                        rokZaAzuriranje.Ponavljanja.Add(ponavljanjeIspitnogRoka);
-                }
-            }
-        }
+        rokZaAzuriranje.Ponavljanja = ispitniRok.PonavljanjaIspitnihRokova;
        
         await _context.SaveChangesAsync();
         return Ok(rokZaAzuriranje);

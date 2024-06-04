@@ -1,6 +1,8 @@
-﻿namespace Blanketomat.API.DTOs.PonavljanjeIspitnogRokaDTOs;
+﻿using Blanketomat.API.Models;
+
+namespace Blanketomat.API.DTOs.PonavljanjeIspitnogRokaDTOs;
 
 public class AzurirajPonavljanjeIspitnogRokaDTO : PonavljanjeIspitnogRokaDTO
 {
-    public int[]? BlanketiIds { get; set; }
+    public List<Blanket>? Blanketi { get; set; }
 }

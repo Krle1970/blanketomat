@@ -8,5 +8,5 @@ public class PredmetBasicDTO
     public required string Naziv { get; set; }
     public required string Godina { get; set; }
     public AkreditacijaBasicDTO? Akreditacija { get; set; }
-    public List<OblastBasicDTO> MyProperty { get; set; }
+    //public List<OblastBasicDTO> MyProperty { get; set; }
 }

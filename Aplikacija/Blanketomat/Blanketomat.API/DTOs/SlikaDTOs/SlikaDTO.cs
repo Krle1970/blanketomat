@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Blanketomat.API.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Blanketomat.API.DTOs.SlikaDTOs;
 
@@ -8,17 +9,17 @@ public class SlikaDTO
     public required string Putanja { get; set; }
 
     // na kojim blanketima je slika
-    public int[]? BlanketiIds { get; set; }
+    public List<Blanket>? Blanketi { get; set; }
 
     // za koje pitanje je slika
-    public int? PitanjeId { get; set; }
+    public Pitanje? Pitanje { get; set; }
 
     // za koji zadatak je slika
-    public int? ZadatakId { get; set; }
+    public Zadatak? Zadatak { get; set; }
 
     // za koji komentar je slika
-    public int? KomentarId { get; set; }
+    public Komentar? Komentar { get; set; }
 
     // za koji odgovor je slika
-    public int? OdgovorId { get; set; }
+    public Odgovor? Odgovor { get; set; }
 }

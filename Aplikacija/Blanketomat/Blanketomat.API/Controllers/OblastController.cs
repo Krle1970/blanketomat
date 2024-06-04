@@ -59,59 +59,12 @@ public class OblastController : ControllerBase
     {
         Oblast oblast = new Oblast
         {
-            Naziv = novaOblast.Naziv
+            Naziv = novaOblast.Naziv,
+            Predmet = novaOblast.Predmet,
+            Podoblasti = novaOblast.Podoblasti,
+            Pitanja = novaOblast.Pitanja,
+            Zadaci = novaOblast.Zadaci
         };
-
-        if (novaOblast.PredmetId != null)
-        {
-            Predmet? predmet = await _context.Predmeti.FindAsync(novaOblast.PredmetId);
-            if (predmet != null)
-            {
-                oblast.Predmet = predmet;
-            }
-        }
-
-        if (novaOblast.PodoblastiIds != null)
-        {
-            Podoblast? podoblast;
-            for (int i = 0; i < novaOblast.PodoblastiIds.Count(); i++)
-            {
-                podoblast = await _context.Podoblasti.FindAsync(novaOblast.PodoblastiIds[i]);
-                if(podoblast != null)
-                {
-                    if (!oblast.Podoblasti!.Contains(podoblast))
-                        oblast.Podoblasti.Add(podoblast);
-                }
-            }
-        }
-
-        if (novaOblast.PitanjaIds != null)
-        {
-            Pitanje? pitanje;
-            for (int i = 0; i < novaOblast.PitanjaIds.Count(); i++)
-            {
-                pitanje = await _context.Pitanja.FindAsync(novaOblast.PitanjaIds[i]);
-                if (pitanje != null)
-                {
-                    if (!oblast.Pitanja!.Contains(pitanje))
-                        oblast.Pitanja.Add(pitanje);
-                }
-            }
-        }
-
-        if (novaOblast.ZadaciIds != null)
-        {
-            Zadatak? zadatak;
-            for (int i = 0; i < novaOblast.ZadaciIds.Count(); i++)
-            {
-                zadatak = await _context.Zadaci.FindAsync(novaOblast.ZadaciIds[i]);
-                if (zadatak != null)
-                {
-                    if (!oblast.Zadaci!.Contains(zadatak))
-                        oblast.Zadaci.Add(zadatak);
-                }
-            }
-        }
 
         _context.Oblasti.Add(oblast);
         await _context.SaveChangesAsync();
@@ -128,72 +81,12 @@ public class OblastController : ControllerBase
     {
         // iz ValidateIdFilter-a
         var oblastZaAzuriranje = HttpContext.Items["entity"] as Oblast;
+
         oblastZaAzuriranje!.Naziv=oblast.Naziv;
-
-        if (oblast.PredmetId != null)
-        {
-            Predmet? predmet = await _context.Predmeti.FindAsync(oblast.PredmetId);
-            if (predmet != null)
-            {
-                oblastZaAzuriranje.Predmet = predmet;
-            }
-        }
-
-        if (oblast.PodoblastiIds != null)
-        {
-            Podoblast? podoblast;
-            for (int i = 0; i < oblast.PodoblastiIds.Count(); i++)
-            {
-                podoblast = await _context.Podoblasti.FindAsync(oblast.PodoblastiIds[i]);
-                if (podoblast != null)
-                {
-                    if (!oblastZaAzuriranje.Podoblasti!.Contains(podoblast))
-                        oblastZaAzuriranje.Podoblasti.Add(podoblast);
-                }
-            }
-        }
-
-        if (oblast.PitanjaIds != null)
-        {
-            Pitanje? pitanje;
-            for (int i = 0; i < oblast.PitanjaIds.Count(); i++)
-            {
-                pitanje = await _context.Pitanja.FindAsync(oblast.PitanjaIds[i]);
-                if (pitanje != null)
-                {
-                    if (!oblastZaAzuriranje.Pitanja!.Contains(pitanje))
-                        oblastZaAzuriranje.Pitanja.Add(pitanje);
-                }
-            }
-        }
-
-        if (oblast.ZadaciIds != null)
-        {
-            Zadatak? zadatak;
-            for (int i = 0; i < oblast.ZadaciIds.Count(); i++)
-            {
-                zadatak = await _context.Zadaci.FindAsync(oblast.ZadaciIds[i]);
-                if (zadatak != null)
-                {
-                    if (!oblastZaAzuriranje.Zadaci!.Contains(zadatak))
-                        oblastZaAzuriranje.Zadaci.Add(zadatak);
-                }
-            }
-        }
-
-        if (oblast.BlanketiIds != null)
-        {
-            Blanket? blanket;
-            for (int i = 0; i < oblast.BlanketiIds.Count(); i++)
-            {
-                blanket = await _context.Blanketi.FindAsync(oblast.BlanketiIds[i]);
-                if (blanket != null)
-                {
-                    if (!oblastZaAzuriranje.Blanketi!.Contains(blanket))
-                        oblastZaAzuriranje.Blanketi.Add(blanket);
-                }
-            }
-        }
+        oblastZaAzuriranje.Predmet = oblast.Predmet;
+        oblastZaAzuriranje.Podoblasti = oblast.Podoblasti;
+        oblastZaAzuriranje.Pitanja = oblast.Pitanja;
+        oblastZaAzuriranje.Zadaci = oblast.Zadaci;
 
         await _context.SaveChangesAsync();
         return Ok(oblastZaAzuriranje);

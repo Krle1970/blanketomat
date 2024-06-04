@@ -10,5 +10,5 @@ public class KomentarBasicDTO
     public required int Lajkovi { get; set; }
     public BlanketBasicDTO? Blanket { get; set; }
     public List<OdgovorBasicDTO>? Odgovori { get; set; }
-    public List<SlikaBasicDTO>? Slike { get; set; }
+    //public List<SlikaBasicDTO>? Slike { get; set; }
 }

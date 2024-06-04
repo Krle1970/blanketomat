@@ -59,31 +59,10 @@ public class PodoblastController : ControllerBase
     {
         Podoblast podoblast = new Podoblast
         {
-            Naziv = novaPodoblast.Naziv
+            Naziv = novaPodoblast.Naziv,
+            Oblast = novaPodoblast.Oblast,
+            Zadaci = novaPodoblast.Zadaci
         };
-
-        if (novaPodoblast.OblastId != null)
-        {
-            Oblast? oblast = await _context.Oblasti.FindAsync(novaPodoblast.OblastId);
-            if (oblast != null)
-            {
-                podoblast.Oblast = oblast;
-            }
-        }
-
-        if (novaPodoblast.ZadaciIds != null)
-        {
-            Zadatak? zadatak;
-            for (int i = 0; i < novaPodoblast.ZadaciIds.Count(); i++)
-            {
-                zadatak = await _context.Zadaci.FindAsync(novaPodoblast.ZadaciIds[i]);
-                if (zadatak != null)
-                {
-                    if (!podoblast.Zadaci!.Contains(zadatak))
-                        podoblast.Zadaci.Add(zadatak);
-                }
-            }
-        }
 
         _context.Podoblasti.Add(podoblast);
         await _context.SaveChangesAsync();
@@ -103,43 +82,9 @@ public class PodoblastController : ControllerBase
         var podoblastZaAzuriranje = HttpContext.Items["entity"] as Podoblast;
 
         podoblastZaAzuriranje!.Naziv = podoblast.Naziv;
-
-        if (podoblast.OblastId != null)
-        {
-            Oblast? oblast = await _context.Oblasti.FindAsync(podoblast.OblastId);
-            if (oblast != null)
-            {
-                podoblastZaAzuriranje.Oblast = oblast;
-            }
-        }
-
-        if (podoblast.ZadaciIds != null)
-        {
-            Zadatak? zadatak;
-            for (int i = 0; i < podoblast.ZadaciIds.Count(); i++)
-            {
-                zadatak = await _context.Zadaci.FindAsync(podoblast.ZadaciIds[i]);
-                if (zadatak != null)
-                {
-                    if (!podoblastZaAzuriranje.Zadaci!.Contains(zadatak))
-                        podoblastZaAzuriranje.Zadaci.Add(zadatak);
-                }
-            }
-        }
-
-        if (podoblast.BlanketiIds != null)
-        {
-            Blanket? blanket;
-            for (int i = 0; i < podoblast.BlanketiIds.Count(); i++)
-            {
-                blanket = await _context.Blanketi.FindAsync(podoblast.BlanketiIds[i]);
-                if (blanket != null)
-                {
-                    if (!podoblastZaAzuriranje.Blanketi!.Contains(blanket))
-                        podoblastZaAzuriranje.Blanketi.Add(blanket);
-                }
-            }
-        }
+        podoblastZaAzuriranje.Oblast = podoblast.Oblast;
+        podoblastZaAzuriranje.Zadaci = podoblast.Zadaci;
+        podoblastZaAzuriranje.Blanketi = podoblast.Blanketi;
 
         await _context.SaveChangesAsync();
         return Ok(podoblastZaAzuriranje);

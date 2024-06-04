@@ -1,6 +1,8 @@
-﻿namespace Blanketomat.API.DTOs.OblastDTOs;
+﻿using Blanketomat.API.Models;
+
+namespace Blanketomat.API.DTOs.OblastDTOs;
 
 public class AzurirajOblastDTO : OblastDTO
 {
-    public int[]? BlanketiIds { get; set; }
+    public List<Blanket>? Blanketi { get; set; }
 }

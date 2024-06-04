@@ -60,17 +60,9 @@ public class PonavljanjeIspitnogRokaController : ControllerBase
         PonavljanjeIspitnogRoka ponavljanjeIspitnogRoka = new PonavljanjeIspitnogRoka
         {
             Naziv = novoPonavljanjeIspitnogRoka.Naziv,
-            Datum = novoPonavljanjeIspitnogRoka.Datum
+            Datum = novoPonavljanjeIspitnogRoka.Datum,
+            IspitniRok = novoPonavljanjeIspitnogRoka.IspitniRok
         };
-
-        if (novoPonavljanjeIspitnogRoka.IspitniRokId != null)
-        {
-            IspitniRok? ispitniRok = await _context.IspitniRokovi.FindAsync(novoPonavljanjeIspitnogRoka.IspitniRokId);
-            if (ispitniRok != null)
-            {
-                ponavljanjeIspitnogRoka.IspitniRok = ispitniRok;
-            }
-        }
 
         _context.PonavljanjaIspitnihRokova.Add(ponavljanjeIspitnogRoka);
         await _context.SaveChangesAsync();
@@ -90,29 +82,8 @@ public class PonavljanjeIspitnogRokaController : ControllerBase
         var ponavljanjeIspitnogRokaZaAzuriranje = HttpContext.Items["entity"] as PonavljanjeIspitnogRoka;
         ponavljanjeIspitnogRokaZaAzuriranje!.Naziv = ponavljanjeIspitnogRoka.Naziv;
         ponavljanjeIspitnogRokaZaAzuriranje.Datum = ponavljanjeIspitnogRoka.Datum;
-
-        if (ponavljanjeIspitnogRoka.IspitniRokId != null)
-        {
-            IspitniRok? ispitniRok = await _context.IspitniRokovi.FindAsync(ponavljanjeIspitnogRoka.IspitniRokId);
-            if (ispitniRok != null)
-            {
-                ponavljanjeIspitnogRokaZaAzuriranje.IspitniRok = ispitniRok;
-            }
-        }
-
-        if (ponavljanjeIspitnogRoka.BlanketiIds != null)
-        {
-            Blanket? blanket;
-            for (int i = 0; i < ponavljanjeIspitnogRoka.BlanketiIds.Count(); i++)
-            {
-                blanket = await _context.Blanketi.FindAsync(ponavljanjeIspitnogRoka.BlanketiIds[i]);
-                if (blanket != null)
-                {
-                    if (!ponavljanjeIspitnogRokaZaAzuriranje.Blanketi!.Contains(blanket))
-                        ponavljanjeIspitnogRokaZaAzuriranje.Blanketi.Add(blanket);
-                }
-            }
-        }
+        ponavljanjeIspitnogRokaZaAzuriranje.IspitniRok = ponavljanjeIspitnogRoka.IspitniRok;
+        ponavljanjeIspitnogRokaZaAzuriranje.Blanketi = ponavljanjeIspitnogRoka.Blanketi;
 
         await _context.SaveChangesAsync();
         return Ok(ponavljanjeIspitnogRokaZaAzuriranje);

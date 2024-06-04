@@ -1,6 +1,4 @@
 ﻿using Blanketomat.API.DTOs.KatedraDTOs;
-using Blanketomat.API.DTOs.KomentarDTOs;
-using Blanketomat.API.DTOs.OdgovorDTOs;
 using Blanketomat.API.DTOs.PredmetDTOs;
 using Blanketomat.API.DTOs.SmerDTOs;
 
@@ -13,9 +11,9 @@ public class ProfesorLoginResponseDTO
     public required string Email { get; set; }
     public required string Password { get; set; }
     public required string Token { get; set; }
-    public List<SmerBasicDTO>? Smerovi { get; set; }
-    public List<PredmetBasicDTO>? Predmeti { get; set; }
-    public KatedraBasicDTO? Katedra { get; set; }
-    public List<KomentarBasicDTO>? LajkovaniKomentari { get; set; }
-    public List<OdgovorBasicDTO>? LajkovaniOdgovori { get; set; }
+    public List<SmerIdNazivDTO>? Smerovi { get; set; }
+    public List<PredmetIdNazivGodinaDTO>? Predmeti { get; set; }
+    public KatedraIdNazivDTO? Katedra { get; set; }
+    public required int BrojLajkovanihKomentara { get; set; }
+    public required int BrojLajkovanihOdgovora { get; set; }
 }

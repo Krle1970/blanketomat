@@ -4,6 +4,6 @@ namespace Blanketomat.API.DTOs.StudentDTOs;
 
 public class AzurirajStudentaDTO : StudentDTO
 {
-    public int[]? PostavljeniKomentariIds { get; set; }
-    public int[]? PostavljeniOdgovoriIds { get; set; }
+    public List<Komentar>? PostavljeniKomentari { get; set; }
+    public List<Odgovor>? PostavljeniOdgovori { get; set; }
 }
