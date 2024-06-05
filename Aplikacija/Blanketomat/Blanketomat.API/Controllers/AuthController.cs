@@ -30,7 +30,7 @@ public class AuthController : ControllerBase
         _configuration = configuration;
     }
 
-    [HttpPost("register-profesor")/*, Authorize(Roles = "Administrator")*/]
+    [HttpPost("register-profesor"), Authorize(Roles = "Administrator")]
     //[TypeFilter(typeof(ValidateAuthenticationLoginFilter))]
     public async Task<ActionResult> RegisterProfesor([FromBody] RegisterProfesorRequestDTO user)
     {

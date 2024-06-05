@@ -19,14 +19,14 @@ document.addEventListener('DOMContentLoaded', function() {
             predmetiId: pId
         };
 
-        const token = localStorage.getItem('authToken');
+        //const token = localStorage.getItem('authToken');
 
         fetch(`http://localhost:5246/Auth/register-profesor`, {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                //'Authorization': `Bearer ${token}`
             }
         })
         .then(response => {
@@ -45,9 +45,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     dugme.addEventListener('click', function(event) {
         event.preventDefault();
+       
         registrujProfesora(
             ime.value, prezime.value, email.value, lozinka.value, 
             akreditacijaId.value, smerId.value, predmetiId.value
         );
+        alert('Profesor je uspešno registrovan!');
     });
 });
