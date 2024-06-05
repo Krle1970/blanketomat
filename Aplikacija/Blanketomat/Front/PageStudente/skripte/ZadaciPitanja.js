@@ -27,6 +27,16 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
                     </div>
                 </div>
                 <div class="form-group mb-3">
+                <label for="search-oblasti1" class=" no-select">Odaberite oblasti:</label>
+                <input type="text" id="search-oblasti1" class="oblast form-control mb-2" placeholder="Pretražite oblasti">
+                <div class="dropdown-menu w-100" id="oblasti-dropdown1">
+                    <a class="dropdown-item" data-value="oblast1">Algebra</a>
+                    <a class="dropdown-item" data-value="oblast2">Matrice</a>
+                    <a class="dropdown-item" data-value="oblast3">Funkcije</a>
+                    <a class="dropdown-item" data-value="oblast4">Analiticka</a>
+                </div>
+                </div>
+                <div class="form-group mb-3">
                     <label for="search-podoblasti${i}">Odaberite podoblasti:</label>
                     <input type="text" id="search-podoblasti${i}" class="form-control mb-2" placeholder="Pretražite podoblasti">
                     <div class="dropdown-menu w-100" id="podoblasti-dropdown${i}">
@@ -126,5 +136,30 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
                 this.classList.remove('show');
             }
         });
+        document.getElementById('search-oblasti1').addEventListener('input', function() {
+            const filter = this.value.toLowerCase();
+            const dropdown = document.getElementById('oblasti-dropdown1');
+            const items = dropdown.getElementsByClassName('dropdown-item');
+            let anyVisible = false;
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(filter) ? '' : 'none';
+                if (text.includes(filter)) {
+                    anyVisible = true;
+                }
+            }
+            dropdown.classList.toggle('show', anyVisible);
+        });
+        
+        document.getElementById('oblasti-dropdown1').addEventListener('click', function(event) {
+            if (event.target.classList.contains('dropdown-item')) {
+                const oblast = event.target.textContent;
+                const searchOblasti = document.getElementById('search-oblasti1');
+                searchOblasti.value = oblast;
+                this.classList.remove('show');
+            }
+        });
+        
     }
 });

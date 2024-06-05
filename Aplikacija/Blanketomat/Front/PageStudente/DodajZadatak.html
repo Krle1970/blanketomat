@@ -133,12 +133,7 @@
             <h5 class="card-title">Zadatak</h5>
         </div>
         <div class="task-details card-body unos">
-            <div class="form-group mb-3">
-                <input type="radio" name="task1" id="generisi1" value="generisi" checked>
-                <label for="generisi1">Generiši</label>
-                <input type="radio" name="task1" id="kreiraj1" value="kreiraj" class="ms-3">
-                <label for="kreiraj1">Kreiraj</label>
-            </div>
+           
             <div class="form-group mb-3">
                 <label for="search-predmeti1" >Odaberite predmet:</label>
                 <input type="text" id="search-predmeti1" class="form-control mb-2" placeholder="Pretražite predmete">
@@ -148,10 +143,19 @@
                     <a class="dropdown-item" data-value="predmet3">Matematika 2</a>
                 </div>
             </div>
-            
             <div class="form-group mb-3">
-                <label for="search-podoblasti1" class="podoblast no-select">Odaberite podoblasti:</label>
-                <input type="text" id="search-podoblasti1" class="form-control mb-2" placeholder="Pretražite podoblasti">
+                <label for="search-oblasti1" class=" no-select">Odaberite oblasti:</label>
+                <input type="text" id="search-oblasti1" class="oblast form-control mb-2" placeholder="Pretražite oblasti">
+                <div class="dropdown-menu w-100" id="oblasti-dropdown1">
+                    <a class="dropdown-item" data-value="oblast1">Algebra</a>
+                    <a class="dropdown-item" data-value="oblast2">Matrice</a>
+                    <a class="dropdown-item" data-value="oblast3">Funkcije</a>
+                    <a class="dropdown-item" data-value="oblast4">Analiticka</a>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="search-podoblasti1" class=" no-select">Odaberite podoblasti:</label>
+                <input type="text" id="search-podoblasti1" class="podoblast form-control mb-2" placeholder="Pretražite podoblasti">
                 <div class="dropdown-menu w-100" id="podoblasti-dropdown1">
                     <a class="dropdown-item" data-value="podoblast1">Unutrasnje ulancavanje</a>
                     <a class="dropdown-item" data-value="podoblast2">Dvostruki</a>
@@ -183,7 +187,7 @@
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="skripte/DodajPitanje.js"></script>
+    <script src="skripte/DodajZadatak.js"></script>
     <script src="skripte/script.js"></script>
     <script src="skripte/sad.js"></script>
 </body>

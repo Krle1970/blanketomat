@@ -3,53 +3,54 @@ document.addEventListener('DOMContentLoaded', function() {
     const prezime = document.getElementById('surname1');
     const email = document.getElementById('email1');
     const lozinka = document.getElementById('password1');
-    const akreditacijaId = document.getElementById('akreditacijaId');
-    const smerId = document.getElementById('smerId');
-    const predmetiId = document.getElementById('predmetiId');
+    const akreditacijaId = document.getElementById('akreditacijaId1');
+    const smerId = document.getElementById('smerId1');
+    const predmetiIds = document.getElementById('predmetiIds1');
     const dugme = document.getElementById('submitProfesor');
 
-    function registrujProfesora(name, surname, mail, pass, akrId, sId, pId) {
+    async function registrujProfesora(name, surname, mail, pass) {
         const body = {
-            ime: name,
-            prezime: surname,
-            email: mail,
-            lozinka: pass,
-            akreditacijaId: null,
-            smerId: null,
-            predmetiId: null
+            Ime: name,
+            Prezime: surname,
+            Email: mail,
+            Password: pass,
+            AkreditacijaId: akreditacijaId ? parseInt(akreditacijaId.value) : null,
+            SmerId: smerId ? parseInt(smerId.value) : null,
+            PredmetiIds: predmetiIds.value.split(',').map(id => parseInt(id.trim()))
         };
 
-        const token = 'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzE3Njg0MDQzfQ.CCJCTIHPavU18ZvaM2pVSuGW7DywwqxKBgeoGD-fxjQP3GOt1SP4k0XXbopPtiykKvhXDh1OSZkgZR8WnshRLA';
+        const token = 'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzE3Njk2NjAzfQ.ltK8C5EjwQl2dygYH_xiwuposDaHvgq2mif_xYbW4dmXiXcf2DOH3AFQDog1wl3gPPjDsvw9mNjlH4VBKUAHSQ'; 
         console.log(token);
-        fetch(`https://localhost:5246/Auth/register-profesor`, {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(response => {
+
+        try {
+            const response = await fetch('http://localhost:5246/Auth/register-profesor', {
+                method: 'POST',
+                body: JSON.stringify(body),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            console.log(response);
+
             if (!response.ok) {
-                throw new Error('Mrežna greška ili greška servera: ' + response.statusText);
+                throw new Error('Network response was not ok ' + response.statusText);
             }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Uspešan odgovor:', data);
-        })
-        .catch(error => {
-            console.error('Greška u fetch pozivu:', error);
-        });
+
+            const data = await response.json();
+            console.log(data);
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Došlo je do greške pri registraciji');
+        }
     }
 
     dugme.addEventListener('click', function(event) {
         event.preventDefault();
-       
         registrujProfesora(
-            ime.value, prezime.value, email.value, lozinka.value, 
-            null, null,null
+            ime.value, prezime.value, email.value, lozinka.value
         );
-        alert('Profesor je uspešno registrovan!');
     });
 });
