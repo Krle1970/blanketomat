@@ -51,11 +51,11 @@
                         </a>
                     </li> 
                     <li class="sidebar-item">
-                        <a href="predmet.html" class="sidebar-link">
-                            <i class="fa-solid fa-file-alt pe-2"></i>
-                            <span class="link-text">Predmet</span>
-                        </a>
-                    </li> 
+                      <a href="predmet.html" class="sidebar-link">
+                          <i class="fa-solid fa-file-alt pe-2"></i>
+                          <span class="link-text">Predmet</span>
+                      </a>
+                  </li> 
                     <li class="sidebar-header">
                         Multi Level Nav
                     </li>
@@ -102,38 +102,43 @@
             <main class="content px-3 py-2">
                 <div class="container-fluid">
                     <div class="mb-3">
-                        <h3>Admin home-page</h3>
+                        <h3>Admin predmet-page</h3>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 col-lg-3 mb-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">Broj Studenata</h5>
-                                    <p class="card-text" id="brojStudenata">100</p>
+                        <!-- Card for Adding Subjects -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card" style="min-width: 300px; max-width: 600px;">
+                                <div class="card-header">
+                                    Dodavanje predmeta
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="subjectName" class="form-label">Naziv predmeta</label>
+                                            <input type="text" class="form-control" id="subjectName" placeholder="Unesite naziv predmeta">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="subjectCode" class="form-label">Šifra predmeta</label>
+                                            <input type="text" class="form-control" id="subjectCode" placeholder="Unesite šifru predmeta">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Dodaj predmet</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-3 mb-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">Broj Profesora</h5>
-                                    <p class="card-text" id="brojProfesora">20</p>
+                        <!-- Card for Listing Subjects -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card" style="min-width: 300px; max-width: 600px;">
+                                <div class="card-header">
+                                    Izlistavanje predmeta
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-3 mb-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">Broj Asistenata</h5>
-                                    <p class="card-text" id="brojAsistenata">10</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-3 mb-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">Broj Predmeta i Blanketa</h5>
-                                    <p class="card-text" id="brojPredmeta">30</p>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">Predmet 1</li>
+                                        <li class="list-group-item">Predmet 2</li>
+                                        <li class="list-group-item">Predmet 3</li>
+                                        <!-- Add more subjects here -->
+                                    </ul>
                                 </div>
                             </div>
                         </div>

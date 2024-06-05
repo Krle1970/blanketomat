@@ -14,19 +14,19 @@ document.addEventListener('DOMContentLoaded', function() {
             prezime: surname,
             email: mail,
             lozinka: pass,
-            akreditacijaId: akrId,
-            smerId: sId,
-            predmetiId: pId
+            akreditacijaId: null,
+            smerId: null,
+            predmetiId: null
         };
 
-        //const token = localStorage.getItem('authToken');
-
-        fetch(`http://localhost:5246/Auth/register-profesor`, {
+        const token = 'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzE3Njg0MDQzfQ.CCJCTIHPavU18ZvaM2pVSuGW7DywwqxKBgeoGD-fxjQP3GOt1SP4k0XXbopPtiykKvhXDh1OSZkgZR8WnshRLA';
+        console.log(token);
+        fetch(`https://localhost:5246/Auth/register-profesor`, {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {
                 'Content-Type': 'application/json',
-                //'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`
             }
         })
         .then(response => {
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
        
         registrujProfesora(
             ime.value, prezime.value, email.value, lozinka.value, 
-            akreditacijaId.value, smerId.value, predmetiId.value
+            null, null,null
         );
         alert('Profesor je uspešno registrovan!');
     });
