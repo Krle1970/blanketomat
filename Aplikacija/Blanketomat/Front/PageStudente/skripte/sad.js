@@ -1,16 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const oblast = document.getElementByClassName('oblast');
-    const tekst = document.getElementByClassName('tekst');
-    const dugme = document.getElementByClassName('dugme');
+ 
+    const tekst = document.querySelector('.tekst');
+    const dugme = document.querySelector('.dugme');
 
-    function DodajZadtak(tekst, oblast) {
+    function DodajZadtak(tekst) {
         const body = {
-           Tekst:tekst,
-           Oblast:oblast
+           Tekst:tekst
+           
         };
 
-       
-        fetch(`https://localhost:5246/Auth/register-profesor`, {
+
+        fetch(`http://localhost:5246/Zadatak` , {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {
@@ -18,13 +18,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .then(data=>data.json())
-        .then(response=consol.log(response));
+        .then(response=>console.log(response));
     }
 
     dugme.addEventListener('click', function(event) {
         event.preventDefault();
-       
-        DodajZadtak(tekst, oblast);
+
+        DodajZadtak(tekst.value);
         alert('zadatak je uspešno registrovan!');
     });
 });
