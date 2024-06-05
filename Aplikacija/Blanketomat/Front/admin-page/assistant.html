@@ -71,13 +71,13 @@
                                 </a>
                                 <ul id="multi-two" class="sidebar-dropdown list-unstyled collapse">
                                     <li class="sidebar-item">
-                                        <a href="#" class="sidebar-link">Izlistaj studente</a>
+                                        <a href="list-student.html" class="sidebar-link">Izlistaj studente</a>
                                     </li>
                                     <li class="sidebar-item">
-                                        <a href="#" class="sidebar-link">Izlistaj profesore</a>
+                                        <a href="list-profesor.html" class="sidebar-link">Izlistaj profesore</a>
                                     </li>
                                     <li class="sidebar-item">
-                                        <a href="#" class="sidebar-link">Izlistaj asistente</a>
+                                        <a href="list-asistent.html" class="sidebar-link">Izlistaj asistente</a>
                                     </li>
                                 </ul>
                             </li>
@@ -100,7 +100,7 @@
             <main class="content px-3 py-2">
                 <div class="container-fluid">
                     <div class="mb-3">
-                        <h3>Admin-Profesor strana</h3>
+                        <h3>Admin-Asistent strana</h3>
                     </div>
                 </div>
                 <div class="content p-3 flex-grow-1 overflow-auto">
@@ -115,54 +115,38 @@
                                     <div class="card-body">
                                         <form>
                                             <div class="mb-3">
-                                                <label for="name1" class="form-label">Ime i prezime</label>
+                                                <label for="name1" class="form-label">Ime</label>
                                                 <input type="text" class="form-control" id="name1" placeholder="Unesi ime">
                                             </div>
                                             <div class="mb-3">
-                                              
-                                                <input type="email" class="form-control" id="email1" placeholder="Unesi Prezime">
+                                                <label for="surname1" class="form-label">Prezime</label>
+                                                <input type="text" class="form-control" id="surname1" placeholder="Unesi prezime">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="role1" class="form-label">Email</label>
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi Email">
+                                                <label for="email1" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="email1" placeholder="Unesi email">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="role1" class="form-label">PasswordHash</label>
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi PasswordHash">
+                                                <label for="password1" class="form-label">Lozinka</label>
+                                                <input type="password" class="form-control" id="password1" placeholder="Unesi lozinku">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="role1" class="form-label">PasswordSalt</label>
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi PasswordSalt">
+                                                <label for="akreditacijaId1" class="form-label">Akreditacija ID</label>
+                                                <input type="number" class="form-control" id="akreditacijaId1" placeholder="Unesi akreditacija ID">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="role1" class="form-label">Polja nisu obavezna:</label>
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi Token">
+                                                <label for="smerId1" class="form-label">Smer ID</label>
+                                                <input type="number" class="form-control" id="smerId1" placeholder="Unesi smer ID">
                                             </div>
                                             <div class="mb-3">
-                                                
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi Smer">
-                                            </div>
-                                            <div class="mb-3">
-                                               
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi 'Predmet'">
-                                            </div>
-                                            <div class="mb-3">
-                                               
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi 'Katedra'">
-                                            </div>
-                                            <div class="mb-3">
-                                               
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi 'LajkovaniKomentari'">
-                                            </div>
-                                            <div class="mb-3">
-                                               
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi 'LajkovaniOdgovori'">
+                                                <label for="predmetiIds1" class="form-label">Predmeti IDs</label>
+                                                <input type="text" class="form-control" id="predmetiIds1" placeholder="Unesi predmeti IDs (odvojene zarezima)">
                                             </div>
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                         </form>
                                     </div>
                                 </div>
-                            </div>
+                            </div>                            
                         </div>
                         <div class="col-md-6 col-lg-4 col-xl-3 mb-3">
                             <div class="card">
@@ -173,8 +157,8 @@
                                     <div class="card-body">
                                         <form>
                                             <div class="mb-3">
-                                                <label for="name2" class="form-label">ID asistenta</label>
-                                                <input type="number" class="form-control" id="name2" placeholder="Unesi ID">
+                                                <label for="assistantId" class="form-label">ID asistenta</label>
+                                                <input type="number" class="form-control" id="assistantId" placeholder="Unesi ID">
                                             </div>
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                         </form>
@@ -191,52 +175,51 @@
                                     <div class="card-body">
                                         <form>
                                             <div class="mb-3">
-                                                
-                                                <input type="number" class="form-control" id="name1" placeholder="Unesi ID">
+                                                <input type="number" class="form-control" id="updateAssistantId" placeholder="Unesi ID">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="name1" class="form-label">Ime i prezime</label>
-                                                <input type="text" class="form-control" id="name1" placeholder="Unesi ime">
+                                                <label for="updateName" class="form-label">Ime</label>
+                                                <input type="text" class="form-control" id="updateName" placeholder="Unesi ime">
                                             </div>
                                             <div class="mb-3">
-                                              
-                                                <input type="email" class="form-control" id="email1" placeholder="Unesi Prezime">
+                                                <label for="updateSurname" class="form-label">Prezime</label>
+                                                <input type="text" class="form-control" id="updateSurname" placeholder="Unesi prezime">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="role1" class="form-label">Email</label>
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi Email">
+                                                <label for="updateEmail" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="updateEmail" placeholder="Unesi email">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="role1" class="form-label">Password:</label>
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi PasswordHash">
+                                                <label for="updatePasswordHash" class="form-label">PasswordHash</label>
+                                                <input type="text" class="form-control" id="updatePasswordHash" placeholder="Unesi PasswordHash">
                                             </div>
                                             <div class="mb-3">
-                                              
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi PasswordSalt">
+                                                <label for="updatePasswordSalt" class="form-label">PasswordSalt</label>
+                                                <input type="text" class="form-control" id="updatePasswordSalt" placeholder="Unesi PasswordSalt">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="role1" class="form-label">Polja nisu obavezna:</label>
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi Token">
+                                                <label for="updateToken" class="form-label">Token</label>
+                                                <input type="text" class="form-control" id="updateToken" placeholder="Unesi Token">
                                             </div>
                                             <div class="mb-3">
-                                                
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi Smer">
+                                                <label for="updateSmer" class="form-label">Smer</label>
+                                                <input type="text" class="form-control" id="updateSmer" placeholder="Unesi Smer">
                                             </div>
                                             <div class="mb-3">
-                                               
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi 'Predmet'">
+                                                <label for="updatePredmet" class="form-label">Predmet</label>
+                                                <input type="text" class="form-control" id="updatePredmet" placeholder="Unesi Predmet">
                                             </div>
                                             <div class="mb-3">
-                                               
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi 'Katedra'">
+                                                <label for="updateKatedra" class="form-label">Katedra</label>
+                                                <input type="text" class="form-control" id="updateKatedra" placeholder="Unesi Katedra">
                                             </div>
                                             <div class="mb-3">
-                                               
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi 'LajkovaniKomentari'">
+                                                <label for="updateLajkovaniKomentari" class="form-label">LajkovaniKomentari</label>
+                                                <input type="text" class="form-control" id="updateLajkovaniKomentari" placeholder="Unesi LajkovaniKomentari">
                                             </div>
                                             <div class="mb-3">
-                                               
-                                                <input type="text" class="form-control" id="role1" placeholder="Unesi 'LajkovaniOdgovori'">
+                                                <label for="updateLajkovaniOdgovori" class="form-label">LajkovaniOdgovori</label>
+                                                <input type="text" class="form-control" id="updateLajkovaniOdgovori" placeholder="Unesi LajkovaniOdgovori">
                                             </div>
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                         </form>
@@ -254,5 +237,4 @@
         crossorigin="anonymous"></script>
     <script src="script/script.js"></script>
 </body>
-
 </html>

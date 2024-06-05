@@ -50,6 +50,7 @@ builder.Services.AddDbContext<BlanketomatContext>(options => options.UseSqlServe
 builder.Services.AddMvc()
     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -63,6 +64,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
 app.UseAuthentication();
 
