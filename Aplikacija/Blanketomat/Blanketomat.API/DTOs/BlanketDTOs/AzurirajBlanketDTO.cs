@@ -1,9 +1,8 @@
-﻿using Blanketomat.API.Models.Validations;
-using System.ComponentModel.DataAnnotations;
+﻿using Blanketomat.API.Models;
 
 namespace Blanketomat.API.DTOs.BlanketDTOs;
 
 public class AzurirajBlanketDTO : BlanketDTO
 {
-    public int[]? KomentariIds { get; set; }
+    public List<Komentar>? KomentariIds { get; set; }
 }

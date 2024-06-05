@@ -66,72 +66,12 @@ public class ProfesorController : ControllerBase
         profesorZaAzuriranje.Email = profesor.Email;
         profesorZaAzuriranje.PasswordHash = passwordHash;
         profesorZaAzuriranje.PasswordSalt = passwordSalt;
+        profesorZaAzuriranje.Smerovi = profesor.Smerovi;
+        profesorZaAzuriranje.Predmeti = profesor.Predmeti;
+        profesorZaAzuriranje.Katedra = profesor.Katedra;
+        profesorZaAzuriranje.LajkovaniKomentari = profesor.LajkovaniKomentari;
+        profesorZaAzuriranje.LajkovaniOdgovori = profesor.LajkovaniOdgovori;
         
-        if (profesor.SmeroviIds != null)
-        {
-            Smer? smer;
-            for (int i = 0; i < profesor.SmeroviIds.Count(); i++)
-            {
-                smer = await _context.Smerovi.FindAsync(profesor.SmeroviIds[i]);
-                if (smer != null)
-                {
-                    if (!profesorZaAzuriranje.Smerovi!.Contains(smer))
-                        profesorZaAzuriranje.Smerovi.Add(smer);
-                }
-            }
-        }
-
-        if (profesor.PredmetiIds != null)
-        {
-            Predmet? predmet;
-            for (int i = 0; i < profesor.PredmetiIds.Count(); i++)
-            {
-                predmet = await _context.Predmeti.FindAsync(profesor.PredmetiIds[i]);
-                if (predmet != null)
-                {
-                    if (!profesorZaAzuriranje.Predmeti!.Contains(predmet))
-                        profesorZaAzuriranje.Predmeti.Add(predmet);
-                }
-            }
-        }
-
-        if (profesor.KatedraId != null)
-        {
-            Katedra? katedra = await _context.Katedre.FindAsync(profesor.KatedraId);
-            if (katedra != null)
-            {
-                profesorZaAzuriranje.Katedra = katedra;
-            }
-        }
-
-        if (profesor.LajkovaniKomentariIds != null)
-        {
-            Komentar? komentar;
-            for (int i = 0; i < profesor.LajkovaniKomentariIds.Count(); i++)
-            {
-                komentar = await _context.Komentari.FindAsync(profesor.LajkovaniKomentariIds[i]);
-                if (komentar != null)
-                {
-                    if (!profesorZaAzuriranje.LajkovaniKomentari!.Contains(komentar))
-                        profesorZaAzuriranje.LajkovaniKomentari.Add(komentar);
-                }
-            }
-        }
-
-        if (profesor.LajkovaniOdgovoriIds != null)
-        {
-            Odgovor? odgovor;
-            for (int i = 0; i < profesor.LajkovaniOdgovoriIds.Count(); i++)
-            {
-                odgovor = await _context.Odgovori.FindAsync(profesor.LajkovaniOdgovoriIds[i]);
-                if (odgovor != null)
-                {
-                    if (!profesorZaAzuriranje.LajkovaniOdgovori!.Contains(odgovor))
-                        profesorZaAzuriranje.LajkovaniOdgovori.Add(odgovor);
-                }
-            }
-        }
-
         await _context.SaveChangesAsync();
     
         return Ok(profesorZaAzuriranje);

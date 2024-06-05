@@ -33,58 +33,13 @@ public class SlikaController : ControllerBase
     {
         Slika slika = new Slika
         {
-            Putanja = novaSlika.Putanja
+            Putanja = novaSlika.Putanja,
+            Blanketi = novaSlika.Blanketi,
+            Pitanje = novaSlika.Pitanje,
+            Zadatak = novaSlika.Zadatak,
+            Komentar = novaSlika.Komentar,
+            Odgovor = novaSlika.Odgovor
         };
-
-        if (novaSlika.BlanketiIds != null)
-        {
-            Blanket? blanket;
-            for (int i = 0; i < novaSlika.BlanketiIds.Count(); i++)
-            {
-                blanket = await _context.Blanketi.FindAsync(novaSlika.BlanketiIds[i]);
-                if (blanket != null)
-                {
-                    if (!slika.Blanketi!.Contains(blanket))
-                        slika.Blanketi.Add(blanket);
-                }
-            }
-        }
-
-        if (novaSlika.PitanjeId != null)
-        {
-            Pitanje? pitanje = await _context.Pitanja.FindAsync(novaSlika.PitanjeId);
-            if (pitanje != null)
-            {
-                slika.Pitanje = pitanje;
-            }
-        }
-
-        if (novaSlika.ZadatakId != null)
-        {
-            Zadatak? zadatak = await _context.Zadaci.FindAsync(novaSlika.ZadatakId);
-            if (zadatak != null)
-            {
-                slika.Zadatak = zadatak;
-            }
-        }
-
-        if (novaSlika.KomentarId != null)
-        {
-            Komentar? komentar = await _context.Komentari.FindAsync(novaSlika.KomentarId);
-            if (komentar != null)
-            {
-                slika.Komentar = komentar;
-            }
-        }
-
-        if (novaSlika.OdgovorId != null)
-        {
-            Odgovor? odgovor = await _context.Odgovori.FindAsync(novaSlika.OdgovorId);
-            if (odgovor != null)
-            {
-                slika.Odgovor = odgovor;
-            }
-        }
 
         _context.Slike.Add(slika);
         await _context.SaveChangesAsync();
@@ -103,56 +58,11 @@ public class SlikaController : ControllerBase
         // iz ValidateIdFilter-a
         var slikaZaAzuriranje = HttpContext.Items["entity"] as Slika;
         slikaZaAzuriranje!.Putanja = slika.Putanja;
-
-        if (slika.BlanketiIds != null)
-        {
-            Blanket? blanket;
-            for (int i = 0; i < slika.BlanketiIds.Count(); i++)
-            {
-                blanket = await _context.Blanketi.FindAsync(slika.BlanketiIds[i]);
-                if (blanket != null)
-                {
-                    if (!slikaZaAzuriranje.Blanketi!.Contains(blanket))
-                        slikaZaAzuriranje.Blanketi.Add(blanket);
-                }
-            }
-        }
-
-        if (slika.PitanjeId != null)
-        {
-            Pitanje? pitanje = await _context.Pitanja.FindAsync(slika.PitanjeId);
-            if (pitanje != null)
-            {
-                slikaZaAzuriranje.Pitanje = pitanje;
-            }
-        }
-
-        if (slika.ZadatakId != null)
-        {
-            Zadatak? zadatak = await _context.Zadaci.FindAsync(slika.ZadatakId);
-            if (zadatak != null)
-            {
-                slikaZaAzuriranje.Zadatak = zadatak;
-            }
-        }
-
-        if (slika.KomentarId != null)
-        {
-            Komentar? komentar = await _context.Komentari.FindAsync(slika.KomentarId);
-            if (komentar != null)
-            {
-                slikaZaAzuriranje.Komentar = komentar;
-            }
-        }
-
-        if (slika.OdgovorId != null)
-        {
-            Odgovor? odgovor = await _context.Odgovori.FindAsync(slika.OdgovorId);
-            if (odgovor != null)
-            {
-                slikaZaAzuriranje.Odgovor = odgovor;
-            }
-        }
+        slikaZaAzuriranje.Blanketi = slika.Blanketi;
+        slikaZaAzuriranje.Pitanje = slika.Pitanje;
+        slikaZaAzuriranje.Zadatak = slika.Zadatak;
+        slikaZaAzuriranje.Komentar = slika.Komentar;
+        slikaZaAzuriranje.Odgovor = slika.Odgovor;
 
         await _context.SaveChangesAsync();
         return Ok(slikaZaAzuriranje);

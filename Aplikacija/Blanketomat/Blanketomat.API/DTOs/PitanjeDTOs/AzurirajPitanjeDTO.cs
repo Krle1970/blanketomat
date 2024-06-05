@@ -1,6 +1,8 @@
-﻿namespace Blanketomat.API.DTOs.PitanjeDTOs;
+﻿using Blanketomat.API.Models;
+
+namespace Blanketomat.API.DTOs.PitanjeDTOs;
 
 public class AzurirajPitanjeDTO : PitanjeDTO
 {
-    public int[]? BlanketiIds { get; set; }
+    public List<Blanket>? Blanketi { get; set; }
 }

@@ -23,9 +23,13 @@ public class AdministratorController : ControllerBase
 
     [HttpGet("administratori")]
     [TypeFilter(typeof(ValidateDbSetFilter<Administrator>))]
-    public async Task<ActionResult<List<Administrator>>> VratiSveAdministratore()
+    public async Task<ActionResult<List<AdministratorBasicDTO>>> VratiSveAdministratore()
     {
-        return Ok(await _context.Administratori.ToListAsync());
+        List<AdministratorBasicDTO> administratori = await _context.Administratori
+            .Select(x => new AdministratorBasicDTO { Id = x.Id, Ime = x.Ime, Prezime = x.Prezime, Email = x.Email})
+            .ToListAsync();
+
+        return Ok(administratori);
     }
 
     [HttpGet]
@@ -39,9 +43,10 @@ public class AdministratorController : ControllerBase
         var administratori = await _context.Administratori
             .Skip((page - 1) * brojRezultata)
             .Take(brojRezultata)
+            .Select(x => new AdministratorPagingDTO {Id = x.Id, Ime = x.Ime, Prezime = x.Prezime, Email = x.Email})
             .ToListAsync();
 
-        var response = new PagingResponseDTO<Administrator>
+        var response = new PagingResponseDTO<AdministratorPagingDTO>
         {
             Podaci = administratori,
             BrojStranica = (int)brojStranica,
@@ -54,24 +59,28 @@ public class AdministratorController : ControllerBase
     [HttpGet("{id}")]
     [TypeFilter(typeof(ValidateDbSetFilter<Administrator>))]
     [TypeFilter(typeof(ValidateIdFilter<Administrator>))]
-    public ActionResult<Administrator> VratiAdministratora(int id)
+    public ActionResult<AdministratorBasicDTO> VratiAdministratora(int id)
     {
-        return Ok(HttpContext.Items["entity"]);
+        Administrator? administrator = HttpContext.Items["entity"] as Administrator;
+        AdministratorBasicDTO admin = new AdministratorBasicDTO { Id = administrator!.Id, Ime = administrator.Ime, Prezime = administrator.Prezime, Email = administrator.Email };
+
+        return Ok(admin);
     }
 
     [HttpPost]
     [TypeFilter(typeof(ValidateDodajAdministratoraFilter))]
-    public async Task<ActionResult> DodajAdministratora([FromBody]AdministratorDTO administrator)
+    public async Task<ActionResult> DodajAdministratora([FromBody]DodajAdministratoraDTO noviAdministrator)
     {
-        PasswordManager.CreatePasswordHash(administrator.Password, out byte[] passwordHash, out byte[] passwordSalt);
+        PasswordManager.CreatePasswordHash(noviAdministrator.Password, out byte[] passwordHash, out byte[] passwordSalt);
         var admin = new Administrator
         {
-            Ime = administrator.Ime,
-            Prezime = administrator.Prezime,
-            Email = administrator.Email,
+            Ime = noviAdministrator.Ime,
+            Prezime = noviAdministrator.Prezime,
+            Email = noviAdministrator.Email,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt
         };
+
         _context.Administratori.Add(admin);
         await _context.SaveChangesAsync();
 
@@ -84,8 +93,7 @@ public class AdministratorController : ControllerBase
     [HttpPut("{id}")]
     [TypeFilter(typeof(ValidateDbSetFilter<Administrator>))]
     [TypeFilter(typeof(ValidateIdFilter<Administrator>))]
-    [TypeFilter(typeof(ValidateAzurirajAdministratoraFilter<Administrator>))]
-    public async Task<ActionResult<Administrator>> AzurirajAdministratora(int id, [FromBody]AdministratorDTO administrator)
+    public async Task<ActionResult<AdministratorBasicDTO>> AzurirajAdministratora(int id, [FromBody]AzurirajAdministratoraDTO administrator)
     {
         // iz ValidateIdFilter-a
         var administratorZaAzuriranje = HttpContext.Items["entity"] as Administrator;
@@ -101,20 +109,22 @@ public class AdministratorController : ControllerBase
             administratorZaAzuriranje.PasswordSalt = newPasswordSalt;
         }
 
+        AdministratorBasicDTO admin = new AdministratorBasicDTO { Id = administratorZaAzuriranje!.Id, Ime = administratorZaAzuriranje.Ime, Prezime = administratorZaAzuriranje.Prezime, Email = administratorZaAzuriranje.Email };
+
         await _context.SaveChangesAsync();
-        return Ok(administratorZaAzuriranje);
+        return Ok(admin);
     }
 
     [HttpDelete("{id}")]
     [TypeFilter(typeof(ValidateDbSetFilter<Administrator>))]
     [TypeFilter(typeof(ValidateIdFilter<Administrator>))]
-    public async Task<ActionResult<string>> ObrisiAdministratora(int id)
+    public async Task<ActionResult> ObrisiAdministratora(int id)
     {
         // iz ValidateIdFilter-a
         var administratorZaBrisanje = HttpContext.Items["entity"] as Administrator;
         _context.Administratori.Remove(administratorZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok("Administrator uspešno obrisan");
+        return NoContent();
     }
 }

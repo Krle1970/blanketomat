@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Blanketomat.API.Models;
 
 namespace Blanketomat.API.DTOs.IspitniRokDTOs;
 
 public class AzurirajIspitniRokDTO : IspitniRokDTO
 {
-    public int[]? PonavljanjaIspitnihRokovaIds { get; set; }
+    public List<PonavljanjeIspitnogRoka>? PonavljanjaIspitnihRokova { get; set; }
 }

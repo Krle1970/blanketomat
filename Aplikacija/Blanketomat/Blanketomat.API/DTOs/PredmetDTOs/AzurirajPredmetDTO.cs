@@ -1,6 +1,8 @@
-﻿namespace Blanketomat.API.DTOs.PredmetDTOs;
+﻿using Blanketomat.API.Models;
+
+namespace Blanketomat.API.DTOs.PredmetDTOs;
 
 public class AzurirajPredmetDTO : PredmetDTO
 {
-    public int[]? BlanketiIds { get; set; }
+    public List<Blanket>? Blanketi { get; set; }
 }

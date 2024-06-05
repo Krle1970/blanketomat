@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Blanketomat.API.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Blanketomat.API.DTOs.PonavljanjeIspitnogRokaDTOs;
 
@@ -10,5 +11,5 @@ public class PonavljanjeIspitnogRokaDTO
 
     [Required(ErrorMessage = "Datum odrzavanja ispita je obavezno polje")]
     public required DateOnly Datum { get; set; }
-    public int? IspitniRokId { get; set; }
+    public IspitniRok? IspitniRok { get; set; }
 }

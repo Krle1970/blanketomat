@@ -67,68 +67,13 @@ public class BlanketController : ControllerBase
         {
             Tip = noviBlanket.Tip,
             Kategorija = noviBlanket.Kategorija,
-            Putanja = noviBlanket.Putanja
+            Putanja = noviBlanket.Putanja,
+            Slike = noviBlanket.Slike,
+            Predmet = noviBlanket.Predmet,
+            IspitniRok = noviBlanket.PonavljanjeIspitnogRoka,
+            Pitanja = noviBlanket.Pitanja,
+            Zadaci = noviBlanket.Zadaci
         };
-
-        if (noviBlanket.SlikeIds != null)
-        {
-            Slika? slika;
-            for (int i = 0; i < noviBlanket.SlikeIds.Count(); i++)
-            {
-                slika = await _context.Slike.FindAsync(noviBlanket.SlikeIds[i]);
-                if (slika != null)
-                {
-                    if (!blanket.Slike!.Contains(slika))
-                        blanket.Slike.Add(slika);
-                }
-            }
-        }
-
-        if (noviBlanket.PredmetId != null)
-        {
-            Predmet? predmet = await _context.Predmeti.FindAsync(noviBlanket.PredmetId);
-            if (predmet != null)
-            {
-                blanket.Predmet = predmet;
-            }
-        }
-
-        if (noviBlanket.PonavljanjeIspitnogRokaId != null)
-        {
-            PonavljanjeIspitnogRoka? ponavljanjeIspitnogRoka = await _context.PonavljanjaIspitnihRokova.FindAsync(noviBlanket.PonavljanjeIspitnogRokaId);
-            if (ponavljanjeIspitnogRoka != null)
-            {
-                blanket.IspitniRok = ponavljanjeIspitnogRoka;
-            }
-        }
-
-        if (noviBlanket.PitanjaIds != null)
-        {
-            Pitanje? pitanje;
-            for (int i = 0; i < noviBlanket.PitanjaIds.Count(); i++)
-            {
-                pitanje = await _context.Pitanja.FindAsync(noviBlanket.PitanjaIds[i]);
-                if (pitanje != null)
-                {
-                    if (!blanket.Pitanja!.Contains(pitanje))
-                        blanket.Pitanja.Add(pitanje);
-                }
-            }
-        }
-
-        if (noviBlanket.ZadaciIds != null)
-        {
-            Zadatak? zadatak;
-            for (int i = 0; i < noviBlanket.ZadaciIds.Count(); i++)
-            {
-                zadatak = await _context.Zadaci.FindAsync(noviBlanket.ZadaciIds[i]);
-                if (zadatak != null)
-                {
-                    if (!blanket.Zadaci!.Contains(zadatak))
-                        blanket.Zadaci.Add(zadatak);
-                }
-            }
-        }
 
         _context.Blanketi.Add(blanket);
         await _context.SaveChangesAsync();
@@ -150,80 +95,11 @@ public class BlanketController : ControllerBase
         blanketZaAzuriranje!.Tip = blanket.Tip;
         blanketZaAzuriranje.Kategorija = blanket.Kategorija;
         blanketZaAzuriranje.Putanja = blanket.Putanja;
-
-        if (blanket.SlikeIds != null)
-        {
-            Slika? slika;
-            for (int i = 0; i < blanket.SlikeIds.Count(); i++)
-            {
-                slika = await _context.Slike.FindAsync(blanket.SlikeIds[i]);
-                if (slika != null)
-                {
-                    if (!blanketZaAzuriranje.Slike!.Contains(slika))
-                        blanketZaAzuriranje.Slike.Add(slika);
-                }
-            }
-        }
-
-        if (blanket.PredmetId != null)
-        {
-            Predmet? predmet = await _context.Predmeti.FindAsync(blanket.PredmetId);
-            if (predmet != null)
-            {
-                blanketZaAzuriranje.Predmet = predmet;
-            }
-        }
-
-        if (blanket.PonavljanjeIspitnogRokaId != null)
-        {
-            PonavljanjeIspitnogRoka? ponavljanjeIspitnogRoka = await _context.PonavljanjaIspitnihRokova.FindAsync(blanket.PonavljanjeIspitnogRokaId);
-            if (ponavljanjeIspitnogRoka != null)
-            {
-                blanketZaAzuriranje.IspitniRok = ponavljanjeIspitnogRoka;
-            }
-        }
-
-        if (blanket.PitanjaIds != null)
-        {
-            Pitanje? pitanje;
-            for (int i = 0; i < blanket.PitanjaIds.Count(); i++)
-            {
-                pitanje = await _context.Pitanja.FindAsync(blanket.PitanjaIds[i]);
-                if (pitanje != null)
-                {
-                    if (!blanketZaAzuriranje.Pitanja!.Contains(pitanje))
-                        blanketZaAzuriranje.Pitanja.Add(pitanje);
-                }
-            }
-        }
-
-        if (blanket.ZadaciIds != null)
-        {
-            Zadatak? zadatak;
-            for (int i = 0; i < blanket.ZadaciIds.Count(); i++)
-            {
-                zadatak = await _context.Zadaci.FindAsync(blanket.ZadaciIds[i]);
-                if (zadatak != null)
-                {
-                    if (!blanketZaAzuriranje.Zadaci!.Contains(zadatak))
-                        blanketZaAzuriranje.Zadaci.Add(zadatak);
-                }
-            }
-        }
-
-        if (blanket.KomentariIds != null)
-        {
-            Komentar? komentar;
-            for (int i = 0; i < blanket.KomentariIds.Count(); i++)
-            {
-                komentar = await _context.Komentari.FindAsync(blanket.KomentariIds[i]);
-                if (komentar != null)
-                {
-                    if (!blanketZaAzuriranje.Komentari!.Contains(komentar))
-                        blanketZaAzuriranje.Komentari.Add(komentar);
-                }
-            }
-        }
+        blanketZaAzuriranje.Slike = blanket.Slike;
+        blanketZaAzuriranje.Predmet = blanket.Predmet;
+        blanketZaAzuriranje.IspitniRok = blanket.PonavljanjeIspitnogRoka;
+        blanketZaAzuriranje.Pitanja = blanket.Pitanja;
+        blanketZaAzuriranje.Zadaci = blanket.Zadaci;
 
         await _context.SaveChangesAsync();
         return Ok(blanketZaAzuriranje);

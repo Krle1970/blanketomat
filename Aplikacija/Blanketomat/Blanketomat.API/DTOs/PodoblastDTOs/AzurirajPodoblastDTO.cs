@@ -1,6 +1,8 @@
-﻿namespace Blanketomat.API.DTOs.PodoblastDTOs;
+﻿using Blanketomat.API.Models;
 
-public class AzurirajPodoblastDTO : DodajPodoblastDTO
+namespace Blanketomat.API.DTOs.PodoblastDTOs;
+
+public class AzurirajPodoblastDTO : PodoblastDTO
 {
-    public int[]? BlanketiIds { get; set; }
+    public List<Blanket>? Blanketi { get; set; }
 }

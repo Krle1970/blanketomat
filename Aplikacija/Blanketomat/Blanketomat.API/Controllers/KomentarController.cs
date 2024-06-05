@@ -60,40 +60,11 @@ public class KomentarController : ControllerBase
         Komentar komentar = new Komentar
         {
             Tekst = noviKomentar.Tekst,
-            Lajkovi = 0
+            Lajkovi = 0,
+            Blanket = noviKomentar.Blanket,
+            Slika = noviKomentar.Slike,
+            StudentPostavio = noviKomentar.StudentPostavio
         };
-
-        if (noviKomentar.BlanketId != null)
-        {
-            Blanket? blanket = await _context.Blanketi.FindAsync(noviKomentar.BlanketId);
-            if (blanket != null)
-            {
-                komentar.Blanket = blanket;
-            }
-        }
-
-        if (noviKomentar.SlikeIds != null)
-        {
-            Slika? slika;
-            for (int i = 0; i < noviKomentar.SlikeIds.Count(); i++)
-            {
-                slika = await _context.Slike.FindAsync(noviKomentar.SlikeIds[i]);
-                if (slika != null)
-                {
-                    if (!komentar.Slika!.Contains(slika))
-                        komentar.Slika.Add(slika);
-                }
-            }
-        }
-
-        if (noviKomentar.StudentPostavioId != null)
-        {
-            Student? student = await _context.Studenti.FindAsync(noviKomentar.StudentPostavioId);
-            if (student != null)
-            {
-                komentar.StudentPostavio = student;
-            }
-        }
 
         _context.Komentari.Add(komentar);
         await _context.SaveChangesAsync();
@@ -114,66 +85,12 @@ public class KomentarController : ControllerBase
 
         komentarZaAzuriranje!.Tekst = komentar.Tekst;
         komentarZaAzuriranje.Lajkovi = komentar.Lajkovi;
-
-        if (komentar.BlanketId != null)
-        {
-            Blanket? blanket = await _context.Blanketi.FindAsync(komentar.BlanketId);
-            if (blanket != null)
-            {
-                komentarZaAzuriranje.Blanket = blanket;
-            }
-        }
-
-        if (komentar.SlikeIds != null)
-        {
-            Slika? slika;
-            for (int i = 0; i < komentar.SlikeIds.Count(); i++)
-            {
-                slika = await _context.Slike.FindAsync(komentar.SlikeIds[i]);
-                if (slika != null)
-                {
-                    if (!komentarZaAzuriranje.Slika!.Contains(slika))
-                        komentarZaAzuriranje.Slika.Add(slika);
-                }
-            }
-        }
-
-        if (komentar.StudentPostavioId != null)
-        {
-            Student? student = await _context.Studenti.FindAsync(komentar.StudentPostavioId);
-            if (student != null)
-            {
-                komentarZaAzuriranje.StudentPostavio = student;
-            }
-        }
-
-        if (komentar.AsistentiLikedIds != null)
-        {
-            Asistent? asistent;
-            for (int i = 0; i < komentar.AsistentiLikedIds.Count(); i++)
-            {
-                asistent = await _context.Asistenti.FindAsync(komentar.AsistentiLikedIds[i]);
-                if (asistent != null)
-                {
-                    if (!komentarZaAzuriranje.AsistentiLiked!.Contains(asistent))
-                        komentarZaAzuriranje.AsistentiLiked.Add(asistent);
-                }
-            }
-        }
-
-        if (komentar.ProfesoriLikedIds != null)
-        {
-            Profesor? profesor;
-            for (int i = 0; i < komentar.ProfesoriLikedIds.Count(); i++)
-            {
-                profesor = await _context.Profesori.FindAsync(komentar.ProfesoriLikedIds[i]);
-                if (profesor != null)
-                {
-                    if (!komentarZaAzuriranje.ProfesoriLiked!.Contains(profesor))
-                        komentarZaAzuriranje.ProfesoriLiked.Add(profesor);
-                }
-            }
-        }
+        komentarZaAzuriranje.Blanket = komentar.Blanket;
+        komentarZaAzuriranje.Slika = komentar.Slike;
+        komentarZaAzuriranje.StudentPostavio = komentar.StudentPostavio;
+        komentarZaAzuriranje.Odgovori = komentar.Odgovori;
+        komentarZaAzuriranje.ProfesoriLiked = komentar.ProfesoriLiked;
+        komentarZaAzuriranje.AsistentiLiked = komentar.AsistentiLiked;
 
         await _context.SaveChangesAsync();
         return Ok(komentarZaAzuriranje);

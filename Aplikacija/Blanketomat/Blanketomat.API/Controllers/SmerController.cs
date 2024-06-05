@@ -66,73 +66,13 @@ public class SmerController : ControllerBase
     {
         Smer smer = new Smer
         {
-            Naziv = noviSmer.Naziv
+            Naziv = noviSmer.Naziv,
+            Katedra = noviSmer.Katedra,
+            Predmeti = noviSmer.Predmeti,
+            Profesori = noviSmer.Profesori,
+            Asistenti = noviSmer.Asistenti,
+            Studenti = noviSmer.Studenti
         };
-
-        if (noviSmer.KatedraId != null)
-        {
-            Katedra? katedra = await _context.Katedre.FindAsync(noviSmer.KatedraId);
-            if (katedra != null)
-            {
-                smer.Katedra = katedra;
-            }
-        }
-
-        if (noviSmer.PredmetiIds != null)
-        {
-            Predmet? predmet;
-            for (int i = 0; i < noviSmer.PredmetiIds.Count(); i++)
-            {
-                predmet = await _context.Predmeti.FindAsync(noviSmer.PredmetiIds[i]);
-                if (predmet != null)
-                {
-                    if (!smer.Predmeti!.Contains(predmet))
-                        smer.Predmeti.Add(predmet);
-                }
-            }
-        }
-
-        if (noviSmer.ProfesoriIds != null)
-        {
-            Profesor? profesor;
-            for (int i = 0; i < noviSmer.ProfesoriIds.Count(); i++)
-            {
-                profesor = await _context.Profesori.FindAsync(noviSmer.ProfesoriIds[i]);
-                if (profesor != null)
-                {
-                    if (!smer.Profesori!.Contains(profesor))
-                        smer.Profesori.Add(profesor);
-                }
-            }
-        }
-
-        if (noviSmer.AsistentiIds != null)
-        {
-            Asistent? asistent;
-            for (int i = 0; i < noviSmer.AsistentiIds.Count(); i++)
-            {
-                asistent = await _context.Asistenti.FindAsync(noviSmer.AsistentiIds[i]);
-                if (asistent != null)
-                {
-                    if (!smer.Asistenti!.Contains(asistent))
-                        smer.Asistenti.Add(asistent);
-                }
-            }
-        }
-
-        if (noviSmer.StudentiIds != null)
-        {
-            Student? student;
-            for (int i = 0; i < noviSmer.StudentiIds.Count(); i++)
-            {
-                student = await _context.Studenti.FindAsync(noviSmer.StudentiIds[i]);
-                if (student != null)
-                {
-                    if (!smer.Studenti!.Contains(student))
-                        smer.Studenti.Add(student);
-                }
-            }
-        }
 
         _context.Smerovi.Add(smer);
         await _context.SaveChangesAsync();
@@ -151,71 +91,11 @@ public class SmerController : ControllerBase
         // iz ValidateIdFilter-a
         var smerZaAzuriranje = HttpContext.Items["entity"] as Smer;
         smerZaAzuriranje!.Naziv = smer.Naziv;
-
-        if (smer.KatedraId != null)
-        {
-            Katedra? katedra = await _context.Katedre.FindAsync(smer.KatedraId);
-            if (katedra != null)
-            {
-                smerZaAzuriranje.Katedra = katedra;
-            }
-        }
-
-        if (smer.PredmetiIds != null)
-        {
-            Predmet? predmet;
-            for (int i = 0; i < smer.PredmetiIds.Count(); i++)
-            {
-                predmet = await _context.Predmeti.FindAsync(smer.PredmetiIds[i]);
-                if (predmet != null)
-                {
-                    if (!smerZaAzuriranje.Predmeti!.Contains(predmet))
-                        smerZaAzuriranje.Predmeti.Add(predmet);
-                }
-            }
-        }
-
-        if (smer.ProfesoriIds != null)
-        {
-            Profesor? profesor;
-            for (int i = 0; i < smer.ProfesoriIds.Count(); i++)
-            {
-                profesor = await _context.Profesori.FindAsync(smer.ProfesoriIds[i]);
-                if (profesor != null)
-                {
-                    if (!smerZaAzuriranje.Profesori!.Contains(profesor))
-                        smerZaAzuriranje.Profesori.Add(profesor);
-                }
-            }
-        }
-
-        if (smer.AsistentiIds != null)
-        {
-            Asistent? asistent;
-            for (int i = 0; i < smer.AsistentiIds.Count(); i++)
-            {
-                asistent = await _context.Asistenti.FindAsync(smer.AsistentiIds[i]);
-                if (asistent != null)
-                {
-                    if (!smerZaAzuriranje.Asistenti!.Contains(asistent))
-                        smerZaAzuriranje.Asistenti.Add(asistent);
-                }
-            }
-        }
-
-        if (smer.StudentiIds != null)
-        {
-            Student? student;
-            for (int i = 0; i < smer.StudentiIds.Count(); i++)
-            {
-                student = await _context.Studenti.FindAsync(smer.StudentiIds[i]);
-                if (student != null)
-                {
-                    if (!smerZaAzuriranje.Studenti!.Contains(student))
-                        smerZaAzuriranje.Studenti.Add(student);
-                }
-            }
-        }
+        smerZaAzuriranje.Katedra = smer.Katedra;
+        smerZaAzuriranje.Predmeti = smer.Predmeti;
+        smerZaAzuriranje.Profesori = smer.Profesori;
+        smerZaAzuriranje.Asistenti = smer.Asistenti;
+        smerZaAzuriranje.Studenti = smer.Studenti;
 
         await _context.SaveChangesAsync();
         return Ok(smerZaAzuriranje);

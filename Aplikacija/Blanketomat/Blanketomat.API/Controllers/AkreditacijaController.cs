@@ -24,13 +24,22 @@ public class AkreditacijaController : ControllerBase
     [TypeFilter(typeof(ValidateDbSetFilter<Akreditacija>))]
     public async Task<ActionResult<List<Akreditacija>>> VratiSveAkreditacije()
     {
-        return Ok(await _context.Akreditacije.ToListAsync());
+        List<AkreditacijaBasicDTO> akreditacije = await _context.Akreditacije.
+            Select(x => new AkreditacijaBasicDTO
+            {
+                Id = x.Id,
+                Naziv = x.Naziv,
+                BrojPredmeta = x.Predmeti == null ? 0 : x.Predmeti.Count(),
+                BrojStudenata = x.Studenti == null ? 0 : x.Studenti.Count()
+            }).ToListAsync();
+
+        return Ok(akreditacije);
     }
 
     [HttpGet]
     [TypeFilter(typeof(ValidateDbSetFilter<Akreditacija>))]
     [ValidatePaginationFilter]
-    public async Task<ActionResult<PagingResponseDTO<Akreditacija>>> VratiAkreditacije(int page, int count)
+    public async Task<ActionResult<PagingResponseDTO<AkreditacijaPagingResponseDTO>>> VratiAkreditacije(int page, int count)
     {
         var brojRezultata = count;
         var brojStranica = Math.Ceiling(_context.Akreditacije.Count() / (float)brojRezultata);
@@ -38,9 +47,15 @@ public class AkreditacijaController : ControllerBase
         var akreditacija = await _context.Akreditacije
             .Skip((page - 1) * brojRezultata)
             .Take(brojRezultata)
-            .ToListAsync();
+            .Select(x => new AkreditacijaPagingResponseDTO
+            {
+                Id = x.Id,
+                Naziv = x.Naziv,
+                BrojPredmeta = x.Predmeti == null ? 0 : x.Predmeti.Count(),
+                BrojStudenata = x.Studenti == null ? 0 : x.Studenti.Count()
+            }).ToListAsync();
 
-        var response = new PagingResponseDTO<Akreditacija>
+        var response = new PagingResponseDTO<AkreditacijaPagingResponseDTO>
         {
             Podaci = akreditacija,
             BrojStranica = (int)brojStranica,
@@ -53,51 +68,29 @@ public class AkreditacijaController : ControllerBase
     [HttpGet("{id}")]
     [TypeFilter(typeof(ValidateDbSetFilter<Akreditacija>))]
     [TypeFilter(typeof(ValidateIdFilter<Akreditacija>))]
-    public ActionResult<Akreditacija> VratiAkreditaciju(int id)
+    public ActionResult<AkreditacijaBasicDTO> VratiAkreditaciju(int id)
     {
         // iz ValidateIdFilter-a
-        return Ok(HttpContext.Items["entity"] as Akreditacija);
+        Akreditacija? akreditacija = HttpContext.Items["entity"] as Akreditacija;
+        AkreditacijaBasicDTO akreditacijaBasic = new AkreditacijaBasicDTO { Id = akreditacija!.Id, Naziv = akreditacija.Naziv, 
+            BrojPredmeta = akreditacija.Predmeti == null ? 0 : akreditacija.Predmeti.Count(), 
+            BrojStudenata = akreditacija.Studenti == null ? 0 : akreditacija.Studenti.Count()
+        };
+
+        return Ok(akreditacijaBasic);
     }
 
     [HttpPost]
     [TypeFilter(typeof(ValidateDbSetFilter<Akreditacija>))]
     [TypeFilter(typeof(ValidateDodajAkreditacijuFilter))]
-    public async Task<ActionResult> DodajAkreditaciju([FromBody]AkreditacijaDTO novaAkreditacija)
+    public async Task<ActionResult> DodajAkreditaciju([FromBody]DodajAkreditacijuDTO novaAkreditacija)
     {
         Akreditacija akreditacija = new Akreditacija
         {
             Naziv = novaAkreditacija.Naziv,
-            Studenti = new List<Student>(),
-            Predmeti = new List<Predmet>()
+            Studenti = novaAkreditacija.Studenti,
+            Predmeti = novaAkreditacija.Predmeti
         };
-
-        if (novaAkreditacija!.StudentiIds != null)
-        {
-            Student? student;
-            for (int i = 0; i < novaAkreditacija.StudentiIds.Count(); i++)
-            {
-                student = await _context.Studenti.FindAsync(novaAkreditacija.StudentiIds[i]);
-                if (student != null)
-                {
-                    if (!akreditacija.Studenti.Contains(student))
-                        akreditacija.Studenti.Add(student);
-                }
-            }
-        }
-
-        if (novaAkreditacija.PredmetiIds != null)
-        {
-            Predmet? predmet;
-            for (int i = 0; i < novaAkreditacija.PredmetiIds.Count(); i++)
-            {
-                predmet = await _context.Predmeti.FindAsync(novaAkreditacija.PredmetiIds[i]);
-                if (predmet != null)
-                {
-                    if (!akreditacija.Predmeti.Contains(predmet))
-                        akreditacija.Predmeti.Add(predmet);
-                }
-            }
-        }
 
         _context.Akreditacije.Add(akreditacija);
         await _context.SaveChangesAsync();
@@ -111,43 +104,25 @@ public class AkreditacijaController : ControllerBase
     [HttpPut("{id}")]
     [TypeFilter(typeof(ValidateDbSetFilter<Akreditacija>))]
     [TypeFilter(typeof(ValidateIdFilter<Akreditacija>))]
-    public async Task<ActionResult> AzurirajAkreditaciju(int id, [FromBody]AkreditacijaDTO akreditacija)
+    public async Task<ActionResult<AkreditacijaBasicDTO>> AzurirajAkreditaciju(int id, [FromBody]AzurirajAkreditacijuDTO akreditacija)
     {
         // iz ValidateIdFilter-a
         var akreditacijaZaAzuriranje = HttpContext.Items["entity"] as Akreditacija;
 
         akreditacijaZaAzuriranje!.Naziv = akreditacija.Naziv;
+        akreditacijaZaAzuriranje.Studenti = akreditacija.Studenti;
+        akreditacijaZaAzuriranje.Predmeti = akreditacija.Predmeti;
 
-        if (akreditacija!.StudentiIds != null)
+        AkreditacijaBasicDTO akreditacijaBasic = new AkreditacijaBasicDTO
         {
-            Student? student;
-            for (int i = 0; i < akreditacija.StudentiIds.Count(); i++)
-            {
-                student = await _context.Studenti.FindAsync(akreditacija.StudentiIds[i]);
-                if (student != null)
-                {
-                    if (!akreditacijaZaAzuriranje.Studenti!.Contains(student))
-                        akreditacijaZaAzuriranje.Studenti.Add(student);
-                }
-            }
-        }
-
-        if (akreditacija.PredmetiIds != null)
-        {
-            Predmet? predmet;
-            for (int i = 0; i < akreditacija.PredmetiIds.Count(); i++)
-            {
-                predmet = await _context.Predmeti.FindAsync(akreditacija.PredmetiIds[i]);
-                if (predmet != null)
-                {
-                    if (!akreditacijaZaAzuriranje.Predmeti!.Contains(predmet))
-                        akreditacijaZaAzuriranje.Predmeti.Add(predmet);
-                }
-            }
-        }
+            Id = akreditacijaZaAzuriranje.Id,
+            Naziv = akreditacijaZaAzuriranje.Naziv,
+            BrojPredmeta = akreditacijaZaAzuriranje.Predmeti == null ? 0 : akreditacijaZaAzuriranje.Predmeti.Count(),
+            BrojStudenata = akreditacijaZaAzuriranje.Studenti == null ? 0 : akreditacijaZaAzuriranje.Studenti.Count()
+        };
 
         await _context.SaveChangesAsync();
-        return Ok(akreditacijaZaAzuriranje);
+        return Ok(akreditacijaBasic);
     }
 
     [HttpDelete("{id}")]
@@ -160,6 +135,6 @@ public class AkreditacijaController : ControllerBase
         _context.Akreditacije.Remove(akreditacijaZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok("Akreditacija uspešno obrisana");
+        return NoContent();
     }
 }

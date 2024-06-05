@@ -1,4 +1,5 @@
-﻿using Blanketomat.API.Models.Validations;
+﻿using Blanketomat.API.Models;
+using Blanketomat.API.Models.Validations;
 using System.ComponentModel.DataAnnotations;
 
 namespace Blanketomat.API.DTOs.BlanketDTOs;
@@ -20,9 +21,9 @@ public class BlanketDTO
 
     [MinLength(3, ErrorMessage = "Putanja mora imati minimalno 3 karaktera")]
     public required string Putanja { get; set; }
-    public int[]? SlikeIds { get; set; }
-    public int? PredmetId { get; set; }
-    public int? PonavljanjeIspitnogRokaId { get; set; }
-    public int[]? PitanjaIds { get; set; }
-    public int[]? ZadaciIds { get; set; }
+    public List<Slika>? Slike { get; set; }
+    public Predmet? Predmet { get; set; }
+    public PonavljanjeIspitnogRoka? PonavljanjeIspitnogRoka { get; set; }
+    public List<Pitanje>? Pitanja { get; set; }
+    public List<Zadatak>? Zadaci { get; set; }
 }

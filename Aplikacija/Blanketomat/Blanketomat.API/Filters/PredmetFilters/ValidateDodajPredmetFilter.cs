@@ -17,25 +17,26 @@ public class ValidateDodajPredmetFilter : ActionFilterAttribute
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        var predmet = context.ActionArguments["noviPredmet"] as DodajPredmetDTO;
-        var akreditacija = _context.Akreditacije.Find(predmet!.AkreditacijaId);
-        var postojeciPredmet = _context.Predmeti.FirstOrDefault(x =>
-            akreditacija != null && x.Akreditacija != null &&
-            !string.IsNullOrWhiteSpace(akreditacija.Naziv) &&
-            !string.IsNullOrWhiteSpace(x.Akreditacija.Naziv) &&
-            !string.IsNullOrWhiteSpace(predmet.Naziv) &&
-            !string.IsNullOrWhiteSpace(x.Naziv) &&
-            predmet.Naziv.ToLower() == x.Naziv.ToLower()
-            );
+        //var predmet = context.ActionArguments["noviPredmet"] as DodajPredmetDTO;
 
-        if (postojeciPredmet != null)
-        {
-            context.ModelState.AddModelError("Predmet", "Predmet vec postoji.");
-            var problemDetails = new ValidationProblemDetails(context.ModelState)
-            {
-                Status = StatusCodes.Status400BadRequest
-            };
-            context.Result = new BadRequestObjectResult(problemDetails);
-        }
+        //var akreditacija = _context.Akreditacije.Find(predmet!.Akreditacija.Id);
+        //var postojeciPredmet = _context.Predmeti.FirstOrDefault(x =>
+        //    akreditacija != null && x.Akreditacija != null &&
+        //    !string.IsNullOrWhiteSpace(akreditacija.Naziv) &&
+        //    !string.IsNullOrWhiteSpace(x.Akreditacija.Naziv) &&
+        //    !string.IsNullOrWhiteSpace(predmet.Naziv) &&
+        //    !string.IsNullOrWhiteSpace(x.Naziv) &&
+        //    predmet.Naziv.ToLower() == x.Naziv.ToLower()
+        //    );
+
+        //if (postojeciPredmet != null)
+        //{
+        //    context.ModelState.AddModelError("Predmet", "Predmet vec postoji.");
+        //    var problemDetails = new ValidationProblemDetails(context.ModelState)
+        //    {
+        //        Status = StatusCodes.Status400BadRequest
+        //    };
+        //    context.Result = new BadRequestObjectResult(problemDetails);
+        //}
     }
 }

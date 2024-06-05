@@ -1,6 +1,5 @@
 ﻿using Blanketomat.API.Context;
 using Blanketomat.API.DTOs.AdministratorDTOs;
-using Blanketomat.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -17,7 +16,7 @@ public class ValidateDodajAdministratoraFilter : ActionFilterAttribute
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        var administrator = context.ActionArguments["administrator"] as AdministratorDTO;
+        var administrator = context.ActionArguments["noviAdministrator"] as DodajAdministratoraDTO;
         if (administrator == null)
         {
             context.ModelState.AddModelError("Administrator", "Administrator objekat je null");

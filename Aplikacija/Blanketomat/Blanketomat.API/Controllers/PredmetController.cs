@@ -54,88 +54,20 @@ public class PredmetController : ControllerBase
 
     [HttpPost]
     [TypeFilter(typeof(ValidateDbSetFilter<Predmet>))]
-    [TypeFilter(typeof(ValidateDodajPredmetFilter))]
+    //[TypeFilter(typeof(ValidateDodajPredmetFilter))]
     public async Task<ActionResult> DodajPredmet([FromBody]DodajPredmetDTO noviPredmet)
     {
         Predmet predmet = new Predmet
         {
             Naziv = noviPredmet.Naziv,
-            Godina = noviPredmet.Godina
+            Godina = noviPredmet.Godina,
+            Akreditacija = noviPredmet.Akreditacija,
+            Oblasti = noviPredmet.Oblasti,
+            Smer = noviPredmet.Smer,
+            Profesori = noviPredmet.Profesori,
+            Asistenti = noviPredmet.Asistenti,
+            Studenti = noviPredmet.Studenti
         };
-
-        if (noviPredmet.AkreditacijaId != null)
-        {
-            Akreditacija? akreditacija = await _context.Akreditacije.FindAsync(noviPredmet.AkreditacijaId);
-            if (akreditacija != null)
-            {
-                predmet.Akreditacija = akreditacija;
-            }
-        }
-
-        if (noviPredmet.OblastiIds != null)
-        {
-            Oblast? oblast;
-            for (int i = 0; i < noviPredmet.OblastiIds.Count(); i++)
-            {
-                oblast = await _context.Oblasti.FindAsync(noviPredmet.OblastiIds[i]);
-                if (oblast != null)
-                {
-                    if (!predmet.Oblasti!.Contains(oblast))
-                        predmet.Oblasti.Add(oblast);
-                }
-            }
-        }
-
-        if (noviPredmet.SmerId != null)
-        {
-            Smer? smer = await _context.Smerovi.FindAsync(noviPredmet.SmerId);
-            if (smer != null)
-            {
-                predmet.Smer = smer;
-            }
-        }
-
-        if (noviPredmet.ProfesoriIds != null)
-        {
-            Profesor? profesor;
-            for (int i = 0; i < noviPredmet.ProfesoriIds.Count(); i++)
-            {
-                profesor = await _context.Profesori.FindAsync(noviPredmet.ProfesoriIds[i]);
-                if (profesor != null)
-                {
-                    if (!predmet.Profesori!.Contains(profesor))
-                        predmet.Profesori.Add(profesor);
-                }
-            }
-        }
-
-        if (noviPredmet.AsistentiIds != null)
-        {
-            Asistent? asistent;
-            for (int i = 0; i < noviPredmet.AsistentiIds.Count(); i++)
-            {
-                asistent = await _context.Asistenti.FindAsync(noviPredmet.AsistentiIds[i]);
-                if (asistent != null)
-                {
-                    if (!predmet.Asistenti!.Contains(asistent))
-                        predmet.Asistenti.Add(asistent);
-                }
-            }
-        }
-
-        if (noviPredmet.StudentiIds != null)
-        {
-            Student? student;
-            for (int i = 0; i < noviPredmet.StudentiIds.Count(); i++)
-            {
-                student = await _context.Studenti.FindAsync(noviPredmet.StudentiIds[i]);
-                if (student != null)
-                {
-                    if (!predmet.Studenti!.Contains(student))
-                        predmet.Studenti.Add(student);
-                }
-            }
-        }
 
         _context.Predmeti.Add(predmet);
         await _context.SaveChangesAsync();
@@ -155,94 +87,13 @@ public class PredmetController : ControllerBase
         var predmetZaAzuriranje = HttpContext.Items["entity"] as Predmet;
         predmetZaAzuriranje!.Naziv = predmet.Naziv;
         predmetZaAzuriranje.Godina = predmet.Godina;
-
-        if (predmet.AkreditacijaId != null)
-        {
-            Akreditacija? akreditacija = await _context.Akreditacije.FindAsync(predmet.AkreditacijaId);
-            if (akreditacija != null)
-            {
-                predmetZaAzuriranje.Akreditacija = akreditacija;
-            }
-        }
-
-        if (predmet.OblastiIds != null)
-        {
-            Oblast? oblast;
-            for (int i = 0; i < predmet.OblastiIds.Count(); i++)
-            {
-                oblast = await _context.Oblasti.FindAsync(predmet.OblastiIds[i]);
-                if (oblast != null)
-                {
-                    if (!predmetZaAzuriranje.Oblasti!.Contains(oblast))
-                        predmetZaAzuriranje.Oblasti.Add(oblast);
-                }
-            }
-        }
-
-        if (predmet.BlanketiIds != null)
-        {
-            Blanket? blanket;
-            for (int i = 0; i < predmet.BlanketiIds.Count(); i++)
-            {
-                blanket = await _context.Blanketi.FindAsync(predmet.BlanketiIds[i]);
-                if (blanket != null)
-                {
-                    if (!predmetZaAzuriranje.Blanketi!.Contains(blanket))
-                        predmetZaAzuriranje.Blanketi.Add(blanket);
-                }
-            }
-        }
-
-        if (predmet.SmerId != null)
-        {
-            Smer? smer = await _context.Smerovi.FindAsync(predmet.SmerId);
-            if (smer != null)
-            {
-                predmetZaAzuriranje.Smer = smer;
-            }
-        }
-
-        if (predmet.ProfesoriIds != null)
-        {
-            Profesor? profesor;
-            for (int i = 0; i < predmet.ProfesoriIds.Count(); i++)
-            {
-                profesor = await _context.Profesori.FindAsync(predmet.ProfesoriIds[i]);
-                if (profesor != null)
-                {
-                    if (!predmetZaAzuriranje.Profesori!.Contains(profesor))
-                        predmetZaAzuriranje.Profesori.Add(profesor);
-                }
-            }
-        }
-
-        if (predmet.AsistentiIds != null)
-        {
-            Asistent? asistent;
-            for (int i = 0; i < predmet.AsistentiIds.Count(); i++)
-            {
-                asistent = await _context.Asistenti.FindAsync(predmet.AsistentiIds[i]);
-                if (asistent != null)
-                {
-                    if (!predmetZaAzuriranje.Asistenti!.Contains(asistent))
-                        predmetZaAzuriranje.Asistenti.Add(asistent);
-                }
-            }
-        }
-
-        if (predmet.StudentiIds != null)
-        {
-            Student? student;
-            for (int i = 0; i < predmet.StudentiIds.Count(); i++)
-            {
-                student = await _context.Studenti.FindAsync(predmet.StudentiIds[i]);
-                if (student != null)
-                {
-                    if (!predmetZaAzuriranje.Studenti!.Contains(student))
-                        predmetZaAzuriranje.Studenti.Add(student);
-                }
-            }
-        }
+        predmetZaAzuriranje.Akreditacija =predmet.Akreditacija;
+        predmetZaAzuriranje.Oblasti = predmet.Oblasti;
+        predmetZaAzuriranje.Smer = predmet.Smer;
+        predmetZaAzuriranje.Profesori = predmet.Profesori;
+        predmetZaAzuriranje.Asistenti = predmet.Asistenti;
+        predmetZaAzuriranje.Studenti = predmet.Studenti;
+        predmetZaAzuriranje.Blanketi = predmet.Blanketi;
 
         await _context.SaveChangesAsync();
         return Ok(predmetZaAzuriranje);

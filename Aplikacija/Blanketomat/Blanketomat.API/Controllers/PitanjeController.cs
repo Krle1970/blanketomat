@@ -59,31 +59,10 @@ public class PitanjeController : ControllerBase
     {
         Pitanje pitanje = new Pitanje
         {
-            Tekst = novoPitanje.Tekst
+            Tekst = novoPitanje.Tekst,
+            Slika = novoPitanje.Slike,
+            Oblast = novoPitanje.Oblast
         };
-
-        if (novoPitanje.SlikeIds != null)
-        {
-            Slika? slika;
-            for (int i = 0; i < novoPitanje.SlikeIds.Count(); i++)
-            {
-                slika = await _context.Slike.FindAsync(novoPitanje.SlikeIds[i]);
-                if (slika != null)
-                {
-                    if (!pitanje.Slika!.Contains(slika))
-                        pitanje.Slika.Add(slika);
-                }
-            }
-        }
-
-        if (novoPitanje.OblastId != null)
-        {
-            Oblast? oblast = await _context.Oblasti.FindAsync(novoPitanje.OblastId);
-            if (oblast != null)
-            {
-                pitanje.Oblast = oblast;
-            }
-        }
 
         _context.Pitanja.Add(pitanje);
         await _context.SaveChangesAsync();
@@ -102,43 +81,9 @@ public class PitanjeController : ControllerBase
         var pitanjeZaAzuriranje = HttpContext.Items["entity"] as Pitanje;
 
         pitanjeZaAzuriranje!.Tekst = pitanje.Tekst;
-
-        if (pitanje.SlikeIds != null)
-        {
-            Slika? slika;
-            for (int i = 0; i < pitanje.SlikeIds.Count(); i++)
-            {
-                slika = await _context.Slike.FindAsync(pitanje.SlikeIds[i]);
-                if (slika != null)
-                {
-                    if (!pitanjeZaAzuriranje.Slika!.Contains(slika))
-                        pitanjeZaAzuriranje.Slika.Add(slika);
-                }
-            }
-        }
-
-        if (pitanje.OblastId != null)
-        {
-            Oblast? oblast = await _context.Oblasti.FindAsync(pitanje.OblastId);
-            if (oblast != null)
-            {
-                pitanjeZaAzuriranje.Oblast = oblast;
-            }
-        }
-
-        if (pitanje.BlanketiIds != null)
-        {
-            Blanket? blanket;
-            for (int i = 0; i < pitanje.BlanketiIds.Count(); i++)
-            {
-                blanket = await _context.Blanketi.FindAsync(pitanje.BlanketiIds[i]);
-                if (blanket != null)
-                {
-                    if (!pitanjeZaAzuriranje.Blanketi!.Contains(blanket))
-                        pitanjeZaAzuriranje.Blanketi.Add(blanket);
-                }
-            }
-        }
+        pitanjeZaAzuriranje.Slika = pitanje.Slike;
+        pitanjeZaAzuriranje.Oblast = pitanje.Oblast;
+        pitanjeZaAzuriranje.Blanketi = pitanje.Blanketi;
 
         await _context.SaveChangesAsync();
         return Ok(pitanjeZaAzuriranje);

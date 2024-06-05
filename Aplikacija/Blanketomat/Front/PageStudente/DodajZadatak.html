@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BslanketomatHome</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/sidebar.css">
+    <link href="styles/Opste.css" rel="stylesheet">
+    <link href="styles/DodajZadatak.css" rel="stylesheet">
+    <link href="styles/input.css" rel="stylesheet">
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    
+   
+</head>
+<body style=" user-select: none;">
+  
+    <div class="container-fluid sticky-top  heder">
+        
+        <div class="row  align-items-center ">
+                 <div class="col-md-4 col-sm-7 col-8  levo"> 
+                     <img class="logo" src="slike\logo.jpg" >
+                     <span class="ime d-md-none m-0">Blanketomat</span>
+                 </div>
+                 <div class="col-md-4 col-sm-1 col-1  p-0 centar text-center"> 
+                  <span class="ime d-none d-md-inline-block m-0 ">Blanketomat</span>
+                 </div>
+                 <div class="col-md-4 col-sm-4 col-3 pe-1 text-end desno"> 
+                      <button class="logDugme"> Uloguj se </button>
+                     
+                 </div>
+         </div>
+     </div>
+   </div>
+
+
+
+   
+   <div class="wrapper">
+    <aside id="sidebar">
+        <div class="d-flex">
+            <button class="toggle-btn" type="button">
+                <i class="lni lni-angle-double-right"></i>
+            </button>
+            
+        </div>
+        <ul class="sidebar-nav">
+            <li class="sidebar-item">
+                <a href="Pocetna.html"  class="sidebar-link">
+                    <i class="lni lni-home"></i>
+                    <span>Pocetna</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="Filtriranje.html"  class="sidebar-link">
+                    <i class="lni lni-search-alt"></i>
+                    <span>Pretraži</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+              <a href="Generisanje.html" class="sidebar-link">
+                <i class="lni lni-ruler-pencil"></i>
+                  <span>Vežbanje</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                    data-bs-target="#auth" aria-expanded="false" aria-controls="auth">
+                    <i class="lni lni-pencil-alt"></i>
+                    <span>Vežbanje</span>
+                </a>
+                <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link">Pitanja</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link">Zadaci</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                    data-bs-target="#multi" aria-expanded="false" aria-controls="multi">
+                    <i class="lni lni-layout"></i>
+                    <span>Multi Level</span>
+                </a>
+                <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"
+                            data-bs-target="#multi-two" aria-expanded="false" aria-controls="multi-two">
+                            Two Links
+                        </a>
+                        <ul id="multi-two" class="sidebar-dropdown list-unstyled collapse">
+                            <li class="sidebar-item">
+                                <a href="#" class="sidebar-link">Link 1</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="#" class="sidebar-link">Link 2</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            
+            <li class="sidebar-item">
+                <a href="KreirajBlanketZ.html" class="sidebar-link">
+                    <i class="lni lni-cog"></i>
+                    <span>Setting</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+              <a href="DodajZadatak.html" class="sidebar-link">
+                <i class="lni lni-layout"></i>
+                  <span>Setting</span>
+              </a>
+          </li>
+        </ul>
+        <div class="sidebar-footer">
+            <a href="#" class="sidebar-link">
+                <i class="lni lni-exit"></i>
+                <span>Odjavi se</span>
+            </a>
+        </div>
+    </aside>
+</div>
+</div>
+<div class="container-fluid-custom p-3">
+    <p class="Naslov">Kreiraj zadatak</p>
+    <div class="card task-card">
+        <div class="card-body zadatak">
+            <h5 class="card-title">Zadatak</h5>
+        </div>
+        <div class="task-details card-body unos">
+            <div class="form-group mb-3">
+                <input type="radio" name="task1" id="generisi1" value="generisi" checked>
+                <label for="generisi1">Generiši</label>
+                <input type="radio" name="task1" id="kreiraj1" value="kreiraj" class="ms-3">
+                <label for="kreiraj1">Kreiraj</label>
+            </div>
+            <div class="form-group mb-3">
+                <label for="search-predmeti1" >Odaberite predmet:</label>
+                <input type="text" id="search-predmeti1" class="form-control mb-2" placeholder="Pretražite predmete">
+                <div class="dropdown-menu w-100" id="predmeti-dropdown1">
+                    <a class="dropdown-item" data-value="predmet1">Matematika 1</a>
+                    <a class="dropdown-item" data-value="predmet2">Fizika</a>
+                    <a class="dropdown-item" data-value="predmet3">Matematika 2</a>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="search-podoblasti1" class="no-select">Odaberite podoblasti:</label>
+                <input type="text" id="search-podoblasti1" class="form-control mb-2" placeholder="Pretražite podoblasti">
+                <div class="dropdown-menu w-100" id="podoblasti-dropdown1">
+                    <a class="dropdown-item" data-value="podoblast1">Unutrasnje ulancavanje</a>
+                    <a class="dropdown-item" data-value="podoblast2">Dvostruki</a>
+                    <a class="dropdown-item" data-value="podoblast3">Jednostruki</a>
+                    <a class="dropdown-item" data-value="podoblast4">Binarni</a>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="task-text1" >Unesite tekst zadatka:</label>
+                <textarea id="task-text1" class="form-control" rows="3" disabled></textarea>
+            </div>
+            <div class="form-group mb-3">
+                <label for="task-image1" >Dodajte sliku:</label>
+                <input type="file" id="task-image1" class="form-control" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-8 p-0 pt-2">
+            <button type="button" class="btn btn-primary w-100">Dodaj</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="skripte/DodajPitanje.js"></script>
+</body>
+</body>
+</html>

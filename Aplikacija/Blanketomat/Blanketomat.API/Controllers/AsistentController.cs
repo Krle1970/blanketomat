@@ -73,71 +73,11 @@ public class AsistentController : ControllerBase
         asistentZaAzuriranje.Email = asistent.Email;
         asistentZaAzuriranje.PasswordHash = passwordHash;
         asistentZaAzuriranje.PasswordSalt = passwordSalt;
-
-        if (asistent.KatedraId != null)
-        {
-            Katedra? katedra = await _context.Katedre.FindAsync(asistent.KatedraId);
-            if (katedra != null)
-            {
-                asistentZaAzuriranje.Katedra = katedra;
-            }
-        }
-
-        if (asistent.SmeroviIds != null)
-        {
-            Smer? smer;
-            for (int i = 0; i < asistent.SmeroviIds.Length; i++)
-            {
-                smer = await _context.Smerovi.FindAsync(asistent.SmeroviIds[i]);
-                if (smer != null)
-                {
-                    if (!asistentZaAzuriranje.Smerovi!.Contains(smer))
-                        asistentZaAzuriranje.Smerovi.Add(smer);
-                }
-            }
-        }
-
-        if (asistent.PredmetiIds != null)
-        {
-            Predmet? predmet;
-            for (int i = 0; i < asistent.PredmetiIds.Length; i++)
-            {
-                predmet = await _context.Predmeti.FindAsync(asistent.PredmetiIds[i]);
-                if (predmet != null)
-                {
-                    if (!asistentZaAzuriranje.Predmeti!.Contains(predmet))
-                        asistentZaAzuriranje.Predmeti.Add(predmet);
-                }
-            }
-        }
-
-        if (asistent.LajkovaniKomentariIds != null)
-        {
-            Komentar? komentar;
-            for (int i = 0; i < asistent.LajkovaniKomentariIds.Length; i++)
-            {
-                komentar = await _context.Komentari.FindAsync(asistent.LajkovaniKomentariIds[i]);
-                if (komentar != null)
-                {
-                    if (!asistentZaAzuriranje.LajkovaniKomentari!.Contains(komentar))
-                        asistentZaAzuriranje.LajkovaniKomentari.Add(komentar);
-                }
-            }
-        }
-
-        if (asistent.LajkovaniOdgovoriIds != null)
-        {
-            Odgovor? odgovor;
-            for (int i = 0; i < asistent.LajkovaniOdgovoriIds.Length; i++)
-            {
-                odgovor = await _context.Odgovori.FindAsync(asistent.LajkovaniOdgovoriIds[i]);
-                if (odgovor != null)
-                {
-                    if (!asistentZaAzuriranje.LajkovaniOdgovori!.Contains(odgovor))
-                        asistentZaAzuriranje.LajkovaniOdgovori.Add(odgovor);
-                }
-            }
-        }
+        asistentZaAzuriranje.Katedra = asistent.Katedra;
+        asistentZaAzuriranje.Smerovi = asistent.Smerovi;
+        asistentZaAzuriranje.Predmeti = asistent.Predmeti;
+        asistentZaAzuriranje.LajkovaniKomentari = asistent.LajkovaniKomentari;
+        asistentZaAzuriranje.LajkovaniOdgovori = asistent.LajkovaniOdgovori;
 
         await _context.SaveChangesAsync();
         return Ok(asistentZaAzuriranje);

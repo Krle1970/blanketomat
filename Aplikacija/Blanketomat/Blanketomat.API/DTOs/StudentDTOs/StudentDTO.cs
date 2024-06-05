@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Blanketomat.API.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Blanketomat.API.DTOs.StudentDTOs;
 
@@ -20,7 +21,7 @@ public class StudentDTO
     [MinLength(5, ErrorMessage = "Minimalna duzina sifre je 5 karaktera")]
     [MaxLength(30, ErrorMessage = "Maksimalna duzina sifre je 30 karaktera")]
     public required string Password { get; set; }
-    public int? AkreditacijaId { get; set; }
-    public int? SmerId { get; set; }
-    public int[]? PredmetiIds { get; set; }
+    public Akreditacija? Akreditacija { get; set; }
+    public Smer? Smer { get; set; }
+    public List<Predmet>? Predmeti { get; set; }
 }

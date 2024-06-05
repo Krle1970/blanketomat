@@ -41,47 +41,11 @@ public class AuthController : ControllerBase
             Prezime = user.Prezime,
             Email = user.Email,
             PasswordHash = passwordHash,
-            PasswordSalt = passwordSalt
+            PasswordSalt = passwordSalt,
+            Katedra = user.Katedra,
+            Smerovi = user.Smerovi,
+            Predmeti = user.Predmeti
         };
-
-        if (user.KatedraId != null)
-        {
-            Katedra? katedra = await _context.Katedre.FindAsync(user.KatedraId);
-            if (katedra != null)
-            {
-                profesor.Katedra = katedra;
-            }
-        }
-
-        if (user.SmeroviIds != null)
-        {
-            profesor.Smerovi = new List<Smer>();
-            Smer? smer;
-            for (int i = 0; i < user.SmeroviIds.Count(); i++)
-            {
-                smer = await _context.Smerovi.FindAsync(user.SmeroviIds[i]);
-                if (smer != null)
-                {
-                    if (!profesor.Smerovi!.Contains(smer))
-                        profesor.Smerovi.Add(smer);
-                }
-            }
-        }
-
-        if (user.PredmetiIds != null)
-        {
-            Predmet? predmet;
-            profesor.Predmeti = new List<Predmet>();
-            for (int i = 0; i < user.PredmetiIds.Count(); i++)
-            {
-                predmet = await _context.Predmeti.FindAsync(user.PredmetiIds[i]);
-                if (predmet != null)
-                {
-                    if (!profesor.Predmeti!.Contains(predmet))
-                        profesor.Predmeti.Add(predmet);
-                }
-            }
-        }
 
         _context.Profesori.Add(profesor);
         await _context.SaveChangesAsync();
@@ -101,47 +65,11 @@ public class AuthController : ControllerBase
             Prezime = user.Prezime,
             Email = user.Email,
             PasswordHash = passwordHash,
-            PasswordSalt = passwordSalt
+            PasswordSalt = passwordSalt,
+            Katedra = user.Katedra,
+            Smerovi = user.Smerovi,
+            Predmeti = user.Predmeti
         };
-
-        if (user.KatedraId != null)
-        {
-            Katedra? katedra = await _context.Katedre.FindAsync(user.KatedraId);
-            if (katedra != null)
-            {
-                asistent.Katedra = katedra;
-            }
-        }
-
-        if (user.SmeroviIds != null)
-        {
-            asistent.Smerovi = new List<Smer>();
-            Smer? smer;
-            for (int i = 0; i < user.SmeroviIds.Count(); i++)
-            {
-                smer = await _context.Smerovi.FindAsync(user.SmeroviIds[i]);
-                if (smer != null)
-                {
-                    if (!asistent.Smerovi!.Contains(smer))
-                        asistent.Smerovi.Add(smer);
-                }
-            }
-        }
-
-        if (user.PredmetiIds != null)
-        {
-            Predmet? predmet;
-            asistent.Predmeti = new List<Predmet>();
-            for (int i = 0; i < user.PredmetiIds.Count(); i++)
-            {
-                predmet = await _context.Predmeti.FindAsync(user.PredmetiIds[i]);
-                if (predmet != null)
-                {
-                    if (!asistent.Predmeti!.Contains(predmet))
-                        asistent.Predmeti.Add(predmet);
-                }
-            }
-        }
 
         _context.Asistenti.Add(asistent);
         await _context.SaveChangesAsync();
@@ -161,41 +89,11 @@ public class AuthController : ControllerBase
             Prezime = user.Prezime,
             Email = user.Email,
             PasswordHash = passwordHash,
-            PasswordSalt = passwordSalt
+            PasswordSalt = passwordSalt,
+            Akreditacija = user.Akreditacija,
+            Smer = user.Smer,
+            Predmeti = user.Predmeti
         };
-
-        if (user.AkreditacijaId != null)
-        {
-            Akreditacija? akreditacija = await _context.Akreditacije.FindAsync(user.AkreditacijaId);
-            if (akreditacija != null)
-            {
-                student.Akreditacija = akreditacija;
-            }
-        }
-
-        if (user.SmerId != null)
-        {
-            Smer? smer = await _context.Smerovi.FindAsync(user.SmerId);
-            if (smer != null)
-            {
-                student.Smer = smer;
-            }
-        }
-
-        if (user.PredmetiIds != null)
-        {
-            Predmet? predmet;
-            student.Predmeti = new List<Predmet>();
-            for (int i = 0; i < user.PredmetiIds.Count(); i++)
-            {
-                predmet = await _context.Predmeti.FindAsync(user.PredmetiIds[i]);
-                if (predmet != null)
-                {
-                    if (!student.Predmeti.Contains(predmet))
-                        student.Predmeti.Add(predmet);
-                }
-            }
-        }
 
         _context.Studenti.Add(student);
         await _context.SaveChangesAsync();
@@ -249,58 +147,33 @@ public class AuthController : ControllerBase
             return Unauthorized("Student sa ovim podacima ne postoji");
         }
 
-        AkreditacijaBasicDTO? akreditacija = null;
+        string token = TokenManager.CreateToken(user, _configuration.GetSection("AppSettings:Token").Value!);
+        student.Token = token;
+
+        AkreditacijaIdNazivDTO? akreditacija = null;
 
         if (student.Akreditacija != null)
         {
-            akreditacija = new AkreditacijaBasicDTO { Id = student.Akreditacija.Id, Naziv = student.Akreditacija.Naziv };
+            akreditacija = new AkreditacijaIdNazivDTO { Id = student.Akreditacija.Id, Naziv = student.Akreditacija.Naziv };
         }
 
-        SmerBasicDTO? smer = null;
+        SmerIdNazivDTO? smer = null;
 
         if (student.Smer != null)
         {
-            smer = new SmerBasicDTO { Id = student.Smer.Id, Naziv = student.Smer.Naziv };
+            smer = new SmerIdNazivDTO { Id = student.Smer.Id, Naziv = student.Smer.Naziv };
         }
 
-        List<PredmetBasicDTO> predmeti = new List<PredmetBasicDTO>();
+        List<PredmetIdNazivGodinaDTO>? predmeti = null;
 
-        if (student.Predmeti != null)
+        if (student.Predmeti != null && student.Predmeti.Any())
         {
-            PredmetBasicDTO predmetBasic;
+            predmeti = new List<PredmetIdNazivGodinaDTO>();
             foreach (var predmet in student.Predmeti)
             {
-                predmetBasic = new PredmetBasicDTO { Id = predmet.Id, Naziv = predmet.Naziv, Godina = predmet.Godina };
-                predmeti.Add(predmetBasic);
+                predmeti.Add(new PredmetIdNazivGodinaDTO { Id = predmet.Id, Naziv = predmet.Naziv, Godina = predmet.Godina });
             }
         }
-
-        List<KomentarBasicDTO> komentari = new List<KomentarBasicDTO>();
-
-        if (student.PostavljeniKomentari != null)
-        {
-            KomentarBasicDTO komentarBasic;
-            foreach (var komentar in student.PostavljeniKomentari)
-            {
-                komentarBasic = new KomentarBasicDTO { Id = komentar.Id, Tekst = komentar.Tekst, Lajkovi = komentar.Lajkovi };
-                komentari.Add(komentarBasic);
-            }
-        }
-
-        List<OdgovorBasicDTO> odgovori = new List<OdgovorBasicDTO>();
-
-        if (student.PostavljeniOdgovori != null)
-        {
-            OdgovorBasicDTO odgovorBasic;
-            foreach (var odgovor in student.PostavljeniOdgovori)
-            {
-                odgovorBasic = new OdgovorBasicDTO { Id = odgovor.Id, Tekst = odgovor.Tekst, Lajkovi = odgovor.Lajkovi };
-                odgovori.Add(odgovorBasic);
-            }
-        }
-
-        string token = TokenManager.CreateToken(user, _configuration.GetSection("AppSettings:Token").Value!);
-        student.Token = token;
 
         StudentLoginResponseDTO response = new StudentLoginResponseDTO
         {
@@ -312,8 +185,8 @@ public class AuthController : ControllerBase
             Akreditacija = akreditacija,
             Smer = smer,
             Predmeti = predmeti,
-            Komentari = komentari,
-            Odgovori = odgovori
+            BrojKomentara = student.PostavljeniKomentari == null ? 0 : student.PostavljeniKomentari.Count(),
+            BrojOdgovora = student.PostavljeniOdgovori == null ? 0 : student.PostavljeniOdgovori.Count()
         };
 
         await _context.SaveChangesAsync();
@@ -335,59 +208,35 @@ public class AuthController : ControllerBase
             return Unauthorized("Asistent sa ovim podacima ne postoji");
         }
 
-        List<SmerBasicDTO> smerovi = new List<SmerBasicDTO>();
+        List<SmerIdNazivDTO> smerovi = new List<SmerIdNazivDTO>();
 
-        if (asistent.Smerovi != null)
+        if (asistent.Smerovi != null && asistent.Smerovi.Any())
         {
-            SmerBasicDTO smerBasic;
-            foreach (var smer in asistent.Smerovi)
+            SmerIdNazivDTO smer;
+            foreach (var s in asistent.Smerovi)
             {
-                smerBasic = new SmerBasicDTO { Id = smer.Id, Naziv = smer.Naziv };
-                smerovi.Add(smerBasic);
+                smer = new SmerIdNazivDTO { Id = s.Id, Naziv = s.Naziv };
+                smerovi.Add(smer);
             }
         }
 
-        List<PredmetBasicDTO> predmeti = new List<PredmetBasicDTO>();
+        List<PredmetIdNazivGodinaDTO> predmeti = new List<PredmetIdNazivGodinaDTO>();
 
-        if (asistent.Predmeti != null)
+        if (asistent.Predmeti != null && asistent.Predmeti.Any())
         {
-            PredmetBasicDTO predmetBasic;
-            foreach (var predmet in asistent.Predmeti)
+            PredmetIdNazivGodinaDTO predmet;
+            foreach (var p in asistent.Predmeti)
             {
-                predmetBasic = new PredmetBasicDTO { Id = predmet.Id, Naziv = predmet.Naziv, Godina = predmet.Godina };
-                predmeti.Add(predmetBasic);
+                predmet = new PredmetIdNazivGodinaDTO { Id = p.Id, Naziv = p.Naziv, Godina = p.Godina };
+                predmeti.Add(predmet);
             }
         }
 
-        KatedraBasicDTO? katedra = null;
+        KatedraIdNazivDTO? katedra = null;
 
         if (asistent.Katedra != null)
         {
-            katedra = new KatedraBasicDTO { Id = asistent.Katedra.Id, Naziv = asistent.Katedra.Naziv };
-        }
-
-        List<KomentarBasicDTO> komentari = new List<KomentarBasicDTO>();
-
-        if (asistent.LajkovaniKomentari != null)
-        {
-            KomentarBasicDTO komentarBasic;
-            foreach (var komentar in asistent.LajkovaniKomentari)
-            {
-                komentarBasic = new KomentarBasicDTO { Id = komentar.Id, Tekst = komentar.Tekst, Lajkovi = komentar.Lajkovi };
-                komentari.Add(komentarBasic);
-            }
-        }
-
-        List<OdgovorBasicDTO> odgovori = new List<OdgovorBasicDTO>();
-
-        if (asistent.LajkovaniOdgovori != null)
-        {
-            OdgovorBasicDTO odgovorBasic;
-            foreach (var odgovor in asistent.LajkovaniOdgovori)
-            {
-                odgovorBasic = new OdgovorBasicDTO { Id = odgovor.Id, Tekst = odgovor.Tekst, Lajkovi = odgovor.Lajkovi };
-                odgovori.Add(odgovorBasic);
-            }
+            katedra = new KatedraIdNazivDTO { Id = asistent.Katedra.Id, Naziv = asistent.Katedra.Naziv };
         }
 
         string token = TokenManager.CreateToken(user, _configuration.GetSection("AppSettings:Token").Value!);
@@ -403,8 +252,8 @@ public class AuthController : ControllerBase
             Smerovi = smerovi,
             Predmeti = predmeti,
             Katedra = katedra,
-            LajkovaniKomentari = komentari,
-            LajkovaniOdgovori = odgovori
+            BrojLajkovanihKomentara = asistent.LajkovaniKomentari == null ? 0 : asistent.LajkovaniKomentari.Count(),
+            BrojLajkovanihOdgovora = asistent.LajkovaniOdgovori == null ? 0 : asistent.LajkovaniOdgovori.Count()
         };
 
         await _context.SaveChangesAsync();
@@ -426,59 +275,35 @@ public class AuthController : ControllerBase
             return Unauthorized("Profesor sa ovim podacima ne postoji");
         }
 
-        List<SmerBasicDTO> smerovi = new List<SmerBasicDTO>();
+        List<SmerIdNazivDTO> smerovi = new List<SmerIdNazivDTO>();
 
-        if (profesor.Smerovi != null) 
+        if (profesor.Smerovi != null && profesor.Smerovi.Any())
         {
-            SmerBasicDTO smerBasic;
-            foreach (var smer in profesor.Smerovi)
+            SmerIdNazivDTO smer;
+            foreach (var s in profesor.Smerovi)
             {
-                smerBasic = new SmerBasicDTO { Id = smer.Id, Naziv = smer.Naziv };
-                smerovi.Add(smerBasic);
+                smer = new SmerIdNazivDTO { Id = s.Id, Naziv = s.Naziv };
+                smerovi.Add(smer);
             }
         }
 
-        List<PredmetBasicDTO> predmeti = new List<PredmetBasicDTO>();
+        List<PredmetIdNazivGodinaDTO> predmeti = new List<PredmetIdNazivGodinaDTO>();
 
-        if (profesor.Predmeti != null)
+        if (profesor.Predmeti != null && profesor.Predmeti.Any())
         {
-            PredmetBasicDTO predmetBasic;
-            foreach (var predmet in profesor.Predmeti)
+            PredmetIdNazivGodinaDTO predmet;
+            foreach (var p in profesor.Predmeti)
             {
-                predmetBasic = new PredmetBasicDTO { Id = predmet.Id, Naziv = predmet.Naziv, Godina = predmet.Godina };
-                predmeti.Add(predmetBasic);
+                predmet = new PredmetIdNazivGodinaDTO { Id = p.Id, Naziv = p.Naziv, Godina = p.Godina };
+                predmeti.Add(predmet);
             }
         }
 
-        KatedraBasicDTO? katedra = null;
+        KatedraIdNazivDTO? katedra = null;
 
         if (profesor.Katedra != null)
         {
-            katedra = new KatedraBasicDTO { Id = profesor.Katedra.Id, Naziv = profesor.Katedra.Naziv };
-        }
-
-        List<KomentarBasicDTO> komentari = new List<KomentarBasicDTO>();
-
-        if (profesor.LajkovaniKomentari != null)
-        {
-            KomentarBasicDTO komentarBasic;
-            foreach (var komentar in profesor.LajkovaniKomentari)
-            {
-                komentarBasic = new KomentarBasicDTO { Id = komentar.Id, Tekst = komentar.Tekst, Lajkovi = komentar.Lajkovi };
-                komentari.Add(komentarBasic);
-            }
-        }
-
-        List<OdgovorBasicDTO> odgovori = new List<OdgovorBasicDTO>();
-
-        if (profesor.LajkovaniOdgovori != null)
-        {
-            OdgovorBasicDTO odgovorBasic;
-            foreach (var odgovor in profesor.LajkovaniOdgovori)
-            {
-                odgovorBasic = new OdgovorBasicDTO { Id = odgovor.Id, Tekst = odgovor.Tekst, Lajkovi = odgovor.Lajkovi };
-                odgovori.Add(odgovorBasic);
-            }
+            katedra = new KatedraIdNazivDTO { Id = profesor.Katedra.Id, Naziv = profesor.Katedra.Naziv };
         }
 
         string token = TokenManager.CreateToken(user, _configuration.GetSection("AppSettings:Token").Value!);
@@ -494,8 +319,8 @@ public class AuthController : ControllerBase
             Smerovi = smerovi,
             Predmeti = predmeti,
             Katedra = katedra,
-            LajkovaniKomentari = komentari,
-            LajkovaniOdgovori = odgovori
+            BrojLajkovanihKomentara = profesor.LajkovaniKomentari == null ? 0 : profesor.LajkovaniKomentari.Count(),
+            BrojLajkovanihOdgovora = profesor.LajkovaniOdgovori == null ? 0 : profesor.LajkovaniOdgovori.Count()
         };
         
         await _context.SaveChangesAsync();
