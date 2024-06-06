@@ -11,36 +11,36 @@
     <div class="container mt-5">
         <div class="row justify-content-center justify-content-md-end-custom">
             <div class="col-md-6">
-                <img src="Logo.jpg" class="img-fluid" >
+                <img src="Logo.jpg" class="img-fluid">
             </div>
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header text-center" >
+                    <div class="card-header text-center">
                         <h4>Blanketomat Login</h4>
-                        <div class="card-body">
-                            <div class="userlozinka">
-                                <div class="mb-3 user">
-                                    <input type="text" class="form-control" id="username" placeholder="Unesite email-adresu">
-                                </div>
-                                <div class="mb-3">
-                                    <input type="password" class="form-control" id="password" placeholder="Unesite lozinku">
-                                </div>
-                                
-                                <div class="mb-3 select-role">
-                                    <label for="role" class="form-label role-label">Prijavljivanje kao:</label>
-                                    <select class="form-control" id="role">
-                                        <option value="student">Student</option>
-                                        <option value="professor">Profesor</option>
-                                        <option value="assistant">Asistent</option>
-                                        <option value="guest">Gost</option>
-                                        <option value="Admin">Admin</option>
-                                    </select>
-                                </div>                                
+                    </div>
+                    <div class="card-body">
+                        <div class="userlozinka">
+                            <div class="mb-3 user">
+                                <input type="text" class="form-control email"  placeholder="Unesite email-adresu">
                             </div>
-                            <div class="d-grid justify-content-center">
-                                <button type="submit" class="btn btn-primary">Prijavi se</button>
+                            <div class="mb-3">
+                                <input type="password" class="form-control password" placeholder="Unesite lozinku">
+                            </div>
+                            <div class="mb-3 select-role">
+                                <label for="role" class="form-label role-label">Prijavljivanje kao:</label>
+                                <select class="form-control" id="role">
+                                    <option value="Student">Student</option>
+                                    <option value="Profesor">Profesor</option>
+                                    <option value="Asistent">Asistent</option>
+                                    <option value="Gost">Gost</option>
+                                    <option value="Administrator">Administrator</option>
+                                </select>
                             </div>
                         </div>
+                        <div class="d-grid justify-content-center">
+                            <button type="submit" class="dugmeLogin btn btn-primary">Prijavi se</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -50,14 +50,12 @@
             <p>©2024 Blanketomat S.S.O.A.-team</p>
         </div>
         <div class="footer-right">
-            <a href="https://www.elfak.ni.ac.rs/" target="_blank">Sajt  fakulteta</a>
+            <a href="https://www.elfak.ni.ac.rs/" target="_blank">Sajt fakulteta</a>
         </div>
     </footer>
-    
-    
-    
-    
+
     <!-- Bootstrap JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="loginAdmin.js"></script>
 </body>
 </html>
