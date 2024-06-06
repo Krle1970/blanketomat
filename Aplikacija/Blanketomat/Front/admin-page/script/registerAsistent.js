@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const akreditacijaId = document.getElementById('akreditacijaId1');
     const smerId = document.getElementById('smerId1');
     const predmetiIds = document.getElementById('predmetiIds1');
-    const dugme = document.getElementById('submitProfesor');
+    const dugme = document.getElementById('submitAsistent');
 
-    async function registrujProfesora(name, surname, mail, pass) {
+    async function registrujAsistenta(name, surname, mail, pass) {
         const body = {
             Ime: name,
             Prezime: surname,
@@ -19,11 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
             PredmetiIds: predmetiIds.value.split(',').map(id => parseInt(id.trim()))
         };
 
-        const token = localStorage.getItem('token');
-       
-        console.log(token);
+        const token = 'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzE3Njk2NjAzfQ.ltK8C5EjwQl2dygYH_xiwuposDaHvgq2mif_xYbW4dmXiXcf2DOH3AFQDog1wl3gPPjDsvw9mNjlH4VBKUAHSQ'; 
+        //console.log(token);
         try {
-            const response = await fetch('http://localhost:5246/Auth/register-profesor', {
+            const response = await fetch('http://localhost:5246/Auth/register-asistent', {
                 method: 'POST',
                 body: JSON.stringify(body),
                 headers: {
@@ -43,13 +42,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error('Error:', error);
-            alert('Došlo je do greške pri registraciji');
+            //alert('Došlo je do greške pri registraciji');
         }
     }
 
     dugme.addEventListener('click', function(event) {
         event.preventDefault();
-        registrujProfesora(
+        registrujAsistenta(
             ime.value, prezime.value, email.value, lozinka.value
         );
     });
