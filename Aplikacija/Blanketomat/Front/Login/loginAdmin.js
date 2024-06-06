@@ -14,8 +14,27 @@ document.addEventListener("DOMContentLoaded", () => {
             accountType: accountType
         };
 
+        let endpoint = '';
+        switch (accountType) {
+            case 'Administrator':
+                endpoint = 'http://localhost:5246/Auth/login-admin';
+                break;
+            case 'Student':
+                endpoint = 'http://localhost:5246/Auth/login-student';
+                break;
+            case 'Profesor':
+                endpoint = 'http://localhost:5246/Auth/login-profesor';
+                break;
+            case 'Asistent':
+                endpoint = 'http://localhost:5246/Auth/login-asistent';
+                break;
+            default:
+                alert('Nepoznat tip naloga');
+                return;
+        }
+     
         try {
-            const response = await fetch('http://localhost:5246/Auth/login-admin', {
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -32,14 +51,28 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
             console.log('Uspešno prijavljen:', data);
 
-           
             localStorage.setItem('token', data.token);
             console.log('Token sačuvan u lokalnoj memoriji:', data.token);
 
-            // Dodajte odlaganje pre preusmeravanja
+            // odlaganje pre preusmeravanja
             setTimeout(() => {
-                window.location.href = 'http://127.0.0.1:5501/Front/admin-page/index.html';
-            }, 1000); // 2000ms je 2 sekunde
+                if(accountType=="Administrator")
+                {
+                    window.location.href = '../admin-page/index.html';
+                }
+                else if (accountType=="Profesor")
+                {
+                    window.location.href = '../PageStudente/KreirajBlanketP.html';
+                }
+                else if(accountType=="Asistent")
+                {
+                    window.location.href = '../PageStudente/KreirajBlanketZ.html';
+                }
+                else if(accountType=="Student")
+                {
+                    window.location.href = '../PageStudente/Pocetna.html';
+                }
+            }, 1000); // 1000ms je 1 sekunda
 
         } catch (error) {
             console.error('Greška:', error.message);

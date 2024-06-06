@@ -116,48 +116,40 @@
                         <div class="col-md-6 col-lg-4 col-xl-3 mb-3">
                             <div class="card">
                                 <div class="card-header" data-bs-toggle="collapse" data-bs-target="#card1">
-                                    <h5>Dodaj studenta</h5>
+                                    <h5>Registruj studenta</h5>
                                 </div>
                                 <div id="card1" class="collapse">
                                     <div class="card-body">
-                                        <form>
+                                        <form id="registerStudentForm">
                                             <div class="mb-3">
-                                                <label for="addName" class="form-label">Ime</label>
-                                                <input type="text" class="form-control" id="addName" placeholder="Unesi ime">
+                                                <label for="name2" class="form-label">Ime</label>
+                                                <input type="text" class="form-control" id="name2" placeholder="Unesi ime">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="addSurname" class="form-label">Prezime</label>
-                                                <input type="email" class="form-control" id="addSurname" placeholder="Unesi prezime">
+                                                <label for="surname2" class="form-label">Prezime</label>
+                                                <input type="text" class="form-control" id="surname2" placeholder="Unesi prezime">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="addEmail" class="form-label">Email</label>
-                                                <input type="text" class="form-control" id="addEmail" placeholder="Unesi email">
+                                                <label for="email2" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="email2" placeholder="Unesi email">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="addPasswordHash" class="form-label">PasswordHash</label>
-                                                <input type="text" class="form-control" id="addPasswordHash" placeholder="Unesi PasswordHash">
+                                                <label for="password2" class="form-label">Lozinka</label>
+                                                <input type="password" class="form-control" id="password2" placeholder="Unesi lozinku">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="addPasswordSalt" class="form-label">PasswordSalt</label>
-                                                <input type="text" class="form-control" id="addPasswordSalt" placeholder="Unesi PasswordSalt">
+                                                <label for="akreditacijaId2" class="form-label">Akreditacija ID</label>
+                                                <input type="number" class="form-control" id="akreditacijaId2" placeholder="Unesi akreditacija ID">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="addAkreditacija" class="form-label">Akreditacija</label>
-                                                <input type="text" class="form-control" id="addAkreditacija" placeholder="Unesi Akreditaciju">
+                                                <label for="smerId2" class="form-label">Smer ID</label>
+                                                <input type="number" class="form-control" id="smerId2" placeholder="Unesi smer ID">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="addPredmet" class="form-label">Predmet</label>
-                                                <input type="text" class="form-control" id="addPredmet" placeholder="Unesi Predmet">
+                                                <label for="predmetiIds2" class="form-label">Predmeti IDs</label>
+                                                <input type="text" class="form-control" id="predmetiIds2" placeholder="Unesi predmeti IDs (odvojene zarezima)">
                                             </div>
-                                            <div class="mb-3">
-                                                <label for="addKomentari" class="form-label">PostavljeniKomentari</label>
-                                                <input type="text" class="form-control" id="addKomentari" placeholder="Unesi PostavljeniKomentari">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="addOdgovori" class="form-label">PostavljeniOdgovori</label>
-                                                <input type="text" class="form-control" id="addOdgovori" placeholder="Unesi PostavljeniOdgovori">
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button id="submitS"  class="btn btn-primary">Submit</button>
                                         </form>
                                     </div>
                                 </div>
