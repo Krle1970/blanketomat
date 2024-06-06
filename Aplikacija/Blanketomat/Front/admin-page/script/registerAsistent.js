@@ -20,7 +20,10 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         const token = localStorage.getItem('token');
+<<<<<<< HEAD
         //console.log(token);
+=======
+>>>>>>> d36b47dbd3f8ee5d3127db4c85c9958c453f6596
         try {
             const response = await fetch('http://localhost:5246/Auth/register-asistent', {
                 method: 'POST',

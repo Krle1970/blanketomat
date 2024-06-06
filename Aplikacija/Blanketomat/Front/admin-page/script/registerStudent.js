@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
             Smer: smer,
             Predmet: predmet
         };
-        
-        //console.log(token);
+
+        const token = localStorage.getItem('token');
         try {
             const response = await fetch('http://localhost:5246/Auth/register-student', {
                 method: 'POST',
