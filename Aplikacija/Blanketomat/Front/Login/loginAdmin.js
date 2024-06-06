@@ -32,13 +32,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
             console.log('Uspešno prijavljen:', data);
 
-            // Sačuvajte token u lokalnoj memoriji
+           
             localStorage.setItem('token', data.token);
             console.log('Token sačuvan u lokalnoj memoriji:', data.token);
 
             // Dodajte odlaganje pre preusmeravanja
             setTimeout(() => {
-                window.location.href = 'http://127.0.0.1:5500/Front/admin-page/index.html';
+                window.location.href = 'http://127.0.0.1:5501/Front/admin-page/index.html';
             }, 1000); // 2000ms je 2 sekunde
 
         } catch (error) {

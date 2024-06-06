@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const dugme = document.getElementById('submitStudent');
 
-    async function registrujAsistenta(name, surname, mail, pass) {
+    async function registrujStudenta(name, surname, mail, pass) {
         const body = {
             Ime: name,
             Prezime: surname,
@@ -19,8 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
             Smer: smer,
             Predmet: predmet
         };
-
-        const token = 'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNzE3Njk2NjAzfQ.ltK8C5EjwQl2dygYH_xiwuposDaHvgq2mif_xYbW4dmXiXcf2DOH3AFQDog1wl3gPPjDsvw9mNjlH4VBKUAHSQ'; 
+        
         //console.log(token);
         try {
             const response = await fetch('http://localhost:5246/Auth/register-student', {
