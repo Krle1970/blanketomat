@@ -7,8 +7,8 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
         const taskCard = document.createElement('div');
         taskCard.className = 'card task-card';
         taskCard.innerHTML = `
-            <div class="card-body zadatak">
-                <h5 class="card-title">Zadatak ${i}</h5>
+            <div class="card-body">
+                <h5 class="card-title">Pitanje ${i}</h5>
             </div>
             <div class="task-details card-body unos">
                 <div class="form-group mb-3">
@@ -47,7 +47,7 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
                     </div>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="task-text${i}">Unesite tekst zadatka:</label>
+                    <label for="task-text${i}">Unesite tekst pitanja:</label>
                     <textarea id="task-text${i}" class="form-control" rows="3" disabled></textarea>
                 </div>
                 <div class="form-group mb-3">

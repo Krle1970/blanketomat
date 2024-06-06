@@ -17,3 +17,7 @@ toggleBtn.addEventListener("click", function () {
         icon.classList.add('lni-angle-double-right');
     }
 });
+
+ document.querySelector('.logDugme').addEventListener('click', () => {
+ window.location.href = '../Login/LoginPage.html';
+   });

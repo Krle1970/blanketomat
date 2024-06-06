@@ -25,6 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
 
         DodajZadtak(tekst.value);
-        alert('zadatak je uspešno registrovan!');
+        alert('Zadatak je uspešno registrovan!');
     });
 });
