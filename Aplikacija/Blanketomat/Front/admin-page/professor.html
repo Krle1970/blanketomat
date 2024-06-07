@@ -117,7 +117,7 @@
                         <div class="col-md-6 col-lg-4 col-xl-3 mb-3">
                             <div class="card">
                                 <div class="card-header" data-bs-toggle="collapse" data-bs-target="#card1">
-                                    <h5>Registruj  profesora</h5>
+                                    <h5>Registruj profesora</h5>
                                 </div>
                                 <div id="card1" class="collapse">
                                     <div class="card-body">
@@ -140,17 +140,24 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label for="katedraId1" class="form-label">Katedra</label>
-                                                <input type="number" class="form-control" id="katedraId1" placeholder="Unesi katedra ID">
+                                                <select id="katedraId1" class="form-control" required>
+                                                    <option value="">Odaberite katedru</option>
+                                                    <!-- Options will be populated here -->
+                                                </select>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="smerId1" class="form-label">Smer ID</label>
-                                                <input type="number" class="form-control" id="smerId1" placeholder="Unesi smer ID">
+                                                <select id="smerId1" class="form-control" multiple required>
+                                                    <!-- Options will be populated here -->
+                                                </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="predmetiIds1" class="form-label">Predmeti IDs</label>
-                                                <input type="text" class="form-control" id="predmetiIds1" placeholder="Unesi predmeti IDs (odvojene zarezima)">
+                                                <label for="predmetiIds1" class="form-label">Predmeti</label>
+                                                <select id="predmetiIds1" class="form-control" multiple required>
+                                                    <!-- Options will be populated here -->
+                                                </select>
                                             </div>
-                                            <button id="submitProfesor"  class="btn btn-primary">Submit</button>
+                                            <button id="submitProfesor" class="btn btn-primary">Submit</button>
                                         </form>
                                     </div>
                                 </div>

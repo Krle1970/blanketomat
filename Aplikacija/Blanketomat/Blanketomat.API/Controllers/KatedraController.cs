@@ -80,11 +80,40 @@ public class KatedraController : ControllerBase
     [TypeFilter(typeof(ValidateIdFilter<Katedra>))]
     public async Task<ActionResult<string>> ObrisiKatedru(int id)
     {
-        // iz ValidateIdFilter-a
-        var katedraZaBrisanje = HttpContext.Items["entity"] as Katedra;
-        _context.Katedre.Remove(katedraZaBrisanje!);
+       try
+    {
+        var katedra = await _context.Katedre.FindAsync(id);
+        if (katedra == null)
+        {
+            return NotFound();
+        }
+
+        // Ažuriraj sve profesore koji referenciraju ovu katedru
+        var profesori = _context.Profesori.Where(p => p.Katedra != null && p.Katedra.Id == id).ToList();
+        if (profesori != null)
+        {
+            foreach (var profesor in profesori)
+            {
+                if (profesor != null)
+                {
+                    profesor.Katedra = null; // Uklanjanje reference na katedru
+                }
+            }
+        } 
+       
+
         await _context.SaveChangesAsync();
 
-        return Ok("Katedra uspešno izbrisana");
+        _context.Katedre.Remove(katedra);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+    catch (DbUpdateException ex)
+    {
+        // Logovanje greške
+        Console.WriteLine(ex.InnerException?.Message);
+        return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting data.");
+    }
     }
 }

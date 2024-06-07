@@ -33,14 +33,20 @@ document.addEventListener('DOMContentLoaded', function() {
             });
   
             console.log(response);
-  
+
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
             }
-  
-            const data = await response.json();
-            console.log(data);
-  
+            else {
+                alert('Uspešno ste registrovali studenta');
+                const responseText = await response.text();
+                console.log('Response text:', responseText);
+    
+                const data = responseText ? JSON.parse(responseText) : {};
+                console.log(data);
+            }
+          
+
         } catch (error) {
             console.error('Error:', error);
             alert('Došlo je do greške pri registraciji');

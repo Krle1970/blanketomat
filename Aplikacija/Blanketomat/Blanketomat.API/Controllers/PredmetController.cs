@@ -42,6 +42,12 @@ public class PredmetController : ControllerBase
 
         return Ok(response);
     }
+    [HttpGet("predmeti")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Predmet>))]
+    public ActionResult<IEnumerable<Predmet>> VratiSvePredmete()
+    {
+        return Ok(_context.Predmeti);
+    }
 
     [HttpGet("{id}")]
     [TypeFilter(typeof(ValidateDbSetFilter<Predmet>))]
