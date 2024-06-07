@@ -38,3 +38,21 @@
     box-shadow: 0 0 0 0.2rem rgb(208, 207, 207) !important; /* Sjenka oko polja */
 }
 
+.card-header
+{
+  background-color: rgb(198, 215, 215) !important;
+  color: white;
+}
+.card-body
+{
+  background-color: rgb(220, 231, 232) !important;
+  color: rgb(87, 87, 87) !important;
+}
+.kartica{
+  color: white !important;
+}
+.dpodoblast
+{
+  color: white !important;
+  background-color: rgb(93, 117, 117) !important;
+}
