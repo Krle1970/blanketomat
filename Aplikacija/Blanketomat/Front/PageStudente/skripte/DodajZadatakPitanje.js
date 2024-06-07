@@ -23,6 +23,14 @@ document.getElementById('predmeti-dropdown1').addEventListener('click', function
     }
 });
 
+document.addEventListener('click', function(event) {
+    const searchPredmeti = document.getElementById('search-predmeti1');
+    const dropdown = document.getElementById('predmeti-dropdown1');
+    if (!searchPredmeti.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.classList.remove('show');
+    }
+});
+
 document.getElementById('search-podoblasti1').addEventListener('input', function() {
     const filter = this.value.toLowerCase();
     const dropdown = document.getElementById('podoblasti-dropdown1');

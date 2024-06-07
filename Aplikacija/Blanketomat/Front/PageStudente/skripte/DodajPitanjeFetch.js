@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
     dugme.addEventListener('click', function(event) {
         event.preventDefault();
 
-        DodajZadtak(tekst.value);
+        DodajPitanje(tekst.value);
         alert('Pitanje je uspešno registrovan!');
     });
 });
