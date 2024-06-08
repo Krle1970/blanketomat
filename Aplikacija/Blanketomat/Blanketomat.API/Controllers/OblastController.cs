@@ -50,6 +50,56 @@ public class OblastController : ControllerBase
     {
         // iz ValidateIdFilter-a
         return Ok(HttpContext.Items["entity"] as Oblast);
+
+    }
+
+    
+
+        [HttpGet("{oblastId}/podoblasti")]
+        public ActionResult<IEnumerable<Podoblast>> GetPodoblastiByOblast(int oblastId)
+        {
+            var oblast = _context.Oblasti
+                .Include(o => o.Podoblasti)
+                .FirstOrDefault(o => o.Id == oblastId);
+
+            if (oblast == null)
+            {
+                return NotFound("Oblast nije pronađena.");
+            }
+
+            var podoblasti = oblast.Podoblasti;
+
+            // Ako nema podoblasti, vratiti prazan niz umesto NotFound
+            if (podoblasti == null)
+            {
+                return Ok(new List<Podoblast>());
+            }
+
+            return Ok(podoblasti);
+        }
+
+        [HttpPost("{oblastId}/podoblasti")]
+        public ActionResult<Podoblast> CreatePodoblast(int oblastId, [FromBody] Podoblast newPodoblast)
+        {
+            var oblast = _context.Oblasti.FirstOrDefault(o => o.Id == oblastId);
+
+            if (oblast == null)
+            {
+                return NotFound("Oblast nije pronađena.");
+            }
+
+            newPodoblast.Oblast = oblast;
+            _context.Podoblasti.Add(newPodoblast);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetPodoblastiByOblast), new { oblastId = oblastId }, newPodoblast);
+        }
+
+    [HttpGet("oblasti")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Oblast>))]
+    public ActionResult<IEnumerable<Oblast>> VratiSveOblast()
+    {
+        return Ok(_context.Oblasti);
     }
 
     [HttpPost]
@@ -101,6 +151,6 @@ public class OblastController : ControllerBase
         _context.Oblasti.Remove(oblastZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok("Oblast uspe�no obrisana");
+        return Ok("Oblast uspe�no obrisana");
     }
 }

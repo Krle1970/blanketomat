@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Fetch and populate subjects
-    fetch('http://localhost:5246/Predmet/predmeti') //Da [robamo samo da ubacimo vec postojecu skriptu ya fecovanje]
+    fetch('http://localhost:5246/Predmet/predmeti') //Da probamo samo da ubacimo vec postojecu skriptu ya fecovanje]
         .then(response => response.json())
         .then(data => {
             predmetiDropdown.innerHTML = '';
@@ -113,12 +113,12 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
                 taskDetails.classList.remove('show');
                 setTimeout(() => {
                     taskDetails.style.display = 'none';
-                }, 400); // Duration of transition in milliseconds
+                }, 400); 
             } else {
                 taskDetails.style.display = 'block';
                 setTimeout(() => {
                     taskDetails.classList.add('show');
-                }, 10); // Short delay to allow animation
+                }, 10); 
             }
         });
 
@@ -132,10 +132,8 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
             });
         });
 
-        // Fetch and populate subjects
-        
-        // Fetch and populate oblasti
-        fetch('http://localhost:5246/Oblast/oblasti') // Replace with the actual endpoint for oblasti
+      
+        fetch('http://localhost:5246/Oblast/oblasti') 
             .then(response => response.json())
             .then(data => {
                 const dropdownMenu = document.getElementById(`oblasti-dropdown${i}`);
@@ -150,8 +148,8 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
             })
             .catch(error => console.error('Error fetching oblasti:', error));
 
-        // Fetch and populate podoblasti
-        fetch('http://localhost:5246/Podoblast/podoblasti') // Replace with the actual endpoint for podoblasti
+        
+        fetch('http://localhost:5246/Podoblast/podoblasti') 
             .then(response => response.json())
             .then(data => {
                 const dropdownMenu = document.getElementById(`podoblasti-dropdown${i}`);

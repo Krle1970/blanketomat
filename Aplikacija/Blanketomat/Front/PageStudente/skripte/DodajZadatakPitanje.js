@@ -93,3 +93,4 @@ document.addEventListener('click', function(event) {
         dropdownPodoblasti.classList.remove('show');
     }
 });
+

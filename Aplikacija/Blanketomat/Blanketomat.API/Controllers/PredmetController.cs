@@ -1,5 +1,6 @@
 ﻿using Blanketomat.API.Context;
 using Blanketomat.API.DTOs;
+using Blanketomat.API.DTOs.OblastDTOs;
 using Blanketomat.API.DTOs.PredmetDTOs;
 using Blanketomat.API.Filters.GenericFilters;
 using Blanketomat.API.Filters.PredmetFilters;
@@ -57,6 +58,48 @@ public class PredmetController : ControllerBase
         // iz ValidateIdFilter-a
         return Ok(HttpContext.Items["entity"] as Predmet);
     }
+
+     [HttpPost("{predmetId}/oblasti")]
+        public ActionResult<Oblast> AddOblastToPredmet(int predmetId, [FromBody] Oblast newOblast)
+        {
+            var predmet = _context.Predmeti.Include(p => p.Oblasti).FirstOrDefault(p => p.Id == predmetId);
+
+            if (predmet == null)
+            {
+                return NotFound("Predmet nije pronađen.");
+            }
+
+            newOblast.Predmet = predmet;
+            _context.Oblasti.Add(newOblast);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetOblastiByPredmet), new { predmetId = predmet.Id }, newOblast);
+        }
+        [HttpGet("{predmetId}/oblasti")]
+        public ActionResult<IEnumerable<OblastDTO>> GetOblastiByPredmet(int predmetId)
+        {
+            var predmet = _context.Predmeti
+                .Include(p => p.Oblasti)
+                .FirstOrDefault(p => p.Id == predmetId);
+
+            if (predmet == null)
+            {
+                return NotFound("Predmet nije pronađen.");
+            }
+
+            var oblasti = predmet.Oblasti?.Select(o => new OblastDTO
+            {
+                Id = o.Id,
+                Naziv = o.Naziv
+            }).ToList();
+
+            if (oblasti == null || !oblasti.Any())
+            {
+                return NotFound("Nema oblasti za dati predmet.");
+            }
+
+            return Ok(oblasti);
+        }
 
     [HttpPost]
     [TypeFilter(typeof(ValidateDbSetFilter<Predmet>))]

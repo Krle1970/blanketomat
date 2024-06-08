@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Blanketomat.API.DTOs.OblastDTOs;
 
 public class OblastDTO
-{
+{   public int Id { get; set; }
     [MinLength(3, ErrorMessage = "Naziv oblasti mora imati minimum 3 karaktera")]
     [MaxLength(50, ErrorMessage = "Naziv oblasti moze imati maksimalno 50 karaktera")]
     public required string Naziv { get; set; }
