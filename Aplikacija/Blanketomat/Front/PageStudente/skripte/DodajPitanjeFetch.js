@@ -2,9 +2,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const dropdownMenuPredmeti = document.getElementById('predmeti-dropdown1');
     const dropdownMenuOblasti = document.getElementById('oblasti-dropdown1');
     const dropdownMenuPodoblasti = document.getElementById('podoblasti-dropdown1');
+    const tekst = document.querySelector('.tekst');
+    const dugme = document.querySelector('.dugme');
+   
+    const label = document.querySelector('.provera');
+    const labelText = label.textContent;
+    console.log(labelText);  
+    let url;
+    if(labelText=="Unesite tekst pitanje:"){
+         url='http://localhost:5246/Pitanje/pitanje';
+    }
+    else{
+         url='http://localhost:5246/Zadatak/dodajZadatak';
+    }
     let selectedPredmetId = null;
     let selectedOblastId = null;
-    
+    let selectedPodoblastId = null;
+
     fetch('http://localhost:5246/Predmet/predmeti')
         .then(response => response.json())
         .then(data => {
@@ -18,10 +32,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 dropdownMenuPredmeti.appendChild(item);
 
                 item.addEventListener('click', function() {
-                    selectedPredmetId = predmet.id; // Čuvanje ID-a izabranog predmeta
-                    console.log('Izabrani predmet ID:', selectedPredmetId); 
-                    console.log(predmet.id);
-                    // Pozivanje funkcije za dobijanje oblasti
+                    selectedPredmetId = predmet.id;
+                    console.log('Izabrani predmet ID:', selectedPredmetId);
                     fetchOblastiForPredmet(selectedPredmetId);
                 });
             });
@@ -36,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 console.log('Oblasti za izabrani predmet:', data);
                 
-                dropdownMenuOblasti.innerHTML = ''; 
+                dropdownMenuOblasti.innerHTML = '';
                 
                 data.forEach(oblast => {
                     const item = document.createElement('a');
@@ -46,15 +58,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     dropdownMenuOblasti.appendChild(item);
 
                     item.addEventListener('click', function() {
-                        selectedOblastId = oblast.id; // Čuvanje ID-a izabrane oblasti
+                        selectedOblastId = oblast.id;
                         console.log('Izabrana oblast ID:', oblast.id);
-                        
-                       
                         fetchPodoblastiForOblast(selectedOblastId);
                     });
                 });
 
-                // Prikazivanje dropdown menija za oblasti
                 if (dropdownMenuOblasti.childElementCount > 0) {
                     dropdownMenuOblasti.classList.add('show');
                 } else {
@@ -65,14 +74,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function fetchPodoblastiForOblast(oblastId) {
-        const url = `http://localhost:5246/Oblast/${oblastId}/podoblasti`;
+        
 
-        fetch(url)
+        fetch(`http://localhost:5246/Oblast/${oblastId}/podoblasti`)
             .then(response => response.json())
             .then(data => {
                 console.log('Podoblasti za izabranu oblast:', data);
                 
-                dropdownMenuPodoblasti.innerHTML = ''; 
+                dropdownMenuPodoblasti.innerHTML = '';
 
                 data.forEach(podoblast => {
                     const item = document.createElement('a');
@@ -80,9 +89,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     item.setAttribute('data-value', podoblast.id);
                     item.textContent = podoblast.naziv;
                     dropdownMenuPodoblasti.appendChild(item);
+
+                    item.addEventListener('click', function() {
+                        selectedPodoblastId = podoblast.id;
+                        console.log('Izabrana podoblast ID:', podoblast.id);
+                    });
                 });
 
-                // Prikazivanje dropdown menija za podoblasti
                 if (dropdownMenuPodoblasti.childElementCount > 0) {
                     dropdownMenuPodoblasti.classList.add('show');
                 } else {
@@ -91,37 +104,37 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => console.error('Error fetching podoblasti:', error));
     }
-});
-
-  
-
-document.addEventListener('DOMContentLoaded', function() {
- 
-    const tekst = document.querySelector('.tekst');
-    const dugme = document.querySelector('.dugme');
 
     function DodajPitanje(tekst) {
         const body = {
-           Tekst:tekst
-           
+            Tekst: tekst,
+            Oblast: selectedOblastId ? { Id: selectedOblastId, naziv: 'nazivOblasti' } : null,
+            Podoblast: selectedPodoblastId ? { Id: selectedPodoblastId, naziv: 'nazivPodoblasti' } : null // Dodato podoblast
         };
-
-
-        fetch(`http://localhost:5246/Pitanje` , {
+        
+        fetch(url, {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {
                 'Content-Type': 'application/json',
             }
         })
-        .then(data=>data.json())
-        .then(response=>console.log(response));
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(error => { throw new Error(JSON.stringify(error)); });
+            }
+            return response.json();
+        })
+        .then(response => console.log(response))
+        .catch(error => console.error('Error:', error));
     }
-
+    
     dugme.addEventListener('click', function(event) {
         event.preventDefault();
-
+        console.log('Tekst:', tekst.value);
+        console.log('Oblast ID:', selectedOblastId);
+        console.log('Podoblast ID:', selectedPodoblastId); // Dodato logovanje podoblasti
         DodajPitanje(tekst.value);
-        alert('Pitanje je uspešno registrovan!');
+        alert('Pitanje je uspešno registrovano!');
     });
 });

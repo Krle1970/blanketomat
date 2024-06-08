@@ -1,8 +1,9 @@
+
 document.addEventListener('DOMContentLoaded', function() {
     const searchPredmeti = document.getElementById('search-predmeti1');
     const predmetiDropdown = document.getElementById('predmeti-dropdown1');
     const generateButton = document.getElementById('generate-tasks');
-
+   
     // Event listener for the search input
     searchPredmeti.addEventListener('input', function() {
         const filter = this.value.toLowerCase();
@@ -26,19 +27,19 @@ document.addEventListener('DOMContentLoaded', function() {
             searchPredmeti.value = predmet;
             this.classList.remove('show');
             generateButton.disabled = false;
-            document.getElementById('generate-tasks').disabled = false; // Enable the button when an item is selected
+            document.getElementById('generate-tasks').disabled = false; 
         }
     });
 
-    // Hide the dropdown if clicked outside
+
     document.addEventListener('click', function(event) {
         if (!predmetiDropdown.contains(event.target) && event.target !== searchPredmeti) {
             predmetiDropdown.classList.remove('show');
         }
     });
 
-    // Fetch and populate subjects
-    fetch('http://localhost:5246/Predmet/predmeti') //Da probamo samo da ubacimo vec postojecu skriptu ya fecovanje]
+   
+    fetch('http://localhost:5246/Predmet/predmeti') 
         .then(response => response.json())
         .then(data => {
             predmetiDropdown.innerHTML = '';
@@ -47,15 +48,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 item.classList.add('dropdown-item');
                 item.setAttribute('data-value', predmet.id);
                 item.textContent = predmet.naziv;
+                item.addEventListener('click', () => {
+                    predmetID = predmet.id; 
+                    console.log(`Izabran predmet ID: ${predmetID}`); 
+                });
                 predmetiDropdown.appendChild(item);
             });
         })
         .catch(error => console.error('Error fetching subjects:', error));
-    });
-document.getElementById('generate-tasks').addEventListener('click', function() {
-    
+        
+});
+  
+
+
     
 
+document.getElementById('generate-tasks').addEventListener('click', function() {
+
+    console.log(`Izabran predmet ID: ${predmetID}`)
+    let oblastID;
+ 
     const numberOfTasks = document.getElementById('task-number').value;
     const tasksContainer = document.getElementById('tasks-container');
     tasksContainer.innerHTML = '';
@@ -133,7 +145,7 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
         });
 
       
-        fetch('http://localhost:5246/Oblast/oblasti') 
+        fetch(`http://localhost:5246/Predmet/${predmetID}/oblasti`)
             .then(response => response.json())
             .then(data => {
                 const dropdownMenu = document.getElementById(`oblasti-dropdown${i}`);
@@ -143,29 +155,37 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
                     item.classList.add('dropdown-item');
                     item.setAttribute('data-value', oblast.id);
                     item.textContent = oblast.naziv;
+                    item.addEventListener('click', () => {
+                        oblastID = oblast.id;
+                        console.log(`Izabran oblast ID: ${oblastID}`);
+                        // Fetch podoblasti based on selected oblastID
+                        fetchPodoblasti(i, oblastID);
+                    });
                     dropdownMenu.appendChild(item);
                 });
             })
             .catch(error => console.error('Error fetching oblasti:', error));
+           
 
         
-        fetch('http://localhost:5246/Podoblast/podoblasti') 
-            .then(response => response.json())
-            .then(data => {
-                const dropdownMenu = document.getElementById(`podoblasti-dropdown${i}`);
-                dropdownMenu.innerHTML = '';
-                data.forEach(podoblast => {
-                    const item = document.createElement('a');
-                    item.classList.add('dropdown-item');
-                    item.setAttribute('data-value', podoblast.id);
-                    item.textContent = podoblast.naziv;
-                    dropdownMenu.appendChild(item);
-                });
-            })
-            .catch(error => console.error('Error fetching podoblasti:', error));
+            function fetchPodoblasti(taskIndex, oblastID) {
+                fetch(`http://localhost:5246/Oblast/${oblastID}/podoblasti`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const dropdownMenu = document.getElementById(`podoblasti-dropdown${taskIndex}`);
+                        dropdownMenu.innerHTML = '';
+                        data.forEach(podoblast => {
+                            const item = document.createElement('a');
+                            item.classList.add('dropdown-item');
+                            item.setAttribute('data-value', podoblast.id);
+                            item.textContent = podoblast.naziv;
+                            dropdownMenu.appendChild(item);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching podoblasti:', error));
+            }
 
-
-            
+          
             
 
         // Event listener for search-podoblasti
@@ -244,20 +264,20 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
         
         
     }
-    fetch('http://localhost:5246/Predmet/predmeti')
-            .then(response => response.json())
-            .then(data => {
-                const dropdownMenu = document.getElementById(`predmeti-dropdown$1`);
-                dropdownMenu.innerHTML = '';
-                data.forEach(predmet => {
-                    const item = document.createElement('a');
-                    item.classList.add('dropdown-item');
-                    item.setAttribute('data-value', predmet.id);
-                    item.textContent = predmet.naziv;
-                    dropdownMenu.appendChild(item);
-                });
-            })
-            .catch(error => console.error('Error fetching subjects:', error));
 
-    
 });
+document.querySelector('.KreirajButton').addEventListener('click', function() {
+    console.log('KreirajBlanket button clicked');
+    const numberOfTasks = document.getElementById('task-number').value;
+    console.log(`Broj pitanja: ${numberOfTasks}`);
+
+    for (let i = 1; i <= numberOfTasks; i++) {
+        const kreirajRadio = document.getElementById(`kreiraj${i}`);
+        if (kreirajRadio && kreirajRadio.checked) {
+            const taskText = document.getElementById(`task-text${i}`).value;
+            console.log(`Pitanje ${i}: ${taskText}`);
+        }
+    }
+});
+
+

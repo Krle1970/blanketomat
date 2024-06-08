@@ -52,27 +52,31 @@ public class PitanjeController : ControllerBase
         return Ok(HttpContext.Items["entity"] as Pitanje);
     }
 
-    [HttpPost]
-    [TypeFilter(typeof(ValidateDbSetFilter<Pitanje>))]
-    [TypeFilter(typeof(ValidateDodajPitanjeFilter))]
-    public async Task<ActionResult> DodajPitanje([FromBody]DodajPitanjeDTO novoPitanje)
-    {
-        Pitanje pitanje = new Pitanje
+   
+    
+
+        [HttpGet("VratiPitanje{id}")]
+        public ActionResult<PitanjeDTO> GetPitanjeById(int id)
         {
-            Tekst = novoPitanje.Tekst,
-            Slika = novoPitanje.Slike,
-            Oblast = novoPitanje.Oblast
-        };
+            var pitanje = _context.Pitanja
+                .Include(p => p.Slika)
+                .Include(p => p.Oblast)
+                .FirstOrDefault(p => p.Id == id);
 
-        _context.Pitanja.Add(pitanje);
-        await _context.SaveChangesAsync();
+            if (pitanje == null)
+            {
+                return NotFound("Pitanje nije pronaÄ‘eno.");
+            }
 
-        return CreatedAtAction(nameof(VratiPitanje),
-            new { id = pitanje.Id },
-            pitanje
-            );
-    }
+            var pitanjeDto = new PitanjeDTO
+            {
+                Tekst = pitanje.Tekst,
+                Oblast = pitanje.Oblast,
+                Slike = pitanje.Slika
+            };
 
+            return Ok(pitanjeDto);
+        }
     [HttpPut("{id}")]
     [TypeFilter(typeof(ValidateIdFilter<Pitanje>))]
     public async Task<ActionResult<Pitanje>> AzurirajPitanje(int id, [FromBody]AzurirajPitanjeDTO pitanje)
@@ -99,6 +103,27 @@ public class PitanjeController : ControllerBase
         _context.Pitanja.Remove(pitanjeZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok("Pitanje uspešno obrisano");
+        return Ok("Pitanje uspeï¿½no obrisano");
+    }
+   [HttpPost("dodajPitanje")]
+    public async Task<IActionResult> DodajPitanje([FromBody] PitanjeDTO pitanjeDTO)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errorList = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            return BadRequest(new { Errors = errorList });
+        }
+
+        var pitanje = new Pitanje
+        {
+            Tekst = pitanjeDTO.Tekst,
+            Oblast = pitanjeDTO.Oblast != null ? await _context.Oblasti.FindAsync(pitanjeDTO.Oblast.Id) : null,
+            Slika = pitanjeDTO.Slike?.ToList()
+        };
+
+        _context.Pitanja.Add(pitanje);
+        await _context.SaveChangesAsync();
+
+        return Ok(pitanje);
     }
 }

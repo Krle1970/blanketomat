@@ -103,4 +103,26 @@ public class ZadatakController : ControllerBase
 
         return Ok("Zadatak uspešno obrisan");
     }
+    [HttpPost("dodajZadatak")]
+public async Task<IActionResult> DodajZadatak([FromBody] ZadatakDTO zadatakDTO)
+{
+    if (!ModelState.IsValid)
+    {
+        var errorList = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+        return BadRequest(new { Errors = errorList });
+    }
+
+    var zadatak = new Zadatak
+    {
+        Tekst = zadatakDTO.Tekst,
+        Oblast = zadatakDTO.Oblast != null ? await _context.Oblasti.FindAsync(zadatakDTO.Oblast.Id) : null,
+        Slika = zadatakDTO.Slike?.ToList()
+       
+    };
+
+    _context.Zadaci.Add(zadatak);
+    await _context.SaveChangesAsync();
+
+    return Ok(zadatak);
+}
 }
