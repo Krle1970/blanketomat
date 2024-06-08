@@ -1,6 +1,6 @@
-document.getElementById('search-predmeti').addEventListener('input', function() {
+document.getElementById('search-predmeti1').addEventListener('input', function() {
     const filter = this.value.toLowerCase();
-    const dropdown = document.getElementById('predmeti-dropdown');
+    const dropdown = document.getElementById('predmeti-dropdown1');
     const items = dropdown.getElementsByClassName('dropdown-item');
     let anyVisible = false;
     for (let i = 0; i < items.length; i++) {
@@ -11,17 +11,26 @@ document.getElementById('search-predmeti').addEventListener('input', function() 
             anyVisible = true;
         }
     }
-    dropdown.style.display = anyVisible ? 'block' : 'none';
+    dropdown.classList.toggle('show', anyVisible);
 });
 
-document.getElementById('predmeti-dropdown').addEventListener('click', function(event) {
+document.getElementById('predmeti-dropdown1').addEventListener('click', function(event) {
     if (event.target.classList.contains('dropdown-item')) {
         const predmet = event.target.textContent;
-        const searchPredmeti = document.getElementById('search-predmeti');
+        const searchPredmeti = document.getElementById('search-predmeti1');
         searchPredmeti.value = predmet;
-        this.style.display = 'none';
+        this.classList.remove('show');
     }
 });
+
+document.addEventListener('click', function(event) {
+    const searchPredmeti = document.getElementById('search-predmeti1');
+    const dropdown = document.getElementById('predmeti-dropdown1');
+    if (!searchPredmeti.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.classList.remove('show');
+    }
+});
+
 
 document.getElementById('search-rok').addEventListener('input', function() {
     const filter = this.value.toLowerCase();
