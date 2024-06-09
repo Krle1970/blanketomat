@@ -118,28 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => console.error('Error fetching subjects:', error));
     
-    fetch('http://localhost:5246/PonavljanjeIspitnogRoka/PonavljanjaIspitnihRokova')
-    .then(response => response.json())
-    .then(data => {
-        ispitniRokoviDropdown.innerHTML = '';
-        data.forEach(ispitniRok => {
-            const item = document.createElement('a');
-            item.classList.add('dropdown-item');
-            item.setAttribute('data-value', ispitniRok.id);
-            item.textContent = ispitniRok.naziv;
-            item.addEventListener('click', () => {
-                ispitniRokID = ispitniRok.id;
-                ispitniRokNaziv = ispitniRok.naziv;
-                ispitniRokDatum = ispitniRok.datum;
-                console.log(`Izabran ispitni rok ID: ${ispitniRokID}`);
-                console.log(`Izabran ispitni rok: ${ispitniRokNaziv}`);
-                console.log(`Datum ispitnog roka: ${ispitniRokDatum}`);
-            });
-            ispitniRokoviDropdown.appendChild(item);
-        });
-    })
-    .catch(error => console.error('Error fetching subjects:', error));
-
+  
 });
 
 

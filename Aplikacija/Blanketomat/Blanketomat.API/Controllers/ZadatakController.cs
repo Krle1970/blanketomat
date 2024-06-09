@@ -104,25 +104,50 @@ public class ZadatakController : ControllerBase
         return Ok("Zadatak uspešno obrisan");
     }
     [HttpPost("dodajZadatak")]
-public async Task<IActionResult> DodajZadatak([FromBody] ZadatakDTO zadatakDTO)
-{
-    if (!ModelState.IsValid)
+    public async Task<IActionResult> DodajZadatak([FromBody] ZadatakDTO zadatakDTO)
     {
-        var errorList = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-        return BadRequest(new { Errors = errorList });
+        if (!ModelState.IsValid)
+        {
+            var errorList = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            return BadRequest(new { Errors = errorList });
+        }
+
+        var zadatak = new Zadatak
+        {
+            Tekst = zadatakDTO.Tekst,
+            Oblast = zadatakDTO.Oblast != null ? await _context.Oblasti.FindAsync(zadatakDTO.Oblast.Id) : null,
+            Slika = zadatakDTO.Slike?.ToList()
+        
+        };
+
+        _context.Zadaci.Add(zadatak);
+        await _context.SaveChangesAsync();
+
+        return Ok(zadatak);
     }
-
-    var zadatak = new Zadatak
+    [HttpGet("Oblast/{oblastId?}")]
+    public async Task<ActionResult<IEnumerable<object>>> GetZadaciByOblast(int? oblastId)
     {
-        Tekst = zadatakDTO.Tekst,
-        Oblast = zadatakDTO.Oblast != null ? await _context.Oblasti.FindAsync(zadatakDTO.Oblast.Id) : null,
-        Slika = zadatakDTO.Slike?.ToList()
-       
-    };
+        IQueryable<Zadatak> query = _context.Zadaci;
 
-    _context.Zadaci.Add(zadatak);
-    await _context.SaveChangesAsync();
+        if (oblastId.HasValue)
+        {
+            query = query.Where(z => z.Oblast != null && z.Oblast.Id == oblastId.Value);
+        }
 
-    return Ok(zadatak);
-}
+        var zadaci = await query
+            .Select(z => new
+            {
+                z.Id,
+                z.Tekst
+            })
+            .ToListAsync();
+
+        if (zadaci == null || !zadaci.Any())
+        {
+            return NotFound($"Nije pronađen zadatak{(oblastId.HasValue ? $" za specificiranu oblast (Oblast ID: {oblastId})" : "")}.");
+        }
+
+        return Ok(zadaci);
+    }
 }
