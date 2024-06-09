@@ -5,6 +5,7 @@ async function fetchBlankets() {
             throw new Error(`Error fetching blankets: ${response.statusText}`);
         }
         const blankets = await response.json();
+        console.log(blankets); // Dodajte ovo za debugovanje
         return blankets;
     } catch (error) {
         console.error('Error:', error);
@@ -26,7 +27,9 @@ function createCard(blanket) {
 
     const card = document.createElement('div');
     card.className = 'card custom-card';
-    card.onclick = handleCardClick;
+    card.setAttribute('data-id', blanket.id); // Dodaj blanket ID kao data-id atribut
+    
+    card.addEventListener('click', handleCardClick); // Koristite addEventListener umesto onclick
 
     const cardHeader = document.createElement('div');
     cardHeader.className = 'card-header';
@@ -71,4 +74,42 @@ function createCard(blanket) {
     document.getElementById('cards-container').appendChild(cardContainer);
 }
 
-document.addEventListener('DOMContentLoaded', generateHTML);
+async function handleCardClick(event) {
+    const card = event.currentTarget;
+    const blanketId = card.getAttribute('data-id');
+    
+
+    if (blanketId === undefined) {
+        console.error('data-id attribute is undefined');
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:5246/Blanket/${blanketId}/content`);
+        if (!response.ok) {
+            throw new Error(`Error fetching content for blanket ID ${blanketId}: ${response.statusText}`);
+        }
+        const content = await response.json();
+        generatePDF(content);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function generatePDF(content) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    let yOffset = 10; // Initial Y position for the first question or task
+
+    content.forEach((item, index) => {
+        const lines = doc.splitTextToSize(`[ ${index + 1} ]: ${item.tekst}`, 170); // Set width to 170
+        doc.text(lines, 10, yOffset);
+        yOffset += lines.length * 10; // Adjust Y position for the next block of text
+        yOffset += 6; // Add extra space between questions/tasks
+    });
+
+    doc.save('blanket.pdf');
+}
+
+// Pozovite generateHTML da generiše kartice
+generateHTML();

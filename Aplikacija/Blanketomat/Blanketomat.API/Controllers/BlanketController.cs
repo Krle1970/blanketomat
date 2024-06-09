@@ -36,6 +36,7 @@ public class BlanketController : ControllerBase
             .Include(b => b.IspitniRok)
             .Select(b => new
             {
+                b.Id,  // Dodajte Id ovde
                 b.Tip,
                 b.Kategorija,
                 PredmetNaziv = b.Predmet != null ? b.Predmet.Naziv : "N/A",
@@ -49,6 +50,7 @@ public class BlanketController : ControllerBase
 
         return Ok(blanketi);
     }
+
 
 
     [HttpGet]
@@ -237,5 +239,35 @@ public class BlanketController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok(blanket);
+    }
+    [HttpGet("{id}/content")]
+    [TypeFilter(typeof(ValidateDbSetFilter<Blanket>))]
+    [TypeFilter(typeof(ValidateIdFilter<Blanket>))]
+    public async Task<ActionResult<IEnumerable<object>>> VratiPitanjaIliZadatke(int id)
+    {
+        var blanket = await _context.Blanketi
+            .Include(b => b.Pitanja)
+            .Include(b => b.Zadaci)
+            .FirstOrDefaultAsync(b => b.Id == id);
+
+        if (blanket == null)
+        {
+            return NotFound("Blanket nije pronađen.");
+        }
+
+        if (blanket.Tip.Equals("Pismeni", StringComparison.OrdinalIgnoreCase))
+        {
+            var zadaci = blanket.Zadaci?.Select(z => new { z.Id, z.Tekst }).ToList();
+            return Ok(zadaci);
+        }
+        else if (blanket.Tip.Equals("Usmeni", StringComparison.OrdinalIgnoreCase))
+        {
+            var pitanja = blanket.Pitanja?.Select(p => new { p.Id, p.Tekst }).ToList();
+            return Ok(pitanja);
+        }
+        else
+        {
+            return BadRequest("Nevažeći tip blanketa.");
+        }
     }
 }

@@ -52,6 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log('Uspešno prijavljen:', data);
 
             localStorage.setItem('token', data.token);
+            localStorage.setItem('email', data.email);
+            localStorage.setItem('ime', data.ime);
+            localStorage.setItem('prezime', data.prezime);
             console.log('Token sačuvan u lokalnoj memoriji:', data.token);
 
             // odlaganje pre preusmeravanja

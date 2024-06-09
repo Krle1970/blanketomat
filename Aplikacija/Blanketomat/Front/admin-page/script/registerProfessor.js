@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             data.forEach(item => {
                 const option = document.createElement('option');
-                console.log('Item:', item);
+                //console.log('Item:', item);
                 option.value = item[valueField];
                 option.text = item[textField];
                 selectElement.appendChild(option);
