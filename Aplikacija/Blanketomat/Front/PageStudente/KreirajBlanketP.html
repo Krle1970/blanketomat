@@ -78,9 +78,28 @@
         <div class="form-group mb-3">
             <label for="search-predmeti1" >Odaberite predmet:</label>
             <input type="text" id="search-predmeti1" class="form-control mb-2" placeholder="Pretražite predmete">
-            <div class="dropdown-menu w-100" id="predmeti-dropdown1">
-          
+            <div class="dropdown-menu w-100" id="predmeti-dropdown1">  
+        </div>
+            <label for="search-rokovi1" >Odaberite ispitni rok:</label>
+            <input type="text" id="search-rokovi1" class="form-control mb-2" placeholder="Pretražite rokove">
+            <div class="dropdown-menu w-100" id="rokovi-dropdown1"></div>
+        </div>
+        
+        <div class="form-group mb-3">
+            <label>Odaberite tip testa:</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="tipTesta" id="kolokvijum1" value="I kolokvijum">
+                <label class="form-check-label" for="kolokvijum1">I kolokvijum</label>
             </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="tipTesta" id="kolokvijum2" value="II kolokvijum">
+                <label class="form-check-label" for="kolokvijum2">II kolokvijum</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="tipTesta" id="ispit" value="Ispit">
+                <label class="form-check-label" for="ispit">Ispit</label>
+            </div>
+            
         </div>
         <button id="generate-tasks" class="btn btn-primary mt-2 GenerisiButton" disabled>Napravi</button>
         
@@ -92,12 +111,6 @@
         </div>
     </div>
 </div>
-
-
-   
-
-
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"

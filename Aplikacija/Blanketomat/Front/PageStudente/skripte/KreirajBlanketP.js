@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchPredmeti = document.getElementById('search-predmeti1');
     const predmetiDropdown = document.getElementById('predmeti-dropdown1');
     const generateButton = document.getElementById('generate-tasks');
+
+    const searchRokovi = document.getElementById('search-rokovi1');
+    const ispitniRokoviDropdown = document.getElementById('rokovi-dropdown1');
    
    
     searchPredmeti.addEventListener('input', function() {
@@ -19,11 +22,36 @@ document.addEventListener('DOMContentLoaded', function() {
         predmetiDropdown.classList.toggle('show', anyVisible);
     });
 
+    searchRokovi.addEventListener('input', function() {
+        const filter = this.value.toLowerCase();
+        const items = ispitniRokoviDropdown.getElementsByClassName('dropdown-item');
+        let anyVisible = false;
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            const text = item.textContent.toLowerCase();
+            item.style.display = text.includes(filter) ? '' : 'none';
+            if (text.includes(filter)) {
+                anyVisible = true;
+            }
+        }
+        ispitniRokoviDropdown.classList.toggle('show', anyVisible);
+    });
+
    
     predmetiDropdown.addEventListener('click', function(event) {
         if (event.target.classList.contains('dropdown-item')) {
             const predmet = event.target.textContent;
             searchPredmeti.value = predmet;
+            this.classList.remove('show');
+            generateButton.disabled = false;
+            document.getElementById('generate-tasks').disabled = false; 
+        }
+    });
+
+    ispitniRokoviDropdown.addEventListener('click', function(event) {
+        if (event.target.classList.contains('dropdown-item')) {
+            const rok = event.target.textContent;
+            searchRokovi.value = rok;
             this.classList.remove('show');
             generateButton.disabled = false;
             document.getElementById('generate-tasks').disabled = false; 
@@ -37,8 +65,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    document.addEventListener('click', function(event) {
+        if (!ispitniRokoviDropdown.contains(event.target) && event.target !== searchRokovi) {
+            ispitniRokoviDropdown.classList.remove('show');
+        }
+    });
+
    
-    fetch('http://localhost:5246/Predmet/predmeti') 
+     fetch('http://localhost:5246/Predmet/predmeti') 
         .then(response => response.json())
         .then(data => {
             predmetiDropdown.innerHTML = '';
@@ -46,31 +80,78 @@ document.addEventListener('DOMContentLoaded', function() {
                 const item = document.createElement('a');
                 item.classList.add('dropdown-item');
                 item.setAttribute('data-value', predmet.id);
-                item.textContent = predmet.naziv;
+                item.textContent = `${predmet.naziv} (${predmet.godina})`; // Prikazuje naziv predmeta i godinu
                 item.addEventListener('click', () => {
-                    predmetID = predmet.id; 
+                    predmetID = predmet.id;
+                    selectedPredmetNaziv = predmet.naziv;
+                    selectedPredmetGodina = predmet.godina;
+                    
                     console.log(`Izabran predmet ID: ${predmetID}`); 
+                    console.log(`Izabran predmet: ${selectedPredmetNaziv}`);
+                    console.log(`Godina: ${selectedPredmetGodina}`);
                 });
                 predmetiDropdown.appendChild(item);
             });
         })
         .catch(error => console.error('Error fetching subjects:', error));
         
-});
-  
 
-
+   fetch('http://localhost:5246/PonavljanjeIspitnogRoka/PonavljanjaIspitnihRokova')
+    .then(response => response.json())
+    .then(data => {
+        ispitniRokoviDropdown.innerHTML = '';
+        data.forEach(ispitniRok => {
+            const item = document.createElement('a');
+            item.classList.add('dropdown-item');
+            item.setAttribute('data-value', ispitniRok.id);
+            item.textContent = ispitniRok.naziv;
+            item.addEventListener('click', () => {
+                ispitniRokID = ispitniRok.id;
+                ispitniRokNaziv = ispitniRok.naziv;
+                ispitniRokDatum = ispitniRok.datum;
+                console.log(`Izabran ispitni rok ID: ${ispitniRokID}`);
+                console.log(`Izabran ispitni rok: ${ispitniRokNaziv}`);
+                console.log(`Datum ispitnog roka: ${ispitniRokDatum}`);
+            });
+            ispitniRokoviDropdown.appendChild(item);
+        });
+    })
+    .catch(error => console.error('Error fetching subjects:', error));
     
+    fetch('http://localhost:5246/PonavljanjeIspitnogRoka/PonavljanjaIspitnihRokova')
+    .then(response => response.json())
+    .then(data => {
+        ispitniRokoviDropdown.innerHTML = '';
+        data.forEach(ispitniRok => {
+            const item = document.createElement('a');
+            item.classList.add('dropdown-item');
+            item.setAttribute('data-value', ispitniRok.id);
+            item.textContent = ispitniRok.naziv;
+            item.addEventListener('click', () => {
+                ispitniRokID = ispitniRok.id;
+                ispitniRokNaziv = ispitniRok.naziv;
+                ispitniRokDatum = ispitniRok.datum;
+                console.log(`Izabran ispitni rok ID: ${ispitniRokID}`);
+                console.log(`Izabran ispitni rok: ${ispitniRokNaziv}`);
+                console.log(`Datum ispitnog roka: ${ispitniRokDatum}`);
+            });
+            ispitniRokoviDropdown.appendChild(item);
+        });
+    })
+    .catch(error => console.error('Error fetching subjects:', error));
+
+});
+
+
+
 
 document.getElementById('generate-tasks').addEventListener('click', function() {
-
     console.log(`Izabran predmet ID: ${predmetID}`)
     let oblastID;
  
     const numberOfTasks = document.getElementById('task-number').value;
     const tasksContainer = document.getElementById('tasks-container');
     tasksContainer.innerHTML = '';
-    
     
     for (let i = 1; i <= numberOfTasks; i++) {
         const taskCard = document.createElement('div');
@@ -137,7 +218,6 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
             });
         });
 
-      
         fetch(`http://localhost:5246/Predmet/${predmetID}/oblasti`)
             .then(response => response.json())
             .then(data => {
@@ -158,9 +238,7 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
                 });
             })
             .catch(error => console.error('Error fetching oblasti:', error));
-           
 
-        
             function fetchPodoblasti(taskIndex, oblastID) {
                 fetch(`http://localhost:5246/Oblast/${oblastID}/podoblasti`)
                     .then(response => response.json())
@@ -178,10 +256,6 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
                     .catch(error => console.error('Error fetching podoblasti:', error));
             }
 
-          
-            
-
-        // Event listener for search-podoblasti
         document.getElementById(`search-podoblasti${i}`).addEventListener('input', function() {
             const filter = this.value.toLowerCase();
             const dropdown = document.getElementById(`podoblasti-dropdown${i}`);
@@ -198,7 +272,6 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
             dropdown.classList.toggle('show', anyVisible);
         });
 
-        // Event listener for podoblasti-dropdown
         document.getElementById(`podoblasti-dropdown${i}`).addEventListener('click', function(event) {
             if (event.target.classList.contains('dropdown-item')) {
                 const podoblast = event.target.textContent;
@@ -208,7 +281,6 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
             }
         });
 
-        // Event listener for search-oblasti
         document.getElementById(`search-oblasti${i}`).addEventListener('input', function() {
             const filter = this.value.toLowerCase();
             const dropdown = document.getElementById(`oblasti-dropdown${i}`);
@@ -225,8 +297,6 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
             dropdown.classList.toggle('show', anyVisible);
         });
 
-        // Event listener for oblasti-dropdown
-        
         document.getElementById(`oblasti-dropdown${i}`).addEventListener('click', function(event) {
             if (event.target.classList.contains('dropdown-item')) {
                 const podoblast = event.target.textContent;
@@ -235,15 +305,13 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
                 this.classList.remove('show');
             }
         });
+
         document.addEventListener('click', function(event) {
             for (let i = 1; i <= numberOfTasks; i++) {
-                
                 const searchOblasti = document.getElementById(`search-oblasti${i}`);
                 const dropdownOblasti = document.getElementById(`oblasti-dropdown${i}`);
                 const searchPodoblasti = document.getElementById(`search-podoblasti${i}`);
                 const dropdownPodoblasti = document.getElementById(`podoblasti-dropdown${i}`);
-    
-                
     
                 if (searchOblasti && dropdownOblasti && !searchOblasti.contains(event.target) && !dropdownOblasti.contains(event.target)) {
                     dropdownOblasti.classList.remove('show');
@@ -254,15 +322,17 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
                 }
             }
         });
-        
-        
     }
-
 });
+
 document.querySelector('.KreirajButton').addEventListener('click', async function() {
     console.log('KreirajBlanket button clicked');
+
+    const kategorijaTipTesta = document.querySelector('input[name="tipTesta"]:checked').value;
+    const tipBlanketa = "Usmeni";
     const numberOfTasks = document.getElementById('task-number').value;
     const promises = [];
+    const questions = [];
 
     for (let i = 1; i <= numberOfTasks; i++) {
         const generisiRadio = document.getElementById(`generisi${i}`);
@@ -270,12 +340,12 @@ document.querySelector('.KreirajButton').addEventListener('click', async functio
             const selectedOblastDropdown = document.querySelector(`#oblasti-dropdown${i} .dropdown-item.active`);
             const selectedOblastId = selectedOblastDropdown ? selectedOblastDropdown.getAttribute('data-value') : null;
 
-            let url;
             if (selectedOblastId == null) {
                 alert(`Molimo vas da odaberete oblast za pitanje ${i}`);
                 return;
             }
-            url = `http://localhost:5246/Pitanje/Oblast/${selectedOblastId}`;
+
+            const url = `http://localhost:5246/Pitanje/Oblast/${selectedOblastId}`;
 
             const promise = fetch(url)
                 .then(response => {
@@ -292,6 +362,7 @@ document.querySelector('.KreirajButton').addEventListener('click', async functio
                         const randomQuestion = data[randomIndex];
                         console.log(`Random question:`, randomQuestion);
                         if (randomQuestion && randomQuestion.tekst) {
+                            questions.push({ id: randomQuestion.id, tekst: randomQuestion.tekst });
                             return randomQuestion;
                         } else {
                             console.error('tekst property is missing in:', randomQuestion);
@@ -310,6 +381,7 @@ document.querySelector('.KreirajButton').addEventListener('click', async functio
         }
     }
 
+    // Kod za kreiranje pitanja
     for (let i = 1; i <= numberOfTasks; i++) {
         const kreirajRadio = document.getElementById(`kreiraj${i}`);
         const selectedOblastDropdown = document.querySelector(`#oblasti-dropdown${i} .dropdown-item.active`);
@@ -349,6 +421,7 @@ document.querySelector('.KreirajButton').addEventListener('click', async functio
             })
             .then(data => {
                 console.log(`Dodata pitanje ID: ${data.id}`);
+                questions.push({ id: data.id, tekst: taskText });
                 return data;
             })
             .catch(error => {
@@ -360,29 +433,60 @@ document.querySelector('.KreirajButton').addEventListener('click', async functio
         }
     }
 
-    const responses = await Promise.all(promises);
-    const validResponses = responses.filter(response => response && response.tekst);
-    const ids = validResponses.map(response => response.id);
-    console.log('Dodata pitanja ID-jevi:', ids);
+    Promise.all(promises).then(() => {
+        console.log('Sva pitanja:', questions);
+        const ids = questions.map(q => q.id);
+        console.log('Dodata pitanja ID-jevi:', ids);
 
-    // Generisanje PDF-a
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    let yOffset = 10; // Initial Y position for the first question
+        const blanketDto = {
+            Tip: tipBlanketa,
+            Kategorija: kategorijaTipTesta,
+            Putanja: "path/to/document.pdf", // Adjust this as needed
+            Predmet: {
+                Id: predmetID,
+                Naziv: selectedPredmetNaziv,
+                Godina: selectedPredmetGodina
+            },
+            PonavljanjeIspitnogRoka: {
+                Id: ispitniRokID,
+                Naziv: ispitniRokNaziv,
+                Datum: ispitniRokDatum
+            },
+            Pitanja: questions.map(q => ({ Id: q.id, Tekst: q.tekst }))
+        };
 
-    validResponses.forEach((response, index) => {
-        const lines = doc.splitTextToSize(`Pitanje ${index + 1}: ${response.tekst}`, 170); // Set width to 170
-        doc.text(lines, 10, yOffset);
-        yOffset += lines.length * 10; // Adjust Y position for the next block of text
-        yOffset += 6; // Add extra space between questions
+        fetch('http://localhost:5246/Blanket/dodajBlanket', {
+            method: 'POST',
+            body: JSON.stringify(blanketDto),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(error => { throw new Error(JSON.stringify(error)); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Blanket uspešno dodat:', data);
+
+            // Generisanje PDF-a
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let yOffset = 10; // Initial Y position for the first question
+
+            questions.forEach((question, index) => {
+                const lines = doc.splitTextToSize(`Pitanje ${index + 1}: ${question.tekst}`, 170); // Set width to 170
+                doc.text(lines, 10, yOffset);
+                yOffset += lines.length * 10; // Adjust Y position for the next block of text
+                yOffset += 6; // Add extra space between questions
+            });
+
+            doc.save('usmeni.pdf');
+        })
+        .catch(error => {
+            console.error('Error adding blanket:', error);
+        });
     });
-
-    doc.save('usmeni.pdf');
 });
-
-
-
-
-
-
-

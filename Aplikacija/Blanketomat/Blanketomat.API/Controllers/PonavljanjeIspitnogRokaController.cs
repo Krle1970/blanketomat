@@ -19,7 +19,12 @@ public class PonavljanjeIspitnogRokaController : ControllerBase
     {
         _context = context;
     }
-
+    [HttpGet("PonavljanjaIspitnihRokova")]
+    [TypeFilter(typeof(ValidateDbSetFilter<PonavljanjeIspitnogRoka>))]
+    public ActionResult<IEnumerable<PonavljanjeIspitnogRoka>> VratiSveBlankete()
+    {
+        return _context.PonavljanjaIspitnihRokova;
+    }
     [HttpGet]
     [TypeFilter(typeof(ValidateDbSetFilter<PonavljanjeIspitnogRoka>))]
     [ValidatePaginationFilter]

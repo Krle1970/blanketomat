@@ -154,5 +154,49 @@ public class BlanketController : ControllerBase
 
             return CreatedAtAction(nameof(GetPredmetForBlanket), new { blanketId = blanketId }, newPredmet);
         }
-        
+
+    [HttpPost]
+    [Route("dodajBlanket")]
+    public async Task<IActionResult> DodajBlanket([FromBody] BlanketDTO blanketDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var predmet = await _context.Predmeti.FindAsync(blanketDto.Predmet?.Id);
+        if (predmet == null)
+        {
+            return NotFound($"Predmet sa ID-jem {blanketDto.Predmet?.Id} nije pronađen.");
+        }
+
+        var pitanja = new List<Pitanje>();
+        if (blanketDto.Pitanja != null)
+        {
+            pitanja = await _context.Pitanja
+                .Where(p => blanketDto.Pitanja.Select(q => q.Id).Contains(p.Id))
+                .ToListAsync();
+        }
+
+        var ispitniRok = await _context.PonavljanjaIspitnihRokova.FindAsync(blanketDto.PonavljanjeIspitnogRoka?.Id);
+        if (ispitniRok == null)
+        {
+            return NotFound($"Ispitni rok sa ID-jem {blanketDto.PonavljanjeIspitnogRoka?.Id} nije pronađen.");
+        }
+
+        var blanket = new Blanket
+        {
+            Tip = blanketDto.Tip,
+            Kategorija = blanketDto.Kategorija,
+            Putanja = blanketDto.Putanja,
+            Predmet = predmet,
+            IspitniRok = ispitniRok,
+            Pitanja = pitanja
+        };
+
+        _context.Blanketi.Add(blanket);
+        await _context.SaveChangesAsync();
+
+        return Ok(blanket);
+    }
 }
