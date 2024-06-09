@@ -1,10 +1,9 @@
-
 document.addEventListener('DOMContentLoaded', function() {
     const searchPredmeti = document.getElementById('search-predmeti1');
     const predmetiDropdown = document.getElementById('predmeti-dropdown1');
     const generateButton = document.getElementById('generate-tasks');
    
-    // Event listener for the search input
+   
     searchPredmeti.addEventListener('input', function() {
         const filter = this.value.toLowerCase();
         const items = predmetiDropdown.getElementsByClassName('dropdown-item');
@@ -20,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         predmetiDropdown.classList.toggle('show', anyVisible);
     });
 
-    // Event listener for the dropdown items
+   
     predmetiDropdown.addEventListener('click', function(event) {
         if (event.target.classList.contains('dropdown-item')) {
             const predmet = event.target.textContent;
@@ -270,14 +269,13 @@ document.querySelector('.KreirajButton').addEventListener('click', async functio
         if (generisiRadio && generisiRadio.checked) {
             const selectedOblastDropdown = document.querySelector(`#oblasti-dropdown${i} .dropdown-item.active`);
             const selectedOblastId = selectedOblastDropdown ? selectedOblastDropdown.getAttribute('data-value') : null;
-            console.log(selectedOblastId);
 
             let url;
             if (selectedOblastId == null) {
-                url = 'http://localhost:5246/Pitanje/SvePitanja';
-            } else {
-                url = `http://localhost:5246/Pitanje/Oblast/${selectedOblastId}`;
+                alert(`Molimo vas da odaberete oblast za pitanje ${i}`);
+                return;
             }
+            url = `http://localhost:5246/Pitanje/Oblast/${selectedOblastId}`;
 
             const promise = fetch(url)
                 .then(response => {
@@ -293,7 +291,6 @@ document.querySelector('.KreirajButton').addEventListener('click', async functio
                         const randomIndex = Math.floor(Math.random() * data.length);
                         const randomQuestion = data[randomIndex];
                         console.log(`Random question:`, randomQuestion);
-                        // Check if randomQuestion has tekst property
                         if (randomQuestion && randomQuestion.tekst) {
                             return randomQuestion;
                         } else {
@@ -315,9 +312,16 @@ document.querySelector('.KreirajButton').addEventListener('click', async functio
 
     for (let i = 1; i <= numberOfTasks; i++) {
         const kreirajRadio = document.getElementById(`kreiraj${i}`);
+        const selectedOblastDropdown = document.querySelector(`#oblasti-dropdown${i} .dropdown-item.active`);
+        const selectedOblastId = selectedOblastDropdown ? selectedOblastDropdown.getAttribute('data-value') : null;
+
         if (kreirajRadio && kreirajRadio.checked) {
+            if (!selectedOblastId) {
+                alert(`Molimo vas da odaberete oblast za pitanje ${i}`);
+                return;
+            }
+
             const taskText = document.getElementById(`task-text${i}`).value;
-            const selectedOblastId = document.querySelector(`#oblasti-dropdown${i} .dropdown-item.active`)?.getAttribute('data-value') || null;
             const selectedPodoblastId = document.querySelector(`#podoblasti-dropdown${i} .dropdown-item.active`)?.getAttribute('data-value') || null;
 
             console.log(`kreiraj ${i}: ${taskText}`);
@@ -364,13 +368,18 @@ document.querySelector('.KreirajButton').addEventListener('click', async functio
     // Generisanje PDF-a
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
+    let yOffset = 10; // Initial Y position for the first question
 
     validResponses.forEach((response, index) => {
-        doc.text(`Pitanje ${index + 1}: ${response.tekst}`, 10, 10 + (index * 10));
+        const lines = doc.splitTextToSize(`Pitanje ${index + 1}: ${response.tekst}`, 170); // Set width to 170
+        doc.text(lines, 10, yOffset);
+        yOffset += lines.length * 10; // Adjust Y position for the next block of text
+        yOffset += 6; // Add extra space between questions
     });
 
-    doc.save('pitanja.pdf');
+    doc.save('usmeni.pdf');
 });
+
 
 
 

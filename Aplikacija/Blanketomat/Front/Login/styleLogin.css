@@ -32,6 +32,10 @@ body {
   border-radius: 10px; /* Zaobljeni uglovi */
   transition: all 0.3s ease-in-out;
 }
+.d-grid {
+  margin-top: -20px; /* Podesite vrednost prema vašim potrebama */
+}
+
 .btn-primary {
   background-image: linear-gradient(90deg, #6f978b, #89978d); /* Gradient za dugme */
   border: none;

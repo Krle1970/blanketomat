@@ -115,6 +115,44 @@ public class BlanketController : ControllerBase
         _context.Blanketi.Remove(blanketZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok("Blanket uspe�no izbrisan");
+        return Ok("Blanket uspe�no izbrisan");
     }
+    
+    [HttpGet("{blanketId}/predmet")]
+        public ActionResult<IEnumerable<Podoblast>> GetPredmetForBlanket(int blanketId)
+        {
+            var blanket = _context.Blanketi
+                .Include(o => o.Predmet)
+                .FirstOrDefault(o => o.Id == blanketId);
+
+            if (blanket == null)
+            {
+                return NotFound("Blanket nije pronađen.");
+            }
+
+            var predmet = blanket.Predmet;
+
+            if (predmet == null)
+            {
+                return Ok(new List<Predmet>());
+            }
+
+            return Ok(predmet);
+        }
+    [HttpPost("{blanketId}/Predmet")]
+        public ActionResult<Predmet> CreatePredmetForBlanket(int blanketId, [FromBody] Predmet newPredmet)
+        {
+            var blanket = _context.Blanketi.FirstOrDefault(o => o.Id == blanketId);
+
+            if (blanket == null)
+            {
+                return NotFound("Blanket nije pronađen.");
+            }
+            blanket.Predmet = newPredmet;
+            _context.Predmeti.Add(newPredmet);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetPredmetForBlanket), new { blanketId = blanketId }, newPredmet);
+        }
+        
 }

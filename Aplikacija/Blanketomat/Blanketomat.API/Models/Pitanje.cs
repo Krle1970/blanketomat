@@ -8,7 +8,7 @@ public class Pitanje
     public int Id { get; set; }
 
     [MinLength(5, ErrorMessage = "Tekst pitanja mora imati minimum 5 karaktera")]
-    [MaxLength(500, ErrorMessage = "Tekst pitanja moze imati maksimalno 500 karaktera")]
+    [MaxLength(5500, ErrorMessage = "Tekst pitanja moze imati maksimalno 5000 karaktera")]
     public required string Tekst { get; set; }
     public List<Slika>? Slika { get; set; }
     public Oblast? Oblast { get; set; }
