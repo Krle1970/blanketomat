@@ -92,19 +92,13 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
                     <label for="search-oblasti${i}">Odaberite oblasti:</label>
                     <input type="text" id="search-oblasti${i}" class="oblast form-control mb-2" placeholder="Pretražite oblasti">
                     <div class="dropdown-menu w-100" id="oblasti-dropdown${i}">
-                    <a class="dropdown-item" data-value="oblast1">Algebra</a>
-                    <a class="dropdown-item" data-value="oblast2">Matrice</a>
-                    <a class="dropdown-item" data-value="oblast3">Funkcije</a>
-                    <a class="dropdown-item" data-value="oblast4">Analiticka</a></div>
+                    </div>
                 </div>
                 <div class="form-group mb-3">
                     <label for="search-podoblasti${i}">Odaberite podoblasti:</label>
                     <input type="text" id="search-podoblasti${i}" class="form-control mb-2" placeholder="Pretražite podoblasti">
                     <div class="dropdown-menu w-100" id="podoblasti-dropdown${i}">
-                    <a class="dropdown-item" data-value="podoblast1">Unutrasnje ulancavanje</a>
-                    <a class="dropdown-item" data-value="podoblast2">Dvostruki</a>
-                    <a class="dropdown-item" data-value="podoblast3">Jednostruki</a>
-                    <a class="dropdown-item" data-value="podoblast4">Binarni</a></div>
+                    </div>
                 </div>
                 <div class="form-group mb-3">
                     <label for="task-text${i}">Unesite tekst pitanja:</label>
@@ -157,8 +151,8 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
                     item.textContent = oblast.naziv;
                     item.addEventListener('click', () => {
                         oblastID = oblast.id;
+                        item.classList.add('active'); // Add active class
                         console.log(`Izabran oblast ID: ${oblastID}`);
-                        // Fetch podoblasti based on selected oblastID
                         fetchPodoblasti(i, oblastID);
                     });
                     dropdownMenu.appendChild(item);
@@ -266,18 +260,120 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
     }
 
 });
-document.querySelector('.KreirajButton').addEventListener('click', function() {
+document.querySelector('.KreirajButton').addEventListener('click', async function() {
     console.log('KreirajBlanket button clicked');
     const numberOfTasks = document.getElementById('task-number').value;
-    console.log(`Broj pitanja: ${numberOfTasks}`);
+    const promises = [];
+
+    for (let i = 1; i <= numberOfTasks; i++) {
+        const generisiRadio = document.getElementById(`generisi${i}`);
+        if (generisiRadio && generisiRadio.checked) {
+            const selectedOblastDropdown = document.querySelector(`#oblasti-dropdown${i} .dropdown-item.active`);
+            const selectedOblastId = selectedOblastDropdown ? selectedOblastDropdown.getAttribute('data-value') : null;
+            console.log(selectedOblastId);
+
+            let url;
+            if (selectedOblastId == null) {
+                url = 'http://localhost:5246/Pitanje/SvePitanja';
+            } else {
+                url = `http://localhost:5246/Pitanje/Oblast/${selectedOblastId}`;
+            }
+
+            const promise = fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(error => { throw new Error(JSON.stringify(error)); });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(`Data for URL ${url}:`, data);
+
+                    if (data.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * data.length);
+                        const randomQuestion = data[randomIndex];
+                        console.log(`Random question:`, randomQuestion);
+                        // Check if randomQuestion has tekst property
+                        if (randomQuestion && randomQuestion.tekst) {
+                            return randomQuestion;
+                        } else {
+                            console.error('tekst property is missing in:', randomQuestion);
+                            return null;
+                        }
+                    } else {
+                        return null;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching questions:', error);
+                    return null;
+                });
+
+            promises.push(promise);
+        }
+    }
 
     for (let i = 1; i <= numberOfTasks; i++) {
         const kreirajRadio = document.getElementById(`kreiraj${i}`);
         if (kreirajRadio && kreirajRadio.checked) {
             const taskText = document.getElementById(`task-text${i}`).value;
-            console.log(`Pitanje ${i}: ${taskText}`);
+            const selectedOblastId = document.querySelector(`#oblasti-dropdown${i} .dropdown-item.active`)?.getAttribute('data-value') || null;
+            const selectedPodoblastId = document.querySelector(`#podoblasti-dropdown${i} .dropdown-item.active`)?.getAttribute('data-value') || null;
+
+            console.log(`kreiraj ${i}: ${taskText}`);
+            console.log(`kreiraj Oblast ID ${i}: ${selectedOblastId}`);
+            console.log(`kreiraj Podoblast ID ${i}: ${selectedPodoblastId}`);
+
+            const body = {
+                Tekst: taskText,
+                Oblast: selectedOblastId ? { Id: selectedOblastId, naziv: 'nazivOblasti' } : null,
+                Podoblast: selectedPodoblastId ? { Id: selectedPodoblastId, naziv: 'nazivPodoblasti' } : null
+            };
+
+            const promise = fetch('http://localhost:5246/Pitanje/dodajPitanje', {
+                method: 'POST',
+                body: JSON.stringify(body),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(error => { throw new Error(JSON.stringify(error)); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(`Dodata pitanje ID: ${data.id}`);
+                return data;
+            })
+            .catch(error => {
+                console.error('Error adding question:', error);
+                return null;
+            });
+
+            promises.push(promise);
         }
     }
+
+    const responses = await Promise.all(promises);
+    const validResponses = responses.filter(response => response && response.tekst);
+    const ids = validResponses.map(response => response.id);
+    console.log('Dodata pitanja ID-jevi:', ids);
+
+    // Generisanje PDF-a
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    validResponses.forEach((response, index) => {
+        doc.text(`Pitanje ${index + 1}: ${response.tekst}`, 10, 10 + (index * 10));
+    });
+
+    doc.save('pitanja.pdf');
 });
+
+
+
+
 
 

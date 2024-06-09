@@ -126,4 +126,49 @@ public class PitanjeController : ControllerBase
 
         return Ok(pitanje);
     }
+    [HttpGet("SvePitanja")]
+        public async Task<ActionResult<IEnumerable<object>>> GetAllPitanja()
+        {
+            var pitanja = await _context.Pitanja
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Tekst
+                })
+                .ToListAsync();
+
+            if (pitanja == null || !pitanja.Any())
+            {
+                return NotFound("Nije pronađeno nijedno pitanje.");
+            }
+
+            return Ok(pitanja);
+        }
+[HttpGet("Oblast/{oblastId?}")]
+public async Task<ActionResult<IEnumerable<object>>> GetPitanjaByOblast(int? oblastId)
+{
+    IQueryable<Pitanje> query = _context.Pitanja;
+
+    if (oblastId.HasValue)
+    {
+        query = query.Where(p => p.Oblast != null && p.Oblast.Id == oblastId.Value);
+    }
+
+    var pitanja = await query
+        .Select(p => new
+        {
+            p.Id,
+            p.Tekst
+        })
+        .ToListAsync();
+
+    if (pitanja == null || !pitanja.Any())
+    {
+        return NotFound($"Nije pronađeno pitanje{(oblastId.HasValue ? $" za specificiranu oblast (Oblast ID: {oblastId})" : "")}.");
+    }
+
+    return Ok(pitanja);
+}
+
+
 }

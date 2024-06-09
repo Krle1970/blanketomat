@@ -9,12 +9,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const labelText = label.textContent;
     console.log(labelText);  
     let url;
-    if(labelText=="Unesite tekst pitanje:"){
-         url='http://localhost:5246/Pitanje/pitanje';
+    let br;
+    if(labelText==="Unesite tekst pitanja:")
+    {
+         url='http://localhost:5246/Pitanje/dodajPitanje';
+         br=1;
     }
-    else{
+    else if (labelText==="Unesite tekst zadatka:")
+    {
          url='http://localhost:5246/Zadatak/dodajZadatak';
+         br=2;
     }
+    console.log(br);
     let selectedPredmetId = null;
     let selectedOblastId = null;
     let selectedPodoblastId = null;
@@ -41,9 +47,9 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => console.error('Error fetching subjects:', error));
 
     function fetchOblastiForPredmet(predmetId) {
-        const url = `http://localhost:5246/Predmet/${predmetId}/oblasti`;
+        
 
-        fetch(url)
+        fetch(`http://localhost:5246/Predmet/${predmetId}/oblasti`)
             .then(response => response.json())
             .then(data => {
                 console.log('Oblasti za izabrani predmet:', data);
@@ -133,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         console.log('Tekst:', tekst.value);
         console.log('Oblast ID:', selectedOblastId);
-        console.log('Podoblast ID:', selectedPodoblastId); // Dodato logovanje podoblasti
+        console.log('Podoblast ID:', selectedPodoblastId); 
         DodajPitanje(tekst.value);
         alert('Pitanje je uspešno registrovano!');
     });
