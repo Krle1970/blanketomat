@@ -40,21 +40,21 @@
             </div>
             <ul class="sidebar-nav">
                 <li class="sidebar-item">
-                    <a href="Pocetna.html" class="sidebar-link">
+                    <a href="Pocetna.html"  class="sidebar-link">
                         <i class="lni lni-home"></i>
                         <span>Pocetna</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="Filtriranje.html" class="sidebar-link">
+                    <a href="IzvuciPitanja.html"  class="sidebar-link">
                         <i class="lni lni-search-alt"></i>
-                        <span>Pretraži blankete</span>
+                        <span>Vežbaj pitanja</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="Generisanje.html" class="sidebar-link">
+                    <a href="IzvuciZadatke.html" class="sidebar-link">
                         <i class="lni lni-ruler-pencil"></i>
-                        <span>Vežbanje</span>
+                        <span>Vežbaj zadatke</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -82,7 +82,9 @@
                         <label for="search-predmeti1" >Odaberite predmet:</label>
                 <input type="text" id="search-predmeti1" class="form-control mb-2" placeholder="Pretražite predmete">
                 <div class="dropdown-menu w-100" id="predmeti-dropdown1">
-                  
+                    <a class="dropdown-item" data-value="predmet1">Matematika 1</a>
+                    <a class="dropdown-item" data-value="predmet2">Fizika</a>
+                    <a class="dropdown-item" data-value="predmet3">Matematika 2</a>
                 </div>
                     </div>
                 </div>
@@ -95,7 +97,37 @@
                         </div>
                     </div>
                 </div>
-                
+                <div class="col-md-6 p-0 pb-1">
+                    <div class="form-group">
+                        <label>Odaberite tip:</label>
+                        <div class="form-check">
+                            <input class="form-check-input check-kategorija" type="checkbox" value="Ispit" id="Ispit" class="check-kategorija">
+                            <label class="form-check-label" for="ispit">Ispit</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input check-kategorija" type="checkbox" value="I kolokvijum" id="I kolokvijum" class="check-kategorija">
+                            <label class="form-check-label" for="I kolokvijum">Kolokvijum 1</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input check-kategorija" type="checkbox" value="II kolokvijum" id="II kolokvijum" class="check-kategorija">
+                            <label class="form-check-label" for="II kolokvijum">Kolokvijum 2</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 p-0 pb-1 p-0 ps-md-1">
+                    <div class="form-group">
+                        <label>Odaberite tip zadataka:</label>
+                        <div class="form-check">
+                            <input class="form-check-input check-tip" type="checkbox" value="Usmeni" id="Usmeni" class="check-tip">
+                            <label class="form-check-label" for="Usmeni">Usmeni</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input check-tip" type="checkbox" value="Pismeni" id="Pismeni" class="check-tip">
+                            <label class="form-check-label" for="Pismeni">Pismeni</label>
+                        </div>
+                        
+                    </div>
+                </div>
                 
                                
                 <div class="col-12 p-0 pt-2">
@@ -105,7 +137,7 @@
         </div>
         <div class="container-fluid-custom p-3">
             <div class="row">
-                <p class="Naslov"> blanket </p>
+                <p class="Naslov">Traženi blanketi</p>
                 <div id="cards-container" class="row">
                     <!-- Kartice će biti dodate ovde -->
                 </div>
@@ -121,5 +153,6 @@
     <script src="skripte/Filter.js"></script>
     <script src="skripte/PrikazProfila.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 </body>
 </html>

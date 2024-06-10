@@ -150,13 +150,17 @@ function provera(blanket)
     const checkTip = document.querySelectorAll('.check-tip');
     const searchPredmeti = document.getElementById('search-predmeti1');
     const searchOblasti = document.getElementById('search-oblasti1');
+    let postojiKategorija = false;
+    let postojiTip = false;
+    let postojiPredmet = false;
     let postojiOblast = false;
 
     checkKategorija.forEach(checkbox => {
         if (checkbox.checked) {
-            console.log(`Checkbox with value ${checkbox.value} is selected.`);
+            console.log(`Checkbox with value ${checkbox.value} is selected.`);           
             if (checkbox.value === blanket.kategorija) {
                 console.log(`Selected value ${checkbox.value} is equal to ${blanket.kategorija}`);
+                postojiKategorija = true;
             } else {
                 console.log(`Selected value ${checkbox.value} is not equal to ${blanket.kategorija}`);
                 return false;                     
@@ -165,8 +169,9 @@ function provera(blanket)
     checkTip.forEach(checkbox => {
         if (checkbox.checked) {
             console.log(`Checkbox with value ${checkbox.value} is selected.`);
-            if (checkbox.value === blanket.kategorija) {
+            if (checkbox.value === blanket.tip) {
                 console.log(`Selected value ${checkbox.value} is equal to ${blanket.tip}`);
+                postojiTip = true;
             } else {
                 console.log(`Selected value ${checkbox.value} is not equal to ${blanket.tip}`);  
                 return false;                  
@@ -174,6 +179,7 @@ function provera(blanket)
         }})
     if (searchPredmeti.value === blanket.predmetNaziv) {
         console.log(`Postoji blanket sa predmetom ${searchPredmeti.value}`);
+        postojiPredmet = true;
     } else {
         console.log(`Ne poostoji blanket sa predmetom ${searchPredmeti.value}`);
         return false;
@@ -184,10 +190,12 @@ function provera(blanket)
         console.log(`Postoji blanket sa oblascu ${searchOblasti.value}`);
         postojiOblast = true;
     }}
-     if (!postojiOblast) {
+    if (postojiKategorija === true && postojiTip === true && postojiPredmet === true && postojiOblast === true) {
+        return true;
+    }
+    else {
         return false;
-    }     
-    return true;
+    }
 }
 async function generateHTML() 
 {
@@ -293,3 +301,35 @@ function generatePDF(content) {
 
     doc.save('blanket.pdf');
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.check-tip');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                checkboxes.forEach(cb => {
+                    if (cb !== this) {
+                        cb.checked = false;
+                    }
+                });
+            }
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.check-kategorija');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                checkboxes.forEach(cb => {
+                    if (cb !== this) {
+                        cb.checked = false;
+                    }
+                });
+            }
+        });
+    });
+});
