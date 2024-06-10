@@ -165,10 +165,7 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
                     <textarea id="task-text${i}" class="form-control" rows="3" disabled>
                     </textarea>
                 </div>
-                <div class="form-group mb-3">
-                    <label for="task-image${i}">Dodajte sliku:</label>
-                    <input type="file" id="task-image${i}" class="form-control" disabled>
-                </div>
+              
             </div>
         `;
         tasksContainer.appendChild(taskCard);

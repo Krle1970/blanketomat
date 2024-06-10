@@ -110,12 +110,6 @@ public class PredmetController : ControllerBase
         {
             Naziv = noviPredmet.Naziv,
             Godina = noviPredmet.Godina,
-            Akreditacija = noviPredmet.Akreditacija,
-            Oblasti = noviPredmet.Oblasti,
-            Smer = noviPredmet.Smer,
-            Profesori = noviPredmet.Profesori,
-            Asistenti = noviPredmet.Asistenti,
-            Studenti = noviPredmet.Studenti
         };
 
         _context.Predmeti.Add(predmet);
@@ -153,11 +147,58 @@ public class PredmetController : ControllerBase
     [TypeFilter(typeof(ValidateIdFilter<Predmet>))]
     public async Task<ActionResult<string>> ObrisiPredmet(int id)
     {
-        // iz ValidateIdFilter-a
+        // Iz ValidateIdFilter-a
         var predmetZaBrisanje = HttpContext.Items["entity"] as Predmet;
-        _context.Predmeti.Remove(predmetZaBrisanje!);
+
+        if (predmetZaBrisanje == null)
+        {
+            return NotFound("Predmet nije pronađen");
+        }
+
+        // Učitajte povezane oblasti
+        _context.Entry(predmetZaBrisanje).Collection(p => p.Oblasti).Load();
+
+        if (predmetZaBrisanje.Oblasti != null)
+        {
+            foreach (var oblast in predmetZaBrisanje.Oblasti)
+            {
+               
+                _context.Entry(oblast).Collection(o => o.Zadaci).Load();
+                if (oblast.Zadaci != null)
+                {
+                    _context.Zadaci.RemoveRange(oblast.Zadaci);
+                }
+
+               
+                _context.Entry(oblast).Collection(o => o.Pitanja).Load();
+                if (oblast.Pitanja != null)
+                {
+                    _context.Pitanja.RemoveRange(oblast.Pitanja);
+                }
+
+                // Učit i uklonipovezane podoblasti za svaku oblast ako postoje, kod nas je retko to
+                _context.Entry(oblast).Collection(o => o.Podoblasti).Load();
+                if (oblast.Podoblasti != null)
+                {
+                    _context.Podoblasti.RemoveRange(oblast.Podoblasti);
+                }
+            }
+
+            // Ukloni povezane oblasti
+            _context.Oblasti.RemoveRange(predmetZaBrisanje.Oblasti);
+        }
+
+        // Ukloni povezane blankete
+        _context.Entry(predmetZaBrisanje).Collection(p => p.Blanketi).Load();
+        if (predmetZaBrisanje.Blanketi != null)
+        {
+            _context.Blanketi.RemoveRange(predmetZaBrisanje.Blanketi);
+        }
+
+        // Uklon predmet
+        _context.Predmeti.Remove(predmetZaBrisanje);
         await _context.SaveChangesAsync();
 
-        return Ok("Predmet uspešno obrisan");
+        return Ok("Predmet, povezane oblasti, zadaci, pitanja, podoblasti i blanketi su uspešno obrisani");
     }
 }

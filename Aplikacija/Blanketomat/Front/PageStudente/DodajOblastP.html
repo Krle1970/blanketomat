@@ -61,11 +61,12 @@
                 </a>
             </li>
             <li class="sidebar-item">
-                <a href="DodajOblastP.html"  class="sidebar-link">
-                    <i class="lni lni-circle-plus"></i>
-                    <span>Dodaj oblast</span>
-                </a>
-            </li>
+              <a href="DodajOblastP.html"  class="sidebar-link">
+                  <i class="lni lni-paperclip"></i>
+                  <span>Dodaj oblast</span>
+              </a>
+          </li>
+            
         </ul>
         <div class="sidebar-footer">
             <a href="../Login/LoginPage.html" class="sidebar-link">
@@ -77,10 +78,10 @@
 </div>
 </div>
 <div class="container-fluid-custom p-3">
-    <p class="Naslov">Kreiraj pitanje</p>
+    <p class="Naslov">Dodaj oblast</p>
     <div class="card task-card">
         <div class="card-body zadatak">
-            <h5 class="card-title">Pitanje</h5>
+            <h5 class="card-title">Oblast</h5>
         </div>
         <div class="task-details card-body unos">
             <div class="form-group mb-3">
@@ -88,26 +89,17 @@
                 <input type="text" id="search-predmeti1" class="form-control mb-2" placeholder="Pretražite predmete">
                 <div class="dropdown-menu w-100" id="predmeti-dropdown1"></div>
             </div>
+        
             <div class="form-group mb-3">
-                <label for="search-oblasti1" class="no-select">Odaberite oblast:</label>
-                <input type="text" id="search-oblasti1" class="oblast form-control mb-2" placeholder="Pretražite oblasti">
-                <div class="dropdown-menu w-100" id="oblasti-dropdown1"></div>
+                <label for="task-text1" class="provera">Unesite naziv oblasti:</label>
+                <input type="text" id="task-text1" class="tekst form-control" />
             </div>
-            <div class="form-group mb-3">
-                <label for="search-podoblasti1" class="no-select">Odaberite podoblasti:</label>
-                <input type="text" id="search-podoblasti1" class="podoblast form-control mb-2" placeholder="Pretražite podoblasti">
-                <div class="dropdown-menu w-100" id="podoblasti-dropdown1"></div>
-            </div>
-            <div class="form-group mb-3">
-                <label for="task-text1" class="provera" >Unesite tekst pitanja:</label>
-                <textarea id="task-text1" class="tekst form-control" rows="3" ></textarea>
-            </div>
-           
+            
         </div>
     </div>
     <div class="row justify-content-center">
         <div class="col-8 p-0 pt-2">
-            <button type="button" class="dugme btn btn-primary w-100">Dodaj</button>
+            <button type="button" id="dugme" class="dugme btn btn-primary w-100">Dodaj</button>
         </div>
     </div>
 </div>
@@ -119,12 +111,12 @@
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="skripte/DodajZadatakPitanje.js"></script>
+
     <script src="skripte/script.js"></script>
-    <script src="skripte/DodajPitanjeFetch.js"></script>
-    <script src="skripte/PrikazProfila.js"></script>
     
-    <script src="skripte/VratiPodoblasti.js"></script>
+    <script src="skripte/PrikazProfila.js"></script>
+    <script src="skripte/dodajOblast.js"></script>
+ 
     <script src="skripte/InputSettings.js"></script>
 </body>
 </body>

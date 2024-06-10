@@ -61,26 +61,45 @@ public class AsistentController : ControllerBase
     [HttpPut("{id}")]
     [TypeFilter(typeof(ValidateDbSetFilter<Asistent>))]
     [TypeFilter(typeof(ValidateIdFilter<Asistent>))]
-    public async Task<ActionResult<Asistent>> AzurirajAsistenta(int id, [FromBody]AzurirajAsistentaDTO asistent)
+    public async Task<ActionResult<Asistent>> AzurirajAsistenta(int id, [FromBody] AsistentDTO asistentDTO)
     {
-        // iz ValidateIdFilter-a
-        var asistentZaAzuriranje = HttpContext.Items["entity"] as Asistent;
+        var asistentZaAzuriranje = await _context.Asistenti.FindAsync(id);
 
-        PasswordManager.CreatePasswordHash(asistent.Password, out byte[] passwordHash, out byte[] passwordSalt);
+        if (asistentZaAzuriranje == null)
+        {
+            return NotFound();
+        }
 
-        asistentZaAzuriranje!.Ime = asistent.Ime;
-        asistentZaAzuriranje.Prezime = asistent.Prezime;
-        asistentZaAzuriranje.Email = asistent.Email;
+        PasswordManager.CreatePasswordHash(asistentDTO.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+        asistentZaAzuriranje.Ime = asistentDTO.Ime;
+        asistentZaAzuriranje.Prezime = asistentDTO.Prezime;
+        asistentZaAzuriranje.Email = asistentDTO.Email;
         asistentZaAzuriranje.PasswordHash = passwordHash;
         asistentZaAzuriranje.PasswordSalt = passwordSalt;
-        asistentZaAzuriranje.Katedra = asistent.Katedra;
-        asistentZaAzuriranje.Smerovi = asistent.Smerovi;
-        asistentZaAzuriranje.Predmeti = asistent.Predmeti;
-        asistentZaAzuriranje.LajkovaniKomentari = asistent.LajkovaniKomentari;
-        asistentZaAzuriranje.LajkovaniOdgovori = asistent.LajkovaniOdgovori;
 
-        await _context.SaveChangesAsync();
-        return Ok(asistentZaAzuriranje);
+        if (asistentDTO.Katedra != null)
+        {
+            asistentZaAzuriranje.Katedra = asistentDTO.Katedra;
+        }
+        if (asistentDTO.Smerovi != null)
+        {
+            asistentZaAzuriranje.Smerovi = asistentDTO.Smerovi;
+        }
+        if (asistentDTO.Predmeti != null)
+        {
+            asistentZaAzuriranje.Predmeti = asistentDTO.Predmeti;
+        }
+
+        try
+        {
+            await _context.SaveChangesAsync();
+            return Ok(asistentZaAzuriranje);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
 
     [HttpDelete("{id}")]
@@ -92,6 +111,6 @@ public class AsistentController : ControllerBase
         _context.Asistenti.Remove(asistentZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok("Asistent uspešno obrisan");
+        return Ok("Asistent uspeï¿½no obrisan");
     }
 }

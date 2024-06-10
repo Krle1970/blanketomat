@@ -5,7 +5,7 @@ async function fetchBlankets() {
             throw new Error(`Error fetching blankets: ${response.statusText}`);
         }
         const blankets = await response.json();
-        console.log(blankets); // Dodajte ovo za debugovanje
+        console.log(blankets);
         return blankets;
     } catch (error) {
         console.error('Error:', error);
@@ -27,9 +27,9 @@ function createCard(blanket) {
 
     const card = document.createElement('div');
     card.className = 'card custom-card';
-    card.setAttribute('data-id', blanket.id); // Dodaj blanket ID kao data-id atribut
+    card.setAttribute('data-id', blanket.id);
     
-    card.addEventListener('click', handleCardClick); // Koristite addEventListener umesto onclick
+    card.addEventListener('click', handleCardClick); 
 
     const cardHeader = document.createElement('div');
     cardHeader.className = 'card-header';

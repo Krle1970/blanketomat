@@ -25,7 +25,6 @@
                     <li class="sidebar-header">
                         Lista user-a
                     </li>
-                 
                     <li class="sidebar-item">
                         <a href="index.html" class="sidebar-link">
                             <i class="fa-solid fa-list pe-2"></i>
@@ -50,18 +49,13 @@
                             <span class="link-text">Profesor</span>
                         </a>
                     </li>
-                    <li class="sidebar-item">
-                        <a href="blanket.html" class="sidebar-link">
-                            <i class="fa-solid fa-file-alt pe-2"></i>
-                            <span class="link-text">Blanketi</span>
-                        </a>
-                    </li> 
+                
                     <li class="sidebar-item">
                         <a href="predmet.html" class="sidebar-link">
                             <i class="fa-solid fa-file-alt pe-2"></i>
                             <span class="link-text">Predmet</span>
                         </a>
-                    </li> 
+                    </li>
                     <li class="sidebar-header">
                         Multi Level Nav
                     </li>
@@ -162,7 +156,7 @@
                                         </form>
                                     </div>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                         <div class="col-md-6 col-lg-4 col-xl-3 mb-3">
                             <div class="card">
@@ -189,7 +183,7 @@
                                 </div>
                                 <div id="card3" class="collapse">
                                     <div class="card-body">
-                                        <form>
+                                        <form id="updateProfessorForm">
                                             <div class="mb-3">
                                                 <input type="number" class="form-control" id="updateProfessorId" placeholder="Unesi ID">
                                             </div>
@@ -206,36 +200,8 @@
                                                 <input type="email" class="form-control" id="updateEmail" placeholder="Unesi email">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="updatePasswordHash" class="form-label">PasswordHash</label>
-                                                <input type="text" class="form-control" id="updatePasswordHash" placeholder="Unesi PasswordHash">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="updatePasswordSalt" class="form-label">PasswordSalt</label>
-                                                <input type="text" class="form-control" id="updatePasswordSalt" placeholder="Unesi PasswordSalt">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="updateToken" class="form-label">Token</label>
-                                                <input type="text" class="form-control" id="updateToken" placeholder="Unesi Token">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="updateSmer" class="form-label">Smer</label>
-                                                <input type="text" class="form-control" id="updateSmer" placeholder="Unesi Smer">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="updatePredmet" class="form-label">Predmet</label>
-                                                <input type="text" class="form-control" id="updatePredmet" placeholder="Unesi Predmet">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="updateKatedra" class="form-label">Katedra</label>
-                                                <input type="text" class="form-control" id="updateKatedra" placeholder="Unesi Katedra">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="updateLajkovaniKomentari" class="form-label">LajkovaniKomentari</label>
-                                                <input type="text" class="form-control" id="updateLajkovaniKomentari" placeholder="Unesi LajkovaniKomentari">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="updateLajkovaniOdgovori" class="form-label">LajkovaniOdgovori</label>
-                                                <input type="text" class="form-control" id="updateLajkovaniOdgovori" placeholder="Unesi LajkovaniOdgovori">
+                                                <label for="updatePassword" class="form-label">Password</label>
+                                                <input type="password" class="form-control" id="updatePassword" placeholder="Unesi Password">
                                             </div>
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                         </form>
@@ -255,6 +221,7 @@
     <script src="script/registerProfessor.js"></script>
     <script src="script/ObrisiProfesora.js"></script>
     <script src="script/PrikazProfilaAdmin.js"></script>
+    <script src="script/azuriraj.js"></script>
 </body>
 
 </html>

@@ -54,25 +54,46 @@ public class StudentController : ControllerBase
     [HttpPut("{id}")]
     [TypeFilter(typeof(ValidateDbSetFilter<Student>))]
     [TypeFilter(typeof(ValidateIdFilter<Student>))]
-    public async Task<ActionResult> AzurirajStudenta(int id, [FromBody]AzurirajStudentaDTO student)
+    public async Task<ActionResult<Student>> AzurirajStudenta(int id, [FromBody] StudentDTO studentDTO)
     {
-        // iz ValidateIdFilter-a
-        var studentZaAzuriranje = HttpContext.Items["entity"] as Student;
+        var studentZaAzuriranje = await _context.Studenti.FindAsync(id);
 
-        PasswordManager.CreatePasswordHash(student.Password, out byte[] passwordHash, out byte[] passwordSalt);
+        if (studentZaAzuriranje == null)
+        {
+            return NotFound();
+        }
 
-        studentZaAzuriranje!.Ime = student.Ime;
-        studentZaAzuriranje.Prezime = student.Prezime;
-        studentZaAzuriranje.Email = student.Email;
+        PasswordManager.CreatePasswordHash(studentDTO.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+        studentZaAzuriranje.Ime = studentDTO.Ime;
+        studentZaAzuriranje.Prezime = studentDTO.Prezime;
+        studentZaAzuriranje.Email = studentDTO.Email;
         studentZaAzuriranje.PasswordHash = passwordHash;
         studentZaAzuriranje.PasswordSalt = passwordSalt;
-        studentZaAzuriranje.PostavljeniKomentari = student.PostavljeniKomentari;
-        studentZaAzuriranje.PostavljeniOdgovori = student.PostavljeniOdgovori;
 
-        await _context.SaveChangesAsync();
-        return Ok(studentZaAzuriranje);
+        if (studentDTO.Akreditacija != null)
+        {
+            studentZaAzuriranje.Akreditacija = studentDTO.Akreditacija;
+        }
+        if (studentDTO.Smer != null)
+        {
+            studentZaAzuriranje.Smer = studentDTO.Smer;
+        }
+        if (studentDTO.Predmeti != null)
+        {
+            studentZaAzuriranje.Predmeti = studentDTO.Predmeti;
+        }
+
+        try
+        {
+            await _context.SaveChangesAsync();
+            return Ok(studentZaAzuriranje);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
-
     [HttpDelete("{id}")]
     [TypeFilter(typeof(ValidateDbSetFilter<Student>))]
     [TypeFilter(typeof(ValidateIdFilter<Student>))]

@@ -52,30 +52,35 @@ public class ProfesorController : ControllerBase
         return Ok(HttpContext.Items["entity"] as Profesor);
     }
 
-    [HttpPut("{id}")]
-    [TypeFilter(typeof(ValidateDbSetFilter<Profesor>))]
-    public async Task<ActionResult<Profesor>> AzurirajProfesora(int id, [FromBody]AzurirajProfesoraDTO profesor)
+   [HttpPut("{id}")]
+    public async Task<ActionResult<Profesor>> AzurirajProfesora(int id, [FromBody] ProfesorDTO profesorDTO)
     {
-        // iz ValidateIdFilter-a
-        var profesorZaAzuriranje = HttpContext.Items["entity"] as Profesor;
+        var profesorZaAzuriranje = await _context.Profesori.FindAsync(id);
 
-        PasswordManager.CreatePasswordHash(profesor.Password, out byte[] passwordHash, out byte[] passwordSalt);
+        if (profesorZaAzuriranje == null)
+        {
+            return NotFound();
+        }
 
-        profesorZaAzuriranje!.Ime = profesor.Ime;
-        profesorZaAzuriranje.Prezime = profesor.Prezime;
-        profesorZaAzuriranje.Email = profesor.Email;
+        PasswordManager.CreatePasswordHash(profesorDTO.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+        profesorZaAzuriranje.Ime = profesorDTO.Ime;
+        profesorZaAzuriranje.Prezime = profesorDTO.Prezime;
+        profesorZaAzuriranje.Email = profesorDTO.Email;
         profesorZaAzuriranje.PasswordHash = passwordHash;
         profesorZaAzuriranje.PasswordSalt = passwordSalt;
-        profesorZaAzuriranje.Smerovi = profesor.Smerovi;
-        profesorZaAzuriranje.Predmeti = profesor.Predmeti;
-        profesorZaAzuriranje.Katedra = profesor.Katedra;
-        profesorZaAzuriranje.LajkovaniKomentari = profesor.LajkovaniKomentari;
-        profesorZaAzuriranje.LajkovaniOdgovori = profesor.LajkovaniOdgovori;
-        
-        await _context.SaveChangesAsync();
-    
-        return Ok(profesorZaAzuriranje);
+
+        try
+        {
+            await _context.SaveChangesAsync();
+            return Ok(profesorZaAzuriranje);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
+
 
     [HttpDelete("{id}")]
     [TypeFilter(typeof(ValidateDbSetFilter<Profesor>))]
@@ -87,6 +92,6 @@ public class ProfesorController : ControllerBase
         _context.Profesori.Remove(profesorZaBrisanje!);
         await _context.SaveChangesAsync();
 
-        return Ok("Profesor uspešno obrisan");
+        return Ok("Profesor uspeï¿½no obrisan");
     }
 }

@@ -25,7 +25,6 @@
                     <li class="sidebar-header">
                         Lista user-a
                     </li>
-                 
                     <li class="sidebar-item">
                         <a href="student.html" class="sidebar-link">
                             <i class="fa-solid fa-user-graduate pe-2"></i>
@@ -45,17 +44,11 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="blanket.html" class="sidebar-link">
+                        <a href="predmet.html" class="sidebar-link">
                             <i class="fa-solid fa-file-alt pe-2"></i>
-                            <span class="link-text">Blanketi</span>
+                            <span class="link-text">Predmet</span>
                         </a>
-                    </li> 
-                    <li class="sidebar-item">
-                      <a href="predmet.html" class="sidebar-link">
-                          <i class="fa-solid fa-file-alt pe-2"></i>
-                          <span class="link-text">Predmet</span>
-                      </a>
-                  </li> 
+                    </li>
                     <li class="sidebar-header">
                         Multi Level Nav
                     </li>
@@ -113,33 +106,38 @@
                                     Dodavanje predmeta
                                 </div>
                                 <div class="card-body">
-                                    <form>
+                                    <form id="dodajPredmetForm">
                                         <div class="mb-3">
                                             <label for="subjectName" class="form-label">Naziv predmeta</label>
                                             <input type="text" class="form-control" id="subjectName" placeholder="Unesite naziv predmeta">
                                         </div>
                                         <div class="mb-3">
-                                            <label for="subjectCode" class="form-label">Šifra predmeta</label>
-                                            <input type="text" class="form-control" id="subjectCode" placeholder="Unesite šifru predmeta">
+                                            <label for="subjectYear" class="form-label">Godina</label>
+                                            <select class="form-select" id="subjectYear">
+                                                <option value="I">I</option>
+                                                <option value="II">II</option>
+                                                <option value="III">III</option>
+                                                <option value="IV">IV</option>
+                                            </select>
                                         </div>
                                         <button type="submit" class="btn btn-primary">Dodaj predmet</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
-                        <!-- Card for Listing Subjects -->
                         <div class="col-md-6 mb-4">
                             <div class="card" style="min-width: 300px; max-width: 600px;">
                                 <div class="card-header">
-                                    Izlistavanje predmeta
+                                    Dodavanje predmeta
                                 </div>
                                 <div class="card-body">
-                                    <ul class="list-group">
-                                        <li class="list-group-item">Predmet 1</li>
-                                        <li class="list-group-item">Predmet 2</li>
-                                        <li class="list-group-item">Predmet 3</li>
-                                        <!-- Add more subjects here -->
-                                    </ul>
+                                    <form id="obrisiPredmetForm">
+                                        <div class="mb-3">
+                                            <label for="subjectName" class="form-label">ID predmeta</label>
+                                            <input type="number" class="form-control" id="predmetId" placeholder="Unesite ID predmeta">
+                                        </div>
+                                        <button type="submit" id="dugmeBrisanje"class="dugmeBrisi btn btn-primary">Obrisi predmet</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -153,5 +151,8 @@
         crossorigin="anonymous"></script>
     <script src="script/script.js"></script>
     <script src="script/PrikazProfilaAdmin.js"></script>
+    <script src="script/DodajPredmet.js"></script>
+    <script src="script/ObrisiPredmet.js"></script>
 </body>
+
 </html>

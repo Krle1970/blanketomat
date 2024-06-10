@@ -166,6 +166,6 @@ document.querySelector('.dugme').addEventListener('click', async function() {
           yOffset += 6; // Add extra space between questions
       });
 
-      doc.save('usmeni.pdf');
+      doc.save('teorija_vezbanje.pdf');
   });
 });

@@ -160,12 +160,12 @@ document.querySelector('.dugme').addEventListener('click', async function() {
       let yOffset = 10; // Initial Y position for the first question
 
       uniqueQuestions.forEach((question, index) => {
-          const lines = doc.splitTextToSize(`Pitanje ${index + 1}: ${question.tekst}`, 170); // Set width to 170
+          const lines = doc.splitTextToSize(`Zadatak ${index + 1}: ${question.tekst}`, 170); // Set width to 170
           doc.text(lines, 10, yOffset);
           yOffset += lines.length * 10; // Adjust Y position for the next block of text
           yOffset += 6; // Add extra space between questions
       });
 
-      doc.save('usmeni.pdf');
+      doc.save('pismeni_vezbanje.pdf');
   });
 });

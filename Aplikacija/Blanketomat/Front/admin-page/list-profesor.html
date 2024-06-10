@@ -43,12 +43,7 @@
                             <span class="link-text">Profesor</span>
                         </a>
                     </li>
-                    <li class="sidebar-item">
-                        <a href="blanket.html" class="sidebar-link">
-                            <i class="fa-solid fa-file-alt pe-2"></i>
-                            <span class="link-text">Blanketi</span>
-                        </a>
-                    </li>
+                 
                     <li class="sidebar-item">
                         <a href="predmet.html" class="sidebar-link">
                             <i class="fa-solid fa-file-alt pe-2"></i>
@@ -113,11 +108,18 @@
                             <label for="pageNumber" class="form-label">Broj stranice</label>
                             <input type="number" class="form-control" id="pageNumber" placeholder="Unesi broj stranice">
                         </div>
+                        <div class="col-12 mb-3">
+                            <button id="fetchProfessorsBtn" class="btn btn-primary">Izlistaj Profesore</button>
+                        </div>
                         <div class="col-12">
                             <label for="professorList" class="form-label">Lista profesora</label>
                             <select multiple class="form-control" id="professorList" size="10">
                                 <!-- Profesori će biti dinamički dodati ovde -->
                             </select>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <button id="prevPageBtn" class="btn btn-secondary">Prethodna stranica</button>
+                            <button id="nextPageBtn" class="btn btn-secondary">Sledeća stranica</button>
                         </div>
                     </div>
                 </div>
@@ -129,6 +131,7 @@
         crossorigin="anonymous"></script>
     <script src="script/script.js"></script>
     <script src="script/PrikazProfilaAdmin.js"></script>
+    <script src="script/listajP.js"></script>
 </body>
 
 </html>
