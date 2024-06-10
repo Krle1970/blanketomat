@@ -188,9 +188,9 @@ document.getElementById('generate-tasks').addEventListener('click', function() {
             radio.addEventListener('change', function() {
                 const isGenerisi = document.getElementById(`generisi${i}`).checked;
                 const taskText = document.getElementById(`task-text${i}`);
-                const taskImage = document.getElementById(`task-image${i}`);
+               // const taskImage = document.getElementById(`task-image${i}`);
                 taskText.disabled = isGenerisi;
-                taskImage.disabled = isGenerisi;
+                //taskImage.disabled = isGenerisi;
             });
         });
 

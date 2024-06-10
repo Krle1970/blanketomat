@@ -3,9 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const prezime = document.getElementById('surname1');
     const email = document.getElementById('email1');
     const lozinka = document.getElementById('password1');
-    const akreditacijaId = document.getElementById('akreditacijaId1');
-    const smerId = document.getElementById('smerId1');
-    const predmetiIds = document.getElementById('predmetiIds1');
+ 
     const dugme = document.getElementById('submitAsistent');
 
     async function registrujAsistenta(name, surname, mail, pass) {
@@ -13,10 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
             Ime: name,
             Prezime: surname,
             Email: mail,
-            Password: pass,
-            AkreditacijaId: akreditacijaId ? parseInt(akreditacijaId.value) : null,
-            SmerId: smerId ? parseInt(smerId.value) : null,
-            PredmetiIds: predmetiIds.value.split(',').map(id => parseInt(id.trim()))
+            Password: pass
+        
         };
 
         const token = localStorage.getItem('token');
